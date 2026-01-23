@@ -19,11 +19,11 @@
     - first, since the file is a marimo notebook, that has been directly converted from ipynb format, add some print statements, so you can tell whats going on.
     - use `uv run fake_news_bert.py` to run the notebook in console only mode. You should now see the output from your print statements.
 
-- [ ] clean project root, there is a lot of unorganized files, find a better project structure
-    1. use `find` to list current directory structure and consider how new structure should look
-    2. create folders and move files
-    3. update paths in any python files or other scripts (refrain from editing ipynb files)
-    4. specifically verify that `fake_news_bert.py` still works
+- [x] clean project root, there is a lot of unorganized files, find a better project structure
+    - use `find` to list current directory structure and consider how new structure should look
+    - create folders and move files
+    - update paths in any python files or other scripts (refrain from editing ipynb files)
+    - specifically verify that `fake_news_bert.py` still works
 
 - [ ] better accuracy scoring
     - rewrite the `tokentango.train.test_accuracy` method to take the fraction of validation data to testa against as an argument
