@@ -7,14 +7,24 @@ name = "tokentango"
 version = "0.1.0"
 description = "Experimenting with bidirectional encoder transformers"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     "jupyter>=1.1.1",
     "matplotlib>=3.10.3",
+    #   "muon-optimizer",
     "numpy>=2.3.0",
     "pandas>=2.3.0",
     "plotly>=6.1.2",
     "scikit-learn>=1.7.0",
     "tokenizers>=0.21.1",
+    #   "torchvision>=0.22.1",
     "torch>=2.7.1",
 ]
+
+[tool.uv.sources]
+muon-optimizer = { git = "https://github.com/KellerJordan/Muon" }
+torch = { index = "pytorch-cu118" }
+
+[[tool.uv.index]]
+name = "pytorch-cu118"
+url = "https://download.pytorch.org/whl/cu118"

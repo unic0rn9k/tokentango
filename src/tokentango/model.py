@@ -4,6 +4,8 @@ from torch.optim import Adam, AdamW
 from torch import nn, functional as F
 import math
 
+EMBEDDING_DIM = 32
+
 class BertClassifier(nn.Module):
     def __init__(self, max_seq_len, vocab_size, device):
         super(BertClassifier, self).__init__()
@@ -13,37 +15,42 @@ class BertClassifier(nn.Module):
         self.vocab_size = vocab_size
         self.device = device
 
-        self.encoder_layer = nn.TransformerEncoderLayer(d_model=512, nhead=4)
+        self.encoder_layer = nn.TransformerEncoderLayer(d_model=EMBEDDING_DIM, nhead=4)
         self.use_nested_tensor=True
         self.encoder_layer.self_attn.batch_first=True
-        self.transformer_encoder = nn.TransformerEncoder(self.encoder_layer, num_layers=6, norm = nn.LayerNorm(512))
+        self.transformer_encoder = nn.TransformerEncoder(self.encoder_layer, num_layers=6, norm = nn.LayerNorm(EMBEDDING_DIM))
 
-        self.embeddings = nn.Embedding(num_embeddings=vocab_size, embedding_dim=512)#, padding_idx=0)
-        self.positional_encoding = torch.zeros([max_seq_len, 512])#, requires_grad=True)
+        self.embeddings = nn.Embedding(num_embeddings=vocab_size, embedding_dim=EMBEDDING_DIM)#, padding_idx=0)
+        self.positional_encoding = torch.zeros([max_seq_len, EMBEDDING_DIM])#, requires_grad=True)
         position = torch.arange(0, max_seq_len).unsqueeze(1).float()
-        div_term = torch.exp(torch.arange(0, 512, 2).float() * -(math.log(10000.0) / 512))
+        div_term = torch.exp(torch.arange(0, EMBEDDING_DIM, 2).float() * -(math.log(10000.0) / EMBEDDING_DIM))
         self.positional_encoding[:, 0::2] = torch.sin(position * div_term)
         self.positional_encoding[:, 1::2] = torch.cos(position * div_term)
 
-        self.preclassifier = nn.Linear(512, 512)
-        self.classifier = nn.Linear(512, 1)
-        self.distribution = nn.Linear(512, vocab_size, bias=False)
+        self.preclassifier = nn.Linear(EMBEDDING_DIM, EMBEDDING_DIM)
+        self.classifier = nn.Linear(EMBEDDING_DIM, 1)
+        self.distribution = nn.Linear(EMBEDDING_DIM, vocab_size, bias=False)
         self.distribution.weight = self.embeddings.weight
 
-    def hidden(self, seq, **kwargs):
+    def embed(self, seq):
         x = self.embeddings(seq)
         expanded_positional_encoding = self.positional_encoding.unsqueeze(0)  # Shape: (1, sequence_length, embedding_size)
         expanded_positional_encoding = expanded_positional_encoding.expand(x.shape[0], -1, -1).to(self.device)  # Shape: (batch_size, sequence_length, embedding_size)
         x += expanded_positional_encoding[:x.size(0), :x.size(1), :x.size(2)]
+        return x
+
+    def hidden(self, seq, **kwargs):
+        x = self.embed(seq)
         return self.transformer_encoder(x, **kwargs)
 
-    def classify(self, seq, **kwargs):
-        outputs = self.classifier(self.preclassifier(hidden[:,0]).relu())
-        return outputs
-    
+    def classify(self, hidden, **kwargs):
+        return self.classifier(self.preclassifier(hidden[:, 0]).relu()).tanh()
+
     def classify_loss(self, hidden, mb_y):
-        outputs = self.classifier(self.preclassifier(hidden[:,0]).relu())
-        loss_cls = torch.nn.functional.mse_loss(outputs.view(-1), mb_y)
+        logits = self.classify(hidden)
+        loss_cls = torch.nn.functional.huber_loss(
+            logits.view(-1), mb_y
+        )
         return loss_cls
 
     def mlm_loss(self, hidden, mb_x):

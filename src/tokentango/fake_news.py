@@ -99,7 +99,7 @@ def load_data(frac):
 
 
 
-    labels = [1.0 if n == "fake" else 0 for n in large_set["new_labels"]]
+    labels = [1.0 if n == "fake" else -1.0 for n in large_set["new_labels"]]
 
     split_at = int(0.8 * len(labels))
     train_x = text_ids[:split_at]
