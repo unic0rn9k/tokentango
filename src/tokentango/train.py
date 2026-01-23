@@ -13,10 +13,10 @@ import random
 from torch.cuda.amp import autocast, GradScaler
 
 
-def test_accuracy(model, test_x, test_y, test_cls, device):
+def test_accuracy(model, test_x, test_y, test_cls, device, frac=0.1):
     with torch.no_grad():
         with autocast():
-            sample_size = max(1, int(len(test_cls) * 0.1))
+            sample_size = max(1, int(len(test_cls) * frac))
             random_offset = random.randint(0, len(test_cls) - sample_size)
 
             correct = 0

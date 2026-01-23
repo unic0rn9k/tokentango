@@ -25,7 +25,7 @@
     - update paths in any python files or other scripts (refrain from editing ipynb files)
     - specifically verify that `fake_news_bert.py` still works
 
-- [ ] better accuracy scoring
+- [x] better accuracy scoring
     - rewrite the `tokentango.train.test_accuracy` method to take the fraction of validation data to testa against as an argument
     - replace other instances of code that computes validation accuracy with a call to this method
 
