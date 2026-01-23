@@ -114,10 +114,10 @@ Checkpoint metadata is displayed after loading, including:
      - unwrap and update commented checkpoint loading code
      - add helper function to detect and list available checkpoints
 
- - [ ] Add checkpoint selection - web UI mode
-    - search web for marimo dropdown widget documentation
-    - add marimo dropdown widget with train/latest/specific options
-    - integrate widget value with training flow control
-    - make selection work consistently between UI and env var
+  - [x] Add checkpoint selection - web UI mode
+     - search web for marimo dropdown widget documentation
+     - add marimo dropdown widget with train/latest/specific options
+     - integrate widget value with training flow control
+     - make selection work consistently between UI and env var
 
   - [ ] Verify checkpoint with >80% accuracy against 0.8 fraction of training data

@@ -96,6 +96,29 @@ def _(mo):
 
 
 @app.cell
+def _(mo):
+    checkpoint_selector = mo.ui.dropdown(
+        options=["latest", "train", "specific"],
+        value="latest",
+        label="Checkpoint selection",
+    )
+    checkpoint_path_input = mo.ui.text(label="Specific checkpoint path")
+    return checkpoint_path_input, checkpoint_selector
+
+
+@app.cell
+def _(checkpoint_selector, checkpoint_path_input, mo):
+    mode_panel = mo.md(
+        f"""
+        **Checkpoint Selection: {checkpoint_selector.value}**
+
+        {"**Checkpoint Path:** " + checkpoint_path_input.value if checkpoint_selector.value == "specific" and checkpoint_path_input.value else ""}
+        """
+    )
+    return (mode_panel,)
+
+
+@app.cell
 def _(time, tokentango):
     print("[DATA LOADING] Starting data load...")
     data_start = time.time()
