@@ -120,4 +120,4 @@ Checkpoint metadata is displayed after loading, including:
      - integrate widget value with training flow control
      - make selection work consistently between UI and env var
 
-  - [ ] Verify checkpoint with >80% accuracy against 0.8 fraction of training data
+   - [x] Verify checkpoint with >80% accuracy against 0.8 fraction of training data
