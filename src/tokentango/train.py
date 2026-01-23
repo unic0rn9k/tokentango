@@ -12,6 +12,7 @@ import datetime as dt
 import random
 from torch.cuda.amp import autocast, GradScaler
 
+
 def test_accuracy(model, test_x, test_y, test_cls, device):
     with torch.no_grad():
         with autocast():
@@ -20,21 +21,21 @@ def test_accuracy(model, test_x, test_y, test_cls, device):
 
             correct = 0
             for idx in range(random_offset, random_offset + sample_size):
-                x = test_y[idx:idx+1,:]
+                x = test_y[idx : idx + 1, :]
                 hidden = model.hidden(x)
                 output = model.classify(hidden)
-                correct += int(np.sign(output.cpu().detach().item()) == np.sign(test_cls[idx].cpu()))
+                correct += int(
+                    np.sign(output.cpu().detach().item())
+                    == np.sign(test_cls[idx].cpu())
+                )
 
             return correct / sample_size * 100
+
 
 def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
     model.train()
 
-    optimizer = AdamW(
-        model.parameters(),
-        lr = 1e-4,
-        weight_decay=0.01
-    )
+    optimizer = AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)
 
     mlm_losses = []
     cls_losses = []
@@ -47,12 +48,14 @@ def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
     scaler = GradScaler()
 
     for epoch in range(0, num_epochs):
-        for sample, idx in enumerate(range(0, int(num_samples/batch_size), batch_size)):
+        for sample, idx in enumerate(
+            range(0, int(num_samples / batch_size), batch_size)
+        ):
             optimizer.zero_grad()
 
-            x = train_x[idx:idx+batch_size,:]
-            y = train_y[idx:idx+batch_size,:]
-            cls_class = train_cls[idx:idx+batch_size]
+            x = train_x[idx : idx + batch_size, :]
+            y = train_y[idx : idx + batch_size, :]
+            cls_class = train_cls[idx : idx + batch_size]
 
             with autocast():
                 hidden = model.hidden(x)
@@ -64,12 +67,12 @@ def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
             scaler.step(optimizer)
             scaler.update()
 
-            #loss.backward()
-            #optimizer.step()
-            
+            # loss.backward()
+            # optimizer.step()
+
             mlm_losses.append(loss_mlm.cpu().item())
             cls_losses.append(loss_cls.cpu().item())
-            
+
             if sample % 100 == 0:
                 ta = test_accuracy(model, test_x, test_y, test_cls, device)
                 print(f"ta: {ta:.2f}%")
@@ -77,17 +80,19 @@ def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
 
         now = dt.datetime.now()
         eta = (now - start_time) / (epoch + 1) * (num_epochs - epoch)
-        #loss = np.mean([a + b for a, b in zip(cls_losses, mlm_losses)])
+        # loss = np.mean([a + b for a, b in zip(cls_losses, mlm_losses)])
         loss = np.mean(cls_losses)
 
         print(f"eta: {eta} | loss: {loss:.4f}")
 
-        torch.save({
-            "epoch": epoch,
-            "model_state_dict": model.state_dict(),
-            "optimizer_state_dict": optimizer.state_dict(),
-            "loss": loss,
-        }, "checkpoint.pth")
-
+        torch.save(
+            {
+                "epoch": epoch,
+                "model_state_dict": model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+                "loss": loss,
+            },
+            "data/checkpoints/checkpoint.pth",
+        )
 
     return cls_losses, mlm_losses

@@ -10,11 +10,13 @@ import torch
 
 import pandas as pd
 
-def load_data(frac):
-    #train_set_large = train_set.sample(frac=1).reset_index(drop=True)
-    large_set = pd.read_csv("995,000_rows.csv").sample(frac=frac).reset_index(drop=True)
-    large_set = large_set[["content", "type", "title"]].dropna()
 
+def load_data(frac):
+    # train_set_large = train_set.sample(frac=1).reset_index(drop=True)
+    large_set = (
+        pd.read_csv("data/995,000_rows.csv").sample(frac=frac).reset_index(drop=True)
+    )
+    large_set = large_set[["content", "type", "title"]].dropna()
 
     # In[5]:
 
@@ -22,20 +24,21 @@ def load_data(frac):
     tokenizer.normalizer = NFD()
     tokenizer.pre_tokenizer = Whitespace()
 
-    vocab_size=40000
-    trainer = BpeTrainer(vocab_size=vocab_size, special_tokens=["[PAD]", "[UNK]", "[CLS]", "[SEP]", "[MASK]"])
+    vocab_size = 40000
+    trainer = BpeTrainer(
+        vocab_size=vocab_size,
+        special_tokens=["[PAD]", "[UNK]", "[CLS]", "[SEP]", "[MASK]"],
+    )
 
     tokenizer.train_from_iterator(large_set["content"], trainer=trainer)
 
-    tokenizer.save("bpe_tokenizer.json")
+    tokenizer.save("data/bpe_tokenizer.json")
 
     cls_token_id = tokenizer.token_to_id("[CLS]")
     mask_token_id = tokenizer.token_to_id("[MASK]")
     pad_token_id = tokenizer.token_to_id("[PAD]")
 
-
     # In[6]:
-
 
     label_map = {
         "fake": "fake",
@@ -52,26 +55,27 @@ def load_data(frac):
         "unknown": None,
     }
 
-
     # In[7]:
 
-
     large_set["new_labels"] = [label_map.get(n, None) for n in large_set["type"]]
-    label_counts = large_set['new_labels'].value_counts()
+    label_counts = large_set["new_labels"].value_counts()
     print(label_counts)
     min_count = label_counts.min()
-    large_set = large_set.groupby('new_labels').apply(lambda x: x.sample(min_count, random_state=42)).sample(frac=1).reset_index(drop=True)
+    large_set = (
+        large_set.groupby("new_labels")
+        .apply(lambda x: x.sample(min_count, random_state=42))
+        .sample(frac=1)
+        .reset_index(drop=True)
+    )
 
-    #large_set["content_tokens"] = fn.tokenize(large_set["content"])
+    # large_set["content_tokens"] = fn.tokenize(large_set["content"])
 
     nfake = sum(large_set["new_labels"] == "fake")
     nreliable = sum(large_set["new_labels"] == "reliable")
 
     print(nfake / (nfake + nreliable))
 
-
     # In[8]:
-
 
     def mask_random_elements(sequence, mask_probability=0.15):
         masked_sequence = sequence[:]
@@ -94,10 +98,7 @@ def load_data(frac):
     text_ids_masked = [mask_random_elements(text_id) for text_id in text_ids]
     att_masks = [[id != pad_token_id for id in ids] for ids in text_ids]
 
-
     # In[9]:
-
-
 
     labels = [1.0 if n == "fake" else -1.0 for n in large_set["new_labels"]]
 
@@ -111,7 +112,6 @@ def load_data(frac):
     train_mlm = text_ids_masked[:split_at]
     test_mlm = text_ids_masked[split_at:]
 
-
     train_x = torch.tensor(train_x)
     test_x = torch.tensor(test_x)
     train_mlm = torch.tensor(train_mlm)
@@ -122,14 +122,14 @@ def load_data(frac):
     train_m = torch.tensor(train_m)
     test_m = torch.tensor(test_m)
 
-    #batch_size = 32
+    # batch_size = 32
 
-    #train_data = TensorDataset(train_x, train_m, train_y, train_mlm)
-    #train_sampler = RandomSampler(train_data)
-    #train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=batch_size)
+    # train_data = TensorDataset(train_x, train_m, train_y, train_mlm)
+    # train_sampler = RandomSampler(train_data)
+    # train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=batch_size)
 
-    #val_data = TensorDataset(val_x, val_m, val_y)
-    #val_sampler = SequentialSampler(val_data)
-    #val_dataloader = DataLoader(val_data, sampler=val_sampler, batch_size=batch_size)
+    # val_data = TensorDataset(val_x, val_m, val_y)
+    # val_sampler = SequentialSampler(val_data)
+    # val_dataloader = DataLoader(val_data, sampler=val_sampler, batch_size=batch_size)
 
     return train_mlm, train_x, train_y, test_mlm, test_x, test_y
