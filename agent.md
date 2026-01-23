@@ -1,3 +1,29 @@
+# Project structure
+```text
+README.md
+accuracy_benchmark_results.txt
+agent.md
+experiments/
+notebooks/
+notebooks/diffusion.ipynb
+notebooks/fake_news_bert.ipynb
+notebooks/trivial_bert.ipynb
+notebooks/very_experimental.ipynb
+playlist
+pyproject.toml
+scripts/
+scripts/fake_news_bert.py
+src/
+src/tokentango/
+src/tokentango/__init__.py
+src/tokentango/bert_from_scratch.py
+src/tokentango/fake_news.py
+src/tokentango/main.py
+src/tokentango/model.py
+src/tokentango/train.py
+uv.lock
+```
+
 # General instructions
 - Git commit and push after every successful task completion
 - Don't use `git add .`, instead add all the files you have edited individually
@@ -35,3 +61,13 @@
     - test execution time again, and append to file
     - if it is slower, revert your changes and mark todo item as done
     - if it is faster, keep your changes and mark todo item as done
+
+- [ ] Clean `fake_news_bert.py` and `tokentango.train.py`
+    - remove unused imports and variables
+    - put all imports at the top of the file or cell
+    - remove excesive print statements
+
+- [ ] Add confusion matrix to `fake_news_bert.py`
+    - implement confusion matrix or use one from library
+    - print confusion matrix to console with labels for axis, columns and rows
+    - verify output of confusion matrix against result from `tokentango.train.test_accuracy`

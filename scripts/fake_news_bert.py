@@ -1,13 +1,12 @@
 import marimo
 
 __generated_with = "0.19.5"
-app = marimo.App()
+app = marimo.App(width="columns")
 
 
 @app.cell
 def _():
     import marimo as mo
-
     return (mo,)
 
 
@@ -29,7 +28,6 @@ def _():
     # '%autoreload 2' command supported automatically in marimo
 
     import tokentango
-
     return (tokentango,)
 
 
@@ -46,16 +44,7 @@ def _():
     import itertools
     import math
     import datetime as dt
-
-    return (
-        classification_report,
-        confusion_matrix,
-        itertools,
-        np,
-        plt,
-        px,
-        torch,
-    )
+    return np, torch
 
 
 @app.cell
@@ -119,7 +108,7 @@ def _(tokentango):
     # train_y = tokentango.fake_news.train_x
     # train_cls = tokentango.fake_news.train_y
     train_x, train_y, train_cls, test_x, test_y, test_cls = (
-        tokentango.fake_news.load_data(0.01)
+        tokentango.fake_news.load_data(0.02)
     )
     data_time = _time.time() - data_start
     print(f"[DATA LOADING] Completed in {data_time:.2f}s")
@@ -141,34 +130,6 @@ def _(device, test_cls, test_x, test_y, torch, train_cls, train_x, train_y):
 
 
 @app.cell
-def _(test_cls_1, test_x_1, test_y_1, train_cls_1, train_x_1, train_y_1):
-    size_in_bytes = (
-        train_x_1.element_size() * train_x_1.numel()
-        + train_y_1.element_size() * train_y_1.numel()
-        + train_cls_1.element_size() * train_cls_1.numel()
-    )
-    size_in_bytes2 = (
-        test_x_1.element_size() * test_x_1.numel()
-        + test_y_1.element_size() * test_y_1.numel()
-        + test_cls_1.element_size() * test_cls_1.numel()
-    )
-    size_in_gb = (size_in_bytes + size_in_bytes2) / 1024**3
-    print(f"Tensor size: {size_in_gb:.4f} GB")
-    return
-
-
-@app.cell
-def _(torch):
-    # Current memory usage
-    print(torch.cuda.memory_allocated() / 1024**3, "GB allocated")
-    print(torch.cuda.memory_reserved() / 1024**3, "GB reserved by caching allocator")
-
-    # Memory summary
-    print(torch.cuda.memory_summary(device=None, abbreviated=False))
-    return
-
-
-@app.cell
 def _(device, tokentango):
     print("Creating model...")
     model = tokentango.BertClassifier(300, 40000, device).to(device)
@@ -184,10 +145,10 @@ def _(
     test_x_1,
     test_y_1,
     tokentango,
+    torch,
     train_cls_1,
     train_x_1,
     train_y_1,
-    torch,
 ):
     # magic command not supported in marimo; please file an issue to add support
     # %%time
@@ -246,41 +207,10 @@ def _(device, model, np, test_cls_1, test_x_1, test_y_1, tokentango):
 
 
 @app.cell
-def _(px):
-    print("Skipping mlm_losses plot (not available when loading checkpoint)")
-    return
-
-
-@app.cell
-def _(px):
-    print("Skipping cls_losses plot (not available when loading checkpoint)")
-    return
-
-
-@app.cell
-def _(px):
-    print("Skipping test_acc plot (not available when loading checkpoint)")
-    return
-
-
-@app.cell
-def _(px):
-    print("Skipping test_acc plot (not available when loading checkpoint)")
-    return
-
-
-@app.cell
-def _(model, np, test_cls_1, train_cls_1, train_y_1):
-    correct = 0
-    for _idx in range(len(train_cls_1)):
-        _x = train_y_1[_idx : _idx + 1, :]
-        _hidden = model.hidden(_x)
-        _output = model.classify(_hidden)
-        correct = correct + int(
-            np.sign(_output.cpu().detach().item()) == np.sign(train_cls_1[_idx].cpu())
-        )
-    accuracy = correct / len(test_cls_1) * 100
-    print(f"{accuracy}%")
+def _(device, model, test_cls_1, test_x_1, test_y_1, tokentango):
+    tokentango.train.test_accuracy(
+        model, test_x_1, test_y_1, test_cls_1, device, frac=1
+    )
     return
 
 
@@ -297,90 +227,6 @@ def _(model, test_cls_1, torch, train_x_1):
             _output = model.classify(_hidden)
             outputs.append(_output)
     print(f"Generated {len(outputs)} outputs")
-    return (outputs,)
-
-
-@app.cell
-def _(classification_report, np, outputs, test_cls_1, torch):
-    print("Generating classification report...")
-    outputs_1 = torch.sign(torch.cat(outputs))
-    predicted_values = torch.round(outputs_1)
-    predicted_values = predicted_values.cpu().view(-1).numpy()
-    true_values = test_cls_1.cpu().numpy()
-    label_values = ["reliable", "fake"]
-    test_accuracy = np.sum(predicted_values == true_values) / len(true_values)
-    print("Test Accuracy:", test_accuracy)
-    print(
-        classification_report(
-            true_values, predicted_values, target_names=[str(l) for l in label_values]
-        )
-    )
-    print("Classification report complete!")
-    return label_values, predicted_values, true_values
-
-
-@app.cell
-def _(
-    confusion_matrix,
-    itertools,
-    label_values,
-    np,
-    plt,
-    predicted_values,
-    true_values,
-):
-    def plot_confusion_matrix(
-        cm, classes, normalize=False, title="Confusion matrix", cmap=plt.cm.Blues
-    ):
-        """
-        This function prints and plots the confusion matrix.
-        Normalization can be applied by setting `normalize=True`.
-        """
-        if normalize:
-            cm = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]
-            print("Normalized confusion matrix")
-        else:
-            print("Confusion matrix, without normalization")
-
-        print(cm)
-
-        plt.imshow(cm, interpolation="nearest", cmap=cmap)
-        plt.title(title)
-        plt.colorbar()
-        tick_marks = np.arange(len(classes))
-        plt.xticks(tick_marks, classes, rotation=45)
-        plt.yticks(tick_marks, classes)
-
-        fmt = ".2f" if normalize else "d"
-        thresh = cm.max() / 2.0
-        for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-            plt.text(
-                j,
-                i,
-                format(cm[i, j], fmt),
-                horizontalalignment="center",
-                color="white" if cm[i, j] > thresh else "black",
-            )
-
-        plt.tight_layout()
-        plt.ylabel("True label")
-        plt.xlabel("Predicted label")
-
-    # In[32]:
-
-    cm_test = confusion_matrix(true_values, predicted_values)
-
-    np.set_printoptions(precision=2)
-
-    # plt.figure(figsize=(6,6))
-    # plot_confusion_matrix(cm_test, classes=label_values, title='Confusion Matrix - Test Dataset')
-    plt.figure(figsize=(6, 6))
-    plot_confusion_matrix(
-        cm_test,
-        classes=label_values,
-        title="Confusion Matrix - Test Dataset",
-        normalize=True,
-    )
     return
 
 
@@ -397,6 +243,11 @@ def _(test_cls_1, train_cls_1):
     print(sum((n == -1 for n in train_cls_1)))
     print(sum((n == 1 for n in test_cls_1)))
     print(sum((n == -1 for n in test_cls_1)))
+    return
+
+
+@app.cell
+def _():
     return
 
 
