@@ -73,11 +73,11 @@ uv.lock
 - [x] Add information about training set fraction to checkpoint metadata
     - Make sure that existing checkpoints can still be loaded, even tho they don't have this field
 
- - [ ] Add checkpoint selection - headless mode
-    - add environment variable check for MODEL_CHECKPOINT_PATH
-    - implement checkpoint loading logic (train/latest/specific path)
-    - unwrap and update commented checkpoint loading code
-    - add helper function to detect and list available checkpoints
+ - [x] Add checkpoint selection - headless mode
+     - add environment variable check for MODEL_CHECKPOINT_PATH
+     - implement checkpoint loading logic (train/latest/specific path)
+     - unwrap and update commented checkpoint loading code
+     - add helper function to detect and list available checkpoints
 
  - [ ] Add checkpoint selection - web UI mode
     - search web for marimo dropdown widget documentation

@@ -17,6 +17,7 @@ def _(mo):
     # Debug Bert notebook
     - [x] trivial case, with predicting shifted tokens, instead of mlm.
     - [x] trivial case, of classifying presence of marker token, at a random position.
+    - [x] Add checkpoint selection - headless mode
     - [ ] Normalize frequency of labels across training and test samples
     """)
     return
@@ -40,7 +41,7 @@ def _():
     import os
     import time
 
-    return np, time, torch
+    return np, os, time, torch
 
 
 @app.cell
@@ -131,56 +132,107 @@ def _(device, tokentango):
 def _(
     device,
     model,
+    os,
     test_cls_1,
     test_x_1,
     test_y_1,
+    time,
     tokentango,
+    torch,
     train_cls_1,
     train_frac,
     train_x_1,
     train_y_1,
 ):
-    # print("[STAGE 1] Checking for checkpoints...")
-    # checkpoints_dir = "data/checkpoints"
-    #
-    # checkpoint_files = []
-    # if os.path.exists(checkpoints_dir):
-    #    for f in os.listdir(checkpoints_dir):
-    #        if f.startswith("checkpoint_") and f.endswith(".pth"):
-    #            filepath = os.path.join(checkpoints_dir, f)
-    #            checkpoint_files.append((filepath, os.path.getmtime(filepath)))
-    #
-    # if checkpoint_files:
-    #    checkpoint_files.sort(key=lambda x: x[1], reverse=True)
-    #    newest_checkpoint = checkpoint_files[0][0]
-    #    print(f"[STAGE 2] Found checkpoint: {newest_checkpoint}, loading...")
-    #    load_start = time.time()
-    #    checkpoint = torch.load(newest_checkpoint, weights_only=False)
-    #    model.load_state_dict(checkpoint["model_state_dict"])
-    #    loadtime = time.time() - load_start
-    #    print(
-    #        f"[STAGE 2] Loaded checkpoint from epoch {checkpoint['epoch']} in {loadtime:.2f}s"
-    #    )
-    #    if "accuracy" in checkpoint:
-    #        print(f"[STAGE 2] Checkpoint accuracy: {checkpoint['accuracy']:.2f}%")
-    #    train_frac = checkpoint.get("train_frac", 0.8)
-    #    print(f"[STAGE 2] Checkpoint training fraction: {train_frac}")
-    #    print("[STAGE 2] Skipping training - proceeding directly to validation...")
-    # else:
-    #    print(f"[STAGE 2] No checkpoint found, starting training...")
-    result = tokentango.train.train(
-        model,
-        train_x_1,
-        train_y_1,
-        train_cls_1,
-        test_x_1,
-        test_y_1,
-        test_cls_1,
-        device,
-        train_frac,
-    )
-    print("[STAGE 2] Training completed!")
-    return
+    checkpoint_mode = os.environ.get("MODEL_CHECKPOINT_PATH", "latest").lower()
+
+    if checkpoint_mode == "train":
+        print(
+            "[STAGE 1] MODEL_CHECKPOINT_PATH=train: Starting training from scratch..."
+        )
+        result = tokentango.train.train(
+            model,
+            train_x_1,
+            train_y_1,
+            train_cls_1,
+            test_x_1,
+            test_y_1,
+            test_cls_1,
+            device,
+            train_frac,
+        )
+        print("[STAGE 2] Training completed!")
+    elif checkpoint_mode == "latest":
+        print(
+            "[STAGE 1] MODEL_CHECKPOINT_PATH=latest: Looking for latest checkpoint..."
+        )
+        checkpoints_dir = "data/checkpoints"
+        checkpoint_files = tokentango.train.list_checkpoints(checkpoints_dir)
+
+        if checkpoint_files:
+            newest_checkpoint = checkpoint_files[0][0]
+            print(f"[STAGE 2] Found checkpoint: {newest_checkpoint}, loading...")
+            load_start = time.time()
+            checkpoint = tokentango.train.load_checkpoint(model, newest_checkpoint)
+            loadtime = time.time() - load_start
+            print(
+                f"[STAGE 2] Loaded checkpoint from epoch {checkpoint['epoch']} in {loadtime:.2f}s"
+            )
+            if "accuracy" in checkpoint:
+                print(f"[STAGE 2] Checkpoint accuracy: {checkpoint['accuracy']:.2f}%")
+            checkpoint_train_frac = checkpoint.get("train_frac", 0.8)
+            print(f"[STAGE 2] Checkpoint training fraction: {checkpoint_train_frac}")
+            print("[STAGE 2] Skipping training - proceeding directly to validation...")
+        else:
+            print(
+                f"[STAGE 2] No checkpoint found in {checkpoints_dir}, starting training..."
+            )
+            result = tokentango.train.train(
+                model,
+                train_x_1,
+                train_y_1,
+                train_cls_1,
+                test_x_1,
+                test_y_1,
+                test_cls_1,
+                device,
+                train_frac,
+            )
+            print("[STAGE 2] Training completed!")
+    else:
+        checkpoint_path = os.environ.get("MODEL_CHECKPOINT_PATH")
+        print(
+            f"[STAGE 1] MODEL_CHECKPOINT_PATH={checkpoint_path}: Loading specific checkpoint..."
+        )
+        if os.path.exists(checkpoint_path):
+            load_start = time.time()
+            checkpoint = tokentango.train.load_checkpoint(model, checkpoint_path)
+            loadtime = time.time() - load_start
+            print(
+                f"[STAGE 2] Loaded checkpoint from epoch {checkpoint['epoch']} in {loadtime:.2f}s"
+            )
+            if "accuracy" in checkpoint:
+                print(f"[STAGE 2] Checkpoint accuracy: {checkpoint['accuracy']:.2f}%")
+            checkpoint_train_frac = checkpoint.get("train_frac", 0.8)
+            print(f"[STAGE 2] Checkpoint training fraction: {checkpoint_train_frac}")
+            print("[STAGE 2] Skipping training - proceeding directly to validation...")
+        else:
+            print(
+                f"[STAGE 2] Checkpoint file not found: {checkpoint_path}, starting training..."
+            )
+            result = tokentango.train.train(
+                model,
+                train_x_1,
+                train_y_1,
+                train_cls_1,
+                test_x_1,
+                test_y_1,
+                test_cls_1,
+                device,
+                train_frac,
+            )
+            print("[STAGE 2] Training completed!")
+    return checkpoint_mode
 
 
 @app.cell

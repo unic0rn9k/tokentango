@@ -8,6 +8,24 @@ import sys
 from torch.cuda.amp import autocast, GradScaler
 
 
+def list_checkpoints(checkpoints_dir="data/checkpoints"):
+    if not os.path.exists(checkpoints_dir):
+        return []
+    checkpoint_files = []
+    for f in os.listdir(checkpoints_dir):
+        if f.startswith("checkpoint_") and f.endswith(".pth"):
+            filepath = os.path.join(checkpoints_dir, f)
+            checkpoint_files.append((filepath, os.path.getmtime(filepath)))
+    checkpoint_files.sort(key=lambda x: x[1], reverse=True)
+    return checkpoint_files
+
+
+def load_checkpoint(model, checkpoint_path):
+    checkpoint = torch.load(checkpoint_path, weights_only=False)
+    model.load_state_dict(checkpoint["model_state_dict"])
+    return checkpoint
+
+
 def test_accuracy(model, test_x, test_y, test_cls, device, frac=0.1):
     with torch.no_grad():
         with autocast():
