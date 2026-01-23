@@ -38,9 +38,9 @@ def _():
     import torch
     import numpy as np
     import os
-    import time as _time
+    import time
 
-    return np, torch, os, _time
+    return np, torch, os, time
 
 
 @app.cell
@@ -95,14 +95,14 @@ def _(mo):
 
 
 @app.cell
-def _(_time, tokentango):
+def _(time, tokentango):
     print("[DATA LOADING] Starting data load...")
-    data_start = _time.time()
+    data_start = time.time()
     train_x, train_y, train_cls, test_x, test_y, test_cls = (
         tokentango.fake_news.load_data(0.02)
     )
-    data_time = _time.time() - data_start
-    print(f"[DATA LOADING] Completed in {data_time:.2f}s")
+    datatime = time.time() - data_start
+    print(f"[DATA LOADING] Completed in {datatime:.2f}s")
     print(
         f"[DATA LOADING] train_x shape={train_x.shape}, test_x shape={test_x.shape if hasattr(test_x, 'shape') else 'N/A'}"
     )
@@ -134,7 +134,7 @@ def _(
     test_cls_1,
     test_x_1,
     test_y_1,
-    _time,
+    time,
     tokentango,
     torch,
     train_cls_1,
@@ -146,12 +146,12 @@ def _(
 
     if os.path.exists(checkpoint_path):
         print(f"[STAGE 2] Checkpoint found at {checkpoint_path}, loading...")
-        load_start = _time.time()
+        load_start = time.time()
         checkpoint = torch.load(checkpoint_path, weights_only=False)
         model.load_state_dict(checkpoint["model_state_dict"])
-        load_time = _time.time() - load_start
+        loadtime = time.time() - load_start
         print(
-            f"[STAGE 2] Loaded checkpoint from epoch {checkpoint['epoch']} in {load_time:.2f}s"
+            f"[STAGE 2] Loaded checkpoint from epoch {checkpoint['epoch']} in {loadtime:.2f}s"
         )
         print("[STAGE 2] Skipping training - proceeding directly to validation...")
     else:
@@ -169,7 +169,6 @@ def _(
             device,
         )
         print("[STAGE 2] Training completed!")
-    print("[STAGE 3] Ready for model validation...")
     return
 
 
@@ -202,6 +201,63 @@ def _(test_cls_1, train_cls_1):
     print(sum((n == -1 for n in train_cls_1)))
     print(sum((n == 1 for n in test_cls_1)))
     print(sum((n == -1 for n in test_cls_1)))
+    return
+
+
+@app.cell
+def _(model, np, test_cls_1, test_x_1, test_y_1, torch):
+    print("[CONFUSION MATRIX] Computing predictions...")
+    with torch.no_grad():
+        with torch.cuda.amp.autocast():
+            batch_size = 32
+            predictions = []
+            true_labels = []
+
+            for start_idx in range(0, len(test_cls_1), batch_size):
+                end_idx = min(start_idx + batch_size, len(test_cls_1))
+                x = test_y_1[start_idx:end_idx, :]
+                hidden = model.hidden(x)
+                output = model.classify(hidden)
+                output_sign = np.sign(output.cpu().detach().numpy().flatten())
+                predictions.extend(output_sign)
+                true_labels.extend(test_cls_1[start_idx:end_idx].cpu().numpy())
+
+    predictions = np.array(predictions)
+    true_labels = np.array(true_labels)
+
+    unique_labels = np.unique(np.concatenate([true_labels, predictions]))
+    confusion_matrix = np.zeros((len(unique_labels), len(unique_labels)), dtype=int)
+
+    label_to_idx = {label: idx for idx, label in enumerate(unique_labels)}
+
+    for true_label, pred_label in zip(true_labels, predictions):
+        true_idx = label_to_idx[true_label]
+        pred_idx = label_to_idx[pred_label]
+        confusion_matrix[true_idx, pred_idx] += 1
+
+    print("\n[CONFUSION MATRIX]")
+    print("                Predicted")
+    print("              -1        1")
+    header_row = (
+        "Actual   -1  "
+        + str(confusion_matrix[0, 0])
+        + "       "
+        + str(confusion_matrix[0, 1])
+    )
+    print(header_row)
+    row_two = (
+        "          1   "
+        + str(confusion_matrix[1, 0])
+        + "       "
+        + str(confusion_matrix[1, 1])
+    )
+    print(row_two)
+
+    correct = np.sum(predictions == true_labels)
+    total = len(true_labels)
+    accuracy = correct / total * 100
+    print(f"\nConfusion matrix accuracy: {accuracy:.2f}% ({correct}/{total})")
+
     return
 
 
