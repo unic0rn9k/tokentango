@@ -50,6 +50,7 @@ def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
     bar_width = 30
     total_progress_updates = 0
     is_tty = sys.stdout.isatty()
+    ta = 0
 
     for epoch in range(0, num_epochs):
         for sample, idx in enumerate(range(0, num_samples, batch_size)):
@@ -89,16 +90,13 @@ def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
                 )
                 eta_str = str(dt.timedelta(seconds=int(eta_seconds)))
 
+                pb = f"Epoch {epoch + 1}/{num_epochs} {bar} {progress:5.1f}% | ETA: {eta_str} | TA: {ta:5.2f}%"
                 if is_tty:
                     sys.stdout.write("\033[2K\033[1G")
-                    sys.stdout.write(
-                        f"Epoch {epoch + 1}/{num_epochs} {bar} {progress:5.1f}% | ETA: {eta_str}"
-                    )
+                    sys.stdout.write(pb)
                     sys.stdout.flush()
                 else:
-                    print(
-                        f"Epoch {epoch + 1}/{num_epochs} {bar} {progress:5.1f}% | ETA: {eta_str}"
-                    )
+                    print(pb)
 
             if sample % 100 == 0 and sample > 0:
                 ta = test_accuracy(model, test_x, test_y, test_cls, device)
