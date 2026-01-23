@@ -19,15 +19,18 @@ def test_accuracy(model, test_x, test_y, test_cls, device, frac=0.1):
             sample_size = max(1, int(len(test_cls) * frac))
             random_offset = random.randint(0, len(test_cls) - sample_size)
 
+            batch_size = 32
             correct = 0
-            for idx in range(random_offset, random_offset + sample_size):
-                x = test_y[idx : idx + 1, :]
+            for start_idx in range(
+                random_offset, random_offset + sample_size, batch_size
+            ):
+                end_idx = min(start_idx + batch_size, random_offset + sample_size)
+                x = test_y[start_idx:end_idx, :]
                 hidden = model.hidden(x)
                 output = model.classify(hidden)
-                correct += int(
-                    np.sign(output.cpu().detach().item())
-                    == np.sign(test_cls[idx].cpu())
-                )
+                output_sign = np.sign(output.cpu().detach().numpy().flatten())
+                true_sign = np.sign(test_cls[start_idx:end_idx].cpu().numpy())
+                correct += int(np.sum(output_sign == true_sign))
 
             return correct / sample_size * 100
 

@@ -29,7 +29,7 @@
     - rewrite the `tokentango.train.test_accuracy` method to take the fraction of validation data to testa against as an argument
     - replace other instances of code that computes validation accuracy with a call to this method
 
-- [ ] Use batching in accuracy score
+- [x] Use batching in accuracy score
     - test execution time of current implementation, and save it to a file
     - implement batching in the method for potential performance speed-up
     - test execution time again, and append to file
