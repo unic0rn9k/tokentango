@@ -141,23 +141,32 @@ def _(
     train_x_1,
     train_y_1,
 ):
-    print("[STAGE 1] Checking for checkpoint.pth...")
-    checkpoint_path = "data/checkpoints/checkpoint.pth"
+    print("[STAGE 1] Checking for checkpoints...")
+    checkpoints_dir = "data/checkpoints"
 
-    if os.path.exists(checkpoint_path):
-        print(f"[STAGE 2] Checkpoint found at {checkpoint_path}, loading...")
+    checkpoint_files = []
+    if os.path.exists(checkpoints_dir):
+        for f in os.listdir(checkpoints_dir):
+            if f.startswith("checkpoint_") and f.endswith(".pth"):
+                filepath = os.path.join(checkpoints_dir, f)
+                checkpoint_files.append((filepath, os.path.getmtime(filepath)))
+
+    if checkpoint_files:
+        checkpoint_files.sort(key=lambda x: x[1], reverse=True)
+        newest_checkpoint = checkpoint_files[0][0]
+        print(f"[STAGE 2] Found checkpoint: {newest_checkpoint}, loading...")
         load_start = time.time()
-        checkpoint = torch.load(checkpoint_path, weights_only=False)
+        checkpoint = torch.load(newest_checkpoint, weights_only=False)
         model.load_state_dict(checkpoint["model_state_dict"])
         loadtime = time.time() - load_start
         print(
             f"[STAGE 2] Loaded checkpoint from epoch {checkpoint['epoch']} in {loadtime:.2f}s"
         )
+        if "accuracy" in checkpoint:
+            print(f"[STAGE 2] Checkpoint accuracy: {checkpoint['accuracy']:.2f}%")
         print("[STAGE 2] Skipping training - proceeding directly to validation...")
     else:
-        print(
-            f"[STAGE 2] No checkpoint found at {checkpoint_path}, starting training..."
-        )
+        print(f"[STAGE 2] No checkpoint found, starting training...")
         result = tokentango.train.train(
             model,
             train_x_1,
@@ -173,25 +182,11 @@ def _(
 
 
 @app.cell
-def _(device, model, np, test_cls_1, test_x_1, test_y_1, tokentango):
-    print("Computing test accuracy (5 iterations)...")
-    acc = np.mean(
-        [
-            tokentango.train.test_accuracy(
-                model, test_x_1, test_y_1, test_cls_1, device
-            )
-            for _ in range(5)
-        ]
-    )
-    print(f"Average test accuracy: {acc:.2f}%")
-    return
-
-
-@app.cell
 def _(device, model, test_cls_1, test_x_1, test_y_1, tokentango):
-    tokentango.train.test_accuracy(
+    acc = tokentango.train.test_accuracy(
         model, test_x_1, test_y_1, test_cls_1, device, frac=1
     )
+    print(f"Average test accuracy: {acc:.2f}%")
     return
 
 

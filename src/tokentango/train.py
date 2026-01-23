@@ -3,6 +3,7 @@ from torch.optim import AdamW
 import numpy as np
 import random
 import datetime as dt
+import os
 from torch.cuda.amp import autocast, GradScaler
 
 
@@ -81,14 +82,19 @@ def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
 
         print(f"eta: {eta} | loss: {loss:.4f}")
 
+        accuracy = test_accuracies[-1] if test_accuracies else 0.0
+        timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
+        checkpoint_name = f"data/checkpoints/checkpoint_{timestamp}_{accuracy:.2f}.pth"
+
         torch.save(
             {
                 "epoch": epoch,
                 "model_state_dict": model.state_dict(),
                 "optimizer_state_dict": optimizer.state_dict(),
                 "loss": loss,
+                "accuracy": accuracy,
             },
-            "data/checkpoints/checkpoint.pth",
+            checkpoint_name,
         )
 
     return cls_losses, mlm_losses

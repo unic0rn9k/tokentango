@@ -61,3 +61,6 @@ uv.lock
     - print confusion matrix to console with labels for axis, columns and rows
     - verify output of confusion matrix against result from `tokentango.train.test_accuracy`
 
+- [x] Update training method, to not override model checkpoints
+    - Use the date, time and accuracy in the name of the checkpoint file
+    - load the newest checkpoint file, if there are any
