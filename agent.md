@@ -38,6 +38,41 @@ uv.lock
 - Don't speak or think in chinese
 - Don't kill running processes. If you get an nvidia "out of memory" error, sleep in a loop til the process exits
 
+
+# Checkpoint Selection Feature
+The checkpoint selection feature allows you to control model checkpoint loading through the `MODEL_CHECKPOINT_PATH` environment variable when running in headless mode (console execution).
+
+## train mode
+Starts training from scratch without loading any checkpoint.
+```bash
+MODEL_CHECKPOINT_PATH=train uv run scripts/fake_news_bert.py
+```
+
+## latest mode (default)
+Automatically finds and loads the most recently modified checkpoint from `data/checkpoints/` directory. If no checkpoint exists, training starts from scratch.
+```bash
+MODEL_CHECKPOINT_PATH=latest uv run scripts/fake_news_bert.py
+# or simply:
+uv run scripts/fake_news_bert.py
+```
+
+## specific path mode
+Loads a checkpoint from a specific file path. If the file doesn't exist, training starts from scratch.
+```bash
+MODEL_CHECKPOINT_PATH=data/checkpoints/checkpoint_2026-01-23_20-54-31_50.00.pth uv run scripts/fake_news_bert.py
+```
+
+
+# Implementation Details
+The feature is implemented with two helper functions in `src/tokentango/train.py`:
+- `list_checkpoints(checkpoints_dir)`: Returns a sorted list of checkpoints (newest first)
+- `load_checkpoint(model, checkpoint_path)`: Loads checkpoint and returns metadata including epoch, accuracy, and training fraction
+
+Checkpoint metadata is displayed after loading, including:
+- Epoch number
+- Checkpoint accuracy
+- Training fraction used during checkpoint creation
+
 # TODO
 - [x] add logic to `fake_news_bert.py` to make it load `checkpoint.pth`
     - if the checkpoint exists, then skip the training and go straight to model validation.
@@ -86,42 +121,3 @@ uv.lock
     - make selection work consistently between UI and env var
 
   - [ ] Verify checkpoint with >80% accuracy against 0.8 fraction of training data
-
-# Checkpoint Selection Feature
-
-The checkpoint selection feature allows you to control model checkpoint loading through the `MODEL_CHECKPOINT_PATH` environment variable when running in headless mode (console execution).
-
-## Modes
-
-### train mode
-Starts training from scratch without loading any checkpoint.
-```bash
-MODEL_CHECKPOINT_PATH=train uv run scripts/fake_news_bert.py
-```
-
-### latest mode (default)
-Automatically finds and loads the most recently modified checkpoint from `data/checkpoints/` directory. If no checkpoint exists, training starts from scratch.
-```bash
-MODEL_CHECKPOINT_PATH=latest uv run scripts/fake_news_bert.py
-# or simply:
-uv run scripts/fake_news_bert.py
-```
-
-### specific path mode
-Loads a checkpoint from a specific file path. If the file doesn't exist, training starts from scratch.
-```bash
-MODEL_CHECKPOINT_PATH=data/checkpoints/checkpoint_2026-01-23_20-54-31_50.00.pth uv run scripts/fake_news_bert.py
-```
-
-## Implementation Details
-
-The feature is implemented with two helper functions in `src/tokentango/train.py`:
-- `list_checkpoints(checkpoints_dir)`: Returns a sorted list of checkpoints (newest first)
-- `load_checkpoint(model, checkpoint_path)`: Loads checkpoint and returns metadata including epoch, accuracy, and training fraction
-
-Checkpoint metadata is displayed after loading, including:
-- Epoch number
-- Checkpoint accuracy
-- Training fraction used during checkpoint creation
-
-
