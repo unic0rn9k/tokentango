@@ -4,6 +4,7 @@ import numpy as np
 import random
 import datetime as dt
 import os
+import sys
 from torch.cuda.amp import autocast, GradScaler
 
 
@@ -44,10 +45,12 @@ def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
     start_time = dt.datetime.now()
     scaler = GradScaler()
 
+    total_batches = int(num_samples / batch_size)
+    bar_width = 30
+    total_progress_updates = 0
+
     for epoch in range(0, num_epochs):
-        for sample, idx in enumerate(
-            range(0, int(num_samples / batch_size), batch_size)
-        ):
+        for sample, idx in enumerate(range(0, num_samples, batch_size)):
             optimizer.zero_grad()
 
             x = train_x[idx : idx + batch_size, :]
@@ -64,37 +67,78 @@ def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
             scaler.step(optimizer)
             scaler.update()
 
-            # loss.backward()
-            # optimizer.step()
-
             mlm_losses.append(loss_mlm.cpu().item())
             cls_losses.append(loss_cls.cpu().item())
 
-            if sample % 100 == 0:
+            if sample % 5 == 0:
+                progress = sample / total_batches * 100
+                filled = int(bar_width * progress / 100)
+                bar = "[" + "=" * filled + ">" + " " * (bar_width - filled) + "]"
+
+                elapsed = dt.datetime.now() - start_time
+                batches_per_sec = (
+                    (sample + 1) / elapsed.total_seconds()
+                    if elapsed.total_seconds() > 0
+                    else 0
+                )
+                remaining_batches = total_batches - sample
+                eta_seconds = (
+                    remaining_batches / batches_per_sec if batches_per_sec > 0 else 0
+                )
+                eta_str = str(dt.timedelta(seconds=int(eta_seconds)))
+
+                sys.stdout.write("\033[2K\033[1G")
+                sys.stdout.write(
+                    f"Epoch {epoch + 1}/{num_epochs} {bar} {progress:5.1f}% | ETA: {eta_str}"
+                )
+                sys.stdout.flush()
+
+            if sample % 100 == 0 and sample > 0:
                 ta = test_accuracy(model, test_x, test_y, test_cls, device)
-                print(f"ta: {ta:.2f}%")
                 test_accuracies.append(ta)
 
+                now = dt.datetime.now()
+                timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
+                checkpoint_name = (
+                    f"data/checkpoints/checkpoint_{timestamp}_{ta:.2f}.pth"
+                )
+
+                torch.save(
+                    {
+                        "epoch": epoch,
+                        "model_state_dict": model.state_dict(),
+                        "optimizer_state_dict": optimizer.state_dict(),
+                        "loss": loss.cpu().item(),
+                        "accuracy": ta,
+                    },
+                    checkpoint_name,
+                )
+
+                elapsed = dt.datetime.now() - start_time
+                batches_per_sec = (
+                    (sample + 1) / elapsed.total_seconds()
+                    if elapsed.total_seconds() > 0
+                    else 0
+                )
+                remaining_batches = total_batches * (num_epochs - epoch) - sample
+                eta_seconds = (
+                    remaining_batches / batches_per_sec if batches_per_sec > 0 else 0
+                )
+                eta_str = str(dt.timedelta(seconds=int(eta_seconds)))
+
+                sys.stdout.write("\033[2K\033[1G")
+                sys.stdout.write(
+                    f"Epoch {epoch + 1}/{num_epochs} [{sample:4d}/{total_batches}] | TA: {ta:5.2f}% | Saved checkpoint | ETA: {eta_str}\n"
+                )
+                sys.stdout.flush()
+
         now = dt.datetime.now()
-        eta = (now - start_time) / (epoch + 1) * (num_epochs - epoch)
-        # loss = np.mean([a + b for a, b in zip(cls_losses, mlm_losses)])
-        loss = np.mean(cls_losses)
+        eta = (now - start_time) / (epoch + 1) * (num_epochs - epoch - 1)
+        loss = np.mean(cls_losses[-100:]) if cls_losses else 0
+        mlm_loss = np.mean(mlm_losses[-100:]) if mlm_losses else 0
 
-        print(f"eta: {eta} | loss: {loss:.4f}")
-
-        accuracy = test_accuracies[-1] if test_accuracies else 0.0
-        timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
-        checkpoint_name = f"data/checkpoints/checkpoint_{timestamp}_{accuracy:.2f}.pth"
-
-        torch.save(
-            {
-                "epoch": epoch,
-                "model_state_dict": model.state_dict(),
-                "optimizer_state_dict": optimizer.state_dict(),
-                "loss": loss,
-                "accuracy": accuracy,
-            },
-            checkpoint_name,
+        print(
+            f"Epoch {epoch + 1}/{num_epochs} completed | Loss: {loss:.4f} | MLM Loss: {mlm_loss:.4f}"
         )
 
     return cls_losses, mlm_losses

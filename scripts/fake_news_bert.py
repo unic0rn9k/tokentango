@@ -40,7 +40,7 @@ def _():
     import os
     import time
 
-    return np, torch, os, time
+    return np, time, torch
 
 
 @app.cell
@@ -99,7 +99,7 @@ def _(time, tokentango):
     print("[DATA LOADING] Starting data load...")
     data_start = time.time()
     train_x, train_y, train_cls, test_x, test_y, test_cls = (
-        tokentango.fake_news.load_data(0.02)
+        tokentango.fake_news.load_data(0.01)
     )
     datatime = time.time() - data_start
     print(f"[DATA LOADING] Completed in {datatime:.2f}s")
@@ -130,54 +130,51 @@ def _(device, tokentango):
 def _(
     device,
     model,
-    os,
     test_cls_1,
     test_x_1,
     test_y_1,
-    time,
     tokentango,
-    torch,
     train_cls_1,
     train_x_1,
     train_y_1,
 ):
-    print("[STAGE 1] Checking for checkpoints...")
-    checkpoints_dir = "data/checkpoints"
-
-    checkpoint_files = []
-    if os.path.exists(checkpoints_dir):
-        for f in os.listdir(checkpoints_dir):
-            if f.startswith("checkpoint_") and f.endswith(".pth"):
-                filepath = os.path.join(checkpoints_dir, f)
-                checkpoint_files.append((filepath, os.path.getmtime(filepath)))
-
-    if checkpoint_files:
-        checkpoint_files.sort(key=lambda x: x[1], reverse=True)
-        newest_checkpoint = checkpoint_files[0][0]
-        print(f"[STAGE 2] Found checkpoint: {newest_checkpoint}, loading...")
-        load_start = time.time()
-        checkpoint = torch.load(newest_checkpoint, weights_only=False)
-        model.load_state_dict(checkpoint["model_state_dict"])
-        loadtime = time.time() - load_start
-        print(
-            f"[STAGE 2] Loaded checkpoint from epoch {checkpoint['epoch']} in {loadtime:.2f}s"
-        )
-        if "accuracy" in checkpoint:
-            print(f"[STAGE 2] Checkpoint accuracy: {checkpoint['accuracy']:.2f}%")
-        print("[STAGE 2] Skipping training - proceeding directly to validation...")
-    else:
-        print(f"[STAGE 2] No checkpoint found, starting training...")
-        result = tokentango.train.train(
-            model,
-            train_x_1,
-            train_y_1,
-            train_cls_1,
-            test_x_1,
-            test_y_1,
-            test_cls_1,
-            device,
-        )
-        print("[STAGE 2] Training completed!")
+    # print("[STAGE 1] Checking for checkpoints...")
+    # checkpoints_dir = "data/checkpoints"
+    #
+    # checkpoint_files = []
+    # if os.path.exists(checkpoints_dir):
+    #    for f in os.listdir(checkpoints_dir):
+    #        if f.startswith("checkpoint_") and f.endswith(".pth"):
+    #            filepath = os.path.join(checkpoints_dir, f)
+    #            checkpoint_files.append((filepath, os.path.getmtime(filepath)))
+    #
+    # if checkpoint_files:
+    #    checkpoint_files.sort(key=lambda x: x[1], reverse=True)
+    #    newest_checkpoint = checkpoint_files[0][0]
+    #    print(f"[STAGE 2] Found checkpoint: {newest_checkpoint}, loading...")
+    #    load_start = time.time()
+    #    checkpoint = torch.load(newest_checkpoint, weights_only=False)
+    #    model.load_state_dict(checkpoint["model_state_dict"])
+    #    loadtime = time.time() - load_start
+    #    print(
+    #        f"[STAGE 2] Loaded checkpoint from epoch {checkpoint['epoch']} in {loadtime:.2f}s"
+    #    )
+    #    if "accuracy" in checkpoint:
+    #        print(f"[STAGE 2] Checkpoint accuracy: {checkpoint['accuracy']:.2f}%")
+    #    print("[STAGE 2] Skipping training - proceeding directly to validation...")
+    # else:
+    #    print(f"[STAGE 2] No checkpoint found, starting training...")
+    result = tokentango.train.train(
+        model,
+        train_x_1,
+        train_y_1,
+        train_cls_1,
+        test_x_1,
+        test_y_1,
+        test_cls_1,
+        device,
+    )
+    print("[STAGE 2] Training completed!")
     return
 
 
@@ -200,7 +197,7 @@ def _(test_cls_1, train_cls_1):
 
 
 @app.cell
-def _(model, np, test_cls_1, test_x_1, test_y_1, torch):
+def _(model, np, test_cls_1, test_y_1, torch):
     print("[CONFUSION MATRIX] Computing predictions...")
     with torch.no_grad():
         with torch.cuda.amp.autocast():
@@ -252,7 +249,6 @@ def _(model, np, test_cls_1, test_x_1, test_y_1, torch):
     total = len(true_labels)
     accuracy = correct / total * 100
     print(f"\nConfusion matrix accuracy: {accuracy:.2f}% ({correct}/{total})")
-
     return
 
 

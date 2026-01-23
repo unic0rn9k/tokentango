@@ -35,7 +35,8 @@ uv.lock
     - retraining a model can take multiple hours, depending on epochs etc,
     - validating a model can take 15-30 min,
     - and testing code logic with small fraction of training data should only take 5 min at most.
-
+- Don't speak or think in chinese
+- Don't kill running processes. If you get an nvidia "out of memory" error, sleep in a loop til the process exits
 
 # TODO
 - [x] add logic to `fake_news_bert.py` to make it load `checkpoint.pth`
@@ -65,9 +66,11 @@ uv.lock
     - Use the date, time and accuracy in the name of the checkpoint file
     - load the newest checkpoint file, if there are any
 
- - [ ] Update training progression (train.py)
-    - add a cool progress bar (don't add new libraries for this)
-    - move the checkpoint saving into same part that prints "ta: ...%"
+  - [x] Update training progression (train.py)
+     - add a cool progress bar (don't add new libraries for this)
+     - move the checkpoint saving into same part that prints "ta: ...%"
+
+- [ ] Add information about training set fraction to checkpoint metadata
 
  - [ ] Add checkpoint selection - headless mode
     - add environment variable check for MODEL_CHECKPOINT_PATH
