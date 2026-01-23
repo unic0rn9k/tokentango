@@ -1,5 +1,6 @@
 # General instructions
 - Git commit and push after every successful task completion
+- Don't use `git add .`, instead add all the files you have edited individually
 
 # TODO
 - [ ] add logic to `fake_news_bert.py` to make it load `checkpoint.pth`
