@@ -64,3 +64,19 @@ uv.lock
 - [x] Update training method, to not override model checkpoints
     - Use the date, time and accuracy in the name of the checkpoint file
     - load the newest checkpoint file, if there are any
+
+ - [ ] Update training progression (train.py)
+    - add a cool progress bar (don't add new libraries for this)
+    - move the checkpoint saving into same part that prints "ta: ...%"
+
+ - [ ] Add checkpoint selection - headless mode
+    - add environment variable check for MODEL_CHECKPOINT_PATH
+    - implement checkpoint loading logic (train/latest/specific path)
+    - unwrap and update commented checkpoint loading code
+    - add helper function to detect and list available checkpoints
+
+ - [ ] Add checkpoint selection - web UI mode
+    - add marimo dropdown widget with train/latest/specific options
+    - integrate widget value with training flow control
+    - make selection work consistently between UI and env var
+
