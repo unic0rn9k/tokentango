@@ -98,15 +98,16 @@ def _(mo):
 def _(time, tokentango):
     print("[DATA LOADING] Starting data load...")
     data_start = time.time()
+    train_frac = 0.01
     train_x, train_y, train_cls, test_x, test_y, test_cls = (
-        tokentango.fake_news.load_data(0.01)
+        tokentango.fake_news.load_data(train_frac)
     )
     datatime = time.time() - data_start
     print(f"[DATA LOADING] Completed in {datatime:.2f}s")
     print(
         f"[DATA LOADING] train_x shape={train_x.shape}, test_x shape={test_x.shape if hasattr(test_x, 'shape') else 'N/A'}"
     )
-    return test_cls, test_x, test_y, train_cls, train_x, train_y
+    return test_cls, test_x, test_y, train_cls, train_frac, train_x, train_y
 
 
 @app.cell
@@ -135,6 +136,7 @@ def _(
     test_y_1,
     tokentango,
     train_cls_1,
+    train_frac,
     train_x_1,
     train_y_1,
 ):
@@ -161,6 +163,8 @@ def _(
     #    )
     #    if "accuracy" in checkpoint:
     #        print(f"[STAGE 2] Checkpoint accuracy: {checkpoint['accuracy']:.2f}%")
+    #    train_frac = checkpoint.get("train_frac", 0.8)
+    #    print(f"[STAGE 2] Checkpoint training fraction: {train_frac}")
     #    print("[STAGE 2] Skipping training - proceeding directly to validation...")
     # else:
     #    print(f"[STAGE 2] No checkpoint found, starting training...")
@@ -173,6 +177,7 @@ def _(
         test_y_1,
         test_cls_1,
         device,
+        train_frac,
     )
     print("[STAGE 2] Training completed!")
     return

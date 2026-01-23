@@ -67,10 +67,10 @@ uv.lock
     - load the newest checkpoint file, if there are any
 
   - [x] Update training progression (train.py)
-     - add a cool progress bar (don't add new libraries for this)
-     - move the checkpoint saving into same part that prints "ta: ...%"
+      - add a cool progress bar (don't add new libraries for this)
+      - move the checkpoint saving into same part that prints "ta: ...%"
 
-- [ ] Add information about training set fraction to checkpoint metadata
+- [x] Add information about training set fraction to checkpoint metadata
     - Make sure that existing checkpoints can still be loaded, even tho they don't have this field
 
  - [ ] Add checkpoint selection - headless mode

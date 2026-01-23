@@ -30,8 +30,11 @@ def test_accuracy(model, test_x, test_y, test_cls, device, frac=0.1):
             return correct / sample_size * 100
 
 
-def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
+def train(
+    model, train_x, train_y, train_cls, test_x, test_y, test_cls, device, train_frac=0.8
+):
     print("[TRAIN] Starting training loop...")
+    print(f"[TRAIN] Training set fraction: {train_frac}")
     model.train()
 
     optimizer = AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)
@@ -115,6 +118,7 @@ def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
                         "optimizer_state_dict": optimizer.state_dict(),
                         "loss": loss.cpu().item(),
                         "accuracy": ta,
+                        "train_frac": train_frac,
                     },
                     checkpoint_name,
                 )
