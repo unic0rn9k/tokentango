@@ -119,7 +119,7 @@ def _(tokentango):
     # train_y = tokentango.fake_news.train_x
     # train_cls = tokentango.fake_news.train_y
     train_x, train_y, train_cls, test_x, test_y, test_cls = (
-        tokentango.fake_news.load_data(0.8)
+        tokentango.fake_news.load_data(0.01)
     )
     data_time = _time.time() - data_start
     print(f"[DATA LOADING] Completed in {data_time:.2f}s")
@@ -163,10 +163,7 @@ def _(torch):
     print(torch.cuda.memory_allocated() / 1024**3, "GB allocated")
     print(torch.cuda.memory_reserved() / 1024**3, "GB reserved by caching allocator")
 
-    # Optional: summary of tensors by type
-    from torchsummary import summary
-
-    # Or more advanced: use torch.cuda.memory_summary
+    # Memory summary
     print(torch.cuda.memory_summary(device=None, abbreviated=False))
     return
 
@@ -249,20 +246,26 @@ def _(device, model, np, test_cls_1, test_x_1, test_y_1, tokentango):
 
 
 @app.cell
-def _(mlm_losses, px):
-    px.line(mlm_losses)
+def _(px):
+    print("Skipping mlm_losses plot (not available when loading checkpoint)")
     return
 
 
 @app.cell
-def _(cls_losses, px):
-    px.line(cls_losses)
+def _(px):
+    print("Skipping cls_losses plot (not available when loading checkpoint)")
     return
 
 
 @app.cell
-def _(px, test_acc):
-    px.line(test_acc)
+def _(px):
+    print("Skipping test_acc plot (not available when loading checkpoint)")
+    return
+
+
+@app.cell
+def _(px):
+    print("Skipping test_acc plot (not available when loading checkpoint)")
     return
 
 
@@ -304,7 +307,7 @@ def _(classification_report, np, outputs, test_cls_1, torch):
     predicted_values = torch.round(outputs_1)
     predicted_values = predicted_values.cpu().view(-1).numpy()
     true_values = test_cls_1.cpu().numpy()
-    label_values = ["reliabel", "fake"]
+    label_values = ["reliable", "fake"]
     test_accuracy = np.sum(predicted_values == true_values) / len(true_values)
     print("Test Accuracy:", test_accuracy)
     print(
@@ -319,7 +322,6 @@ def _(classification_report, np, outputs, test_cls_1, torch):
 @app.cell
 def _(
     confusion_matrix,
-    get_ipython,
     itertools,
     label_values,
     np,
@@ -327,8 +329,6 @@ def _(
     predicted_values,
     true_values,
 ):
-    get_ipython().run_line_magic("matplotlib", "inline")
-
     def plot_confusion_matrix(
         cm, classes, normalize=False, title="Confusion matrix", cmap=plt.cm.Blues
     ):

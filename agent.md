@@ -3,12 +3,13 @@
 - Don't use `git add .`, instead add all the files you have edited individually
 - CRITICAL: Do NOT push changes until you have properly verified your work works correctly
 
-# Notes
 - Code execution duration: The data loading in `fake_news_bert.py` can take significant time because it loads from `995,000_rows.csv`
-- To reduce data loading time, modify the `frac` parameter in `load_data(0.8)` call in `fake_news_bert.py`:
-  - `0.1` loads ~100,000 rows
-  - `0.05` loads ~50,000 rows
-  - `0.01` loads ~10,000 rows
+- To reduce data loading time, modify the `frac` parameter in `load_data(frac)` call in `fake_news_bert.py`, where frac can be 1 for a full test, and 0.01 for something that should just test code logic, and not model performance
+- Set shell command execution timeout appropriatly depending on usecase:
+    - retraining a model can take multiple hours, depending on epochs etc,
+    - validating a model can take 15-30 min,
+    - and testing code logic with small fraction of training data should only take 5 min at most.
+
 
 # TODO
 - [x] add logic to `fake_news_bert.py` to make it load `checkpoint.pth`
