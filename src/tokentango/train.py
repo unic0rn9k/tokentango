@@ -31,6 +31,7 @@ def test_accuracy(model, test_x, test_y, test_cls, device, frac=0.1):
 
 
 def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
+    print("[TRAIN] Starting training loop...")
     model.train()
 
     optimizer = AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)
@@ -48,6 +49,7 @@ def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
     total_batches = int(num_samples / batch_size)
     bar_width = 30
     total_progress_updates = 0
+    is_tty = sys.stdout.isatty()
 
     for epoch in range(0, num_epochs):
         for sample, idx in enumerate(range(0, num_samples, batch_size)):
@@ -87,11 +89,16 @@ def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
                 )
                 eta_str = str(dt.timedelta(seconds=int(eta_seconds)))
 
-                sys.stdout.write("\033[2K\033[1G")
-                sys.stdout.write(
-                    f"Epoch {epoch + 1}/{num_epochs} {bar} {progress:5.1f}% | ETA: {eta_str}"
-                )
-                sys.stdout.flush()
+                if is_tty:
+                    sys.stdout.write("\033[2K\033[1G")
+                    sys.stdout.write(
+                        f"Epoch {epoch + 1}/{num_epochs} {bar} {progress:5.1f}% | ETA: {eta_str}"
+                    )
+                    sys.stdout.flush()
+                else:
+                    print(
+                        f"Epoch {epoch + 1}/{num_epochs} {bar} {progress:5.1f}% | ETA: {eta_str}"
+                    )
 
             if sample % 100 == 0 and sample > 0:
                 ta = test_accuracy(model, test_x, test_y, test_cls, device)
@@ -126,7 +133,8 @@ def train(model, train_x, train_y, train_cls, test_x, test_y, test_cls, device):
                 )
                 eta_str = str(dt.timedelta(seconds=int(eta_seconds)))
 
-                sys.stdout.write("\033[2K\033[1G")
+                if is_tty:
+                    sys.stdout.write("\033[2K\033[1G")
                 sys.stdout.write(
                     f"Epoch {epoch + 1}/{num_epochs} [{sample:4d}/{total_batches}] | TA: {ta:5.2f}% | Saved checkpoint | ETA: {eta_str}\n"
                 )
