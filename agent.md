@@ -62,7 +62,7 @@ uv.lock
     - if it is slower, revert your changes and mark todo item as done
     - if it is faster, keep your changes and mark todo item as done
 
-- [ ] Clean `fake_news_bert.py` and `tokentango.train.py`
+- [x] Clean `fake_news_bert.py` and `tokentango.train.py`
     - remove unused imports and variables
     - put all imports at the top of the file or cell
     - remove excesive print statements

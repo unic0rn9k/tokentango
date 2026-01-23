@@ -7,6 +7,7 @@ app = marimo.App(width="columns")
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -28,23 +29,18 @@ def _():
     # '%autoreload 2' command supported automatically in marimo
 
     import tokentango
+
     return (tokentango,)
 
 
 @app.cell
 def _():
     import torch
-    from torch.optim import Adam, AdamW
-    from torch import nn, functional as F
-    from plotly import express as px
-    import plotly.graph_objects as go
-    from sklearn.metrics import classification_report, confusion_matrix
     import numpy as np
-    from matplotlib import pyplot as plt
-    import itertools
-    import math
-    import datetime as dt
-    return np, torch
+    import os
+    import time as _time
+
+    return np, torch, os, _time
 
 
 @app.cell
@@ -99,14 +95,9 @@ def _(mo):
 
 
 @app.cell
-def _(tokentango):
+def _(_time, tokentango):
     print("[DATA LOADING] Starting data load...")
-    import time as _time
-
     data_start = _time.time()
-    # train_x = tokentango.fake_news.train_mlm
-    # train_y = tokentango.fake_news.train_x
-    # train_cls = tokentango.fake_news.train_y
     train_x, train_y, train_cls, test_x, test_y, test_cls = (
         tokentango.fake_news.load_data(0.02)
     )
@@ -131,9 +122,7 @@ def _(device, test_cls, test_x, test_y, torch, train_cls, train_x, train_y):
 
 @app.cell
 def _(device, tokentango):
-    print("Creating model...")
     model = tokentango.BertClassifier(300, 40000, device).to(device)
-    print(f"Model created and moved to device: {device}")
     return (model,)
 
 
@@ -141,25 +130,18 @@ def _(device, tokentango):
 def _(
     device,
     model,
+    os,
     test_cls_1,
     test_x_1,
     test_y_1,
+    _time,
     tokentango,
     torch,
     train_cls_1,
     train_x_1,
     train_y_1,
 ):
-    # magic command not supported in marimo; please file an issue to add support
-    # %%time
-    # 1. embedding padding_idx (from model.py) should probably be set to pad_token_id (from fake_news.py)
-    # 3. Maybe change named_parameters to parameters? (also in bert_from_scratch.py)
-    # optimizer = AdamW(model.parameters(), lr = 1e-4, eps = 1e-8)
-
     print("[STAGE 1] Checking for checkpoint.pth...")
-    import os
-    import time as _time
-
     checkpoint_path = "data/checkpoints/checkpoint.pth"
 
     if os.path.exists(checkpoint_path):
@@ -215,39 +197,11 @@ def _(device, model, test_cls_1, test_x_1, test_y_1, tokentango):
 
 
 @app.cell
-def _(model, test_cls_1, torch, train_x_1):
-    print("Generating model outputs for all test samples...")
-    outputs = []
-    num_samples = len(test_cls_1)
-    model.eval()
-    with torch.no_grad():
-        for _idx in range(0, num_samples):
-            _x = train_x_1[_idx : _idx + 1, :]
-            _hidden = model.hidden(_x)
-            _output = model.classify(_hidden)
-            outputs.append(_output)
-    print(f"Generated {len(outputs)} outputs")
-    return
-
-
-@app.cell
-def _(predicted_values):
-    print(sum(n == 1 for n in predicted_values))
-    print(sum(n == -1 for n in predicted_values))
-    return
-
-
-@app.cell
 def _(test_cls_1, train_cls_1):
     print(sum((n == 1 for n in train_cls_1)))
     print(sum((n == -1 for n in train_cls_1)))
     print(sum((n == 1 for n in test_cls_1)))
     print(sum((n == -1 for n in test_cls_1)))
-    return
-
-
-@app.cell
-def _():
     return
 
 

@@ -1,15 +1,8 @@
 import torch
-from torch.optim import Adam, AdamW
-from torch import nn, functional as F
-from plotly import express as px
-import plotly.graph_objects as go
-from sklearn.metrics import classification_report, confusion_matrix
+from torch.optim import AdamW
 import numpy as np
-from matplotlib import pyplot as plt
-import itertools
-import math
-import datetime as dt
 import random
+import datetime as dt
 from torch.cuda.amp import autocast, GradScaler
 
 
