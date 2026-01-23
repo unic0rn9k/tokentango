@@ -121,3 +121,13 @@ Checkpoint metadata is displayed after loading, including:
      - make selection work consistently between UI and env var
 
    - [x] Verify checkpoint with >80% accuracy against 0.8 fraction of training data
+
+# Checkpoint Results Summary
+Tested 5 checkpoints with >80% accuracy against 0.8 training data:
+- checkpoint_2026-01-23_19-00-38_81.51.pth: 65.52% test accuracy
+- checkpoint_2026-01-23_19-03-24_81.70.pth: 65.11% test accuracy
+- checkpoint_2026-01-23_19-06-09_82.26.pth: 62.83% test accuracy
+- checkpoint_2026-01-23_19-08-55_82.04.pth: 63.02% test accuracy
+- checkpoint_2026-01-23_19-11-40_81.16.pth: 62.55% test accuracy
+
+Results saved to `checkpoint_test_results.csv` and visualized in `checkpoint_accuracy_plot.png`.
