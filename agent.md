@@ -1,9 +1,20 @@
 # Project structure
 ```text
+.gitignore
+.python-version
 README.md
 accuracy_benchmark_results.txt
 agent.md
+checkpoint_accuracy_plot.png
+checkpoint_test_results.csv
+data/
+data/MNIST/raw/
+data/995,000_rows.csv
+data/bpe_tokenizer.json
+data/checkpoints/
+data/checkpoint.pth
 experiments/
+experiments/brute_convergence/
 notebooks/
 notebooks/diffusion.ipynb
 notebooks/fake_news_bert.ipynb
@@ -13,6 +24,8 @@ playlist
 pyproject.toml
 scripts/
 scripts/fake_news_bert.py
+scripts/plot_checkpoint_accuracy.py
+scripts/test_checkpoints.py
 src/
 src/tokentango/
 src/tokentango/__init__.py
@@ -114,13 +127,28 @@ Checkpoint metadata is displayed after loading, including:
      - unwrap and update commented checkpoint loading code
      - add helper function to detect and list available checkpoints
 
-- [x] Add checkpoint selection - web UI mode
-     - search web for marimo dropdown widget documentation
-     - add marimo dropdown widget with train/latest/specific options
-     - integrate widget value with training flow control
-     - make selection work consistently between UI and env var
+ - [x] Add checkpoint selection - web UI mode
+      - search web for marimo dropdown widget documentation
+      - add marimo dropdown widget with train/latest/specific options
+      - integrate widget value with training flow control
+      - make selection work consistently between UI and env var
 
- - [x] Fix warnings when running `fake_news_bert.py`
-     - note warnings when running training (use small frac)
-     - search for documentation on specific warnings
-     - fix warnings
+  - [x] Fix warnings when running `fake_news_bert.py`
+      - note warnings when running training (use small frac)
+      - search for documentation on specific warnings
+      - fix warnings
+
+- [x] Update Project structure section
+
+- [ ] Use data classes in train.py where appropriate
+
+- [ ] Deterministic test accuracy
+    - if the frac is 1, then the function should be deterministic
+    - create file for unit test in scripts/test_test_accuracy.py
+    - unit test should choose target list of accuracies first, then create model that always produces same output and test sets that will produce target accuracy if method is implemented correctly
+    - test unit test unit test unit test :)
+
+- [ ] Fix notebook UI
+    - checkpoint_selector, checkpoint_path_input and mode_panel are defined in the marimo notebook, but not used anywhere
+    - search for documentation on how to use marimo notebook widgets
+    - fix notebook UI
