@@ -14,7 +14,9 @@ import pandas as pd
 def load_data(frac):
     # train_set_large = train_set.sample(frac=1).reset_index(drop=True)
     large_set = (
-        pd.read_csv("data/995,000_rows.csv").sample(frac=frac).reset_index(drop=True)
+        pd.read_csv("data/995,000_rows.csv", low_memory=False)
+        .sample(frac=frac)
+        .reset_index(drop=True)
     )
     large_set = large_set[["content", "type", "title"]].dropna()
 
@@ -62,8 +64,8 @@ def load_data(frac):
     print(label_counts)
     min_count = label_counts.min()
     large_set = (
-        large_set.groupby("new_labels")
-        .apply(lambda x: x.sample(min_count, random_state=42))
+        large_set.groupby("new_labels", group_keys=False)
+        .sample(min_count, random_state=42)
         .sample(frac=1)
         .reset_index(drop=True)
     )
@@ -105,8 +107,8 @@ def load_data(frac):
     split_at = int(0.8 * len(labels))
     train_x = text_ids[:split_at]
     test_x = text_ids[split_at:]
-    train_y = labels[:split_at]
-    test_y = labels[split_at:]
+    train_y_labels = labels[:split_at]
+    test_y_labels = labels[split_at:]
     train_m = att_masks[:split_at]
     test_m = att_masks[split_at:]
     train_mlm = text_ids_masked[:split_at]
@@ -115,12 +117,16 @@ def load_data(frac):
     train_x = torch.tensor(train_x)
     test_x = torch.tensor(test_x)
     train_mlm = torch.tensor(train_mlm)
+    test_mlm = torch.tensor(test_mlm)
 
-    train_y = torch.tensor(train_y)
-    test_y = torch.tensor(test_y)
+    train_y = train_mlm.clone()
+    test_y = test_mlm.clone()
 
-    train_m = torch.tensor(train_m)
-    test_m = torch.tensor(test_m)
+    train_y_labels = torch.tensor(train_y_labels)
+    test_y_labels = torch.tensor(test_y_labels)
+
+    train_cls = train_y_labels
+    test_cls = test_y_labels
 
     # batch_size = 32
 
@@ -132,4 +138,4 @@ def load_data(frac):
     # val_sampler = SequentialSampler(val_data)
     # val_dataloader = DataLoader(val_data, sampler=val_sampler, batch_size=batch_size)
 
-    return train_mlm, train_x, train_y, test_mlm, test_x, test_y
+    return train_x, train_y, train_cls, test_x, test_y, test_cls

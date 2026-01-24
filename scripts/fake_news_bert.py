@@ -135,13 +135,13 @@ def _(time, tokentango):
 
 
 @app.cell
-def _(device, test_cls, test_x, test_y, torch, train_cls, train_x, train_y):
+def _(device, test_x, test_y, torch, train_x, train_y, train_cls, test_cls):
     train_x_1 = train_x.to(device)
     train_y_1 = train_y.to(device)
     train_cls_1 = train_cls.to(device)
-    test_x_1 = torch.tensor(test_x).to(device)
-    test_y_1 = torch.tensor(test_y).to(device)
-    test_cls_1 = torch.tensor(test_cls).to(device)
+    test_x_1 = test_x.to(device)
+    test_y_1 = test_y.to(device)
+    test_cls_1 = test_cls.to(device)
     return test_cls_1, test_x_1, test_y_1, train_cls_1, train_x_1, train_y_1
 
 
@@ -280,7 +280,7 @@ def _(test_cls_1, train_cls_1):
 def _(model, np, test_cls_1, test_y_1, torch):
     print("[CONFUSION MATRIX] Computing predictions...")
     with torch.no_grad():
-        with torch.cuda.amp.autocast():
+        with torch.amp.autocast("cuda"):
             batch_size = 32
             predictions = []
             true_labels = []

@@ -31,12 +31,12 @@ uv.lock
 
 - Code execution duration: The data loading in `fake_news_bert.py` can take significant time because it loads from `995,000_rows.csv`
 - To reduce data loading time, modify the `frac` parameter in `load_data(frac)` call in `fake_news_bert.py`, where frac can be 0.8 for a full test (almost. don't use 1 tho), and 0.01 for something that should just test code logic, and not model performance
-- Set shell command execution timeout appropriatly depending on usecase:
+- Set shell command execution timeout appropriately depending on usecase:
     - retraining a model can take multiple hours, depending on epochs etc,
     - validating a model can take 15-30 min,
     - and testing code logic with small fraction of training data should only take 5 min at most.
-- Don't speak or think in chinese
-- Don't kill running processes. If you get an nvidia "out of memory" error, sleep in a loop til the process exits
+- Don't speak or think in Chinese
+- Don't kill running processes. If you get an Nvidia "out of memory" error, sleep in a loop til the process exits
 
 
 # Checkpoint Selection Feature
@@ -114,20 +114,13 @@ Checkpoint metadata is displayed after loading, including:
      - unwrap and update commented checkpoint loading code
      - add helper function to detect and list available checkpoints
 
-  - [x] Add checkpoint selection - web UI mode
+- [x] Add checkpoint selection - web UI mode
      - search web for marimo dropdown widget documentation
      - add marimo dropdown widget with train/latest/specific options
      - integrate widget value with training flow control
      - make selection work consistently between UI and env var
 
-   - [x] Verify checkpoint with >80% accuracy against 0.8 fraction of training data
-
-# Checkpoint Results Summary
-Tested 5 checkpoints with >80% accuracy against 0.8 training data:
-- checkpoint_2026-01-23_19-00-38_81.51.pth: 65.52% test accuracy
-- checkpoint_2026-01-23_19-03-24_81.70.pth: 65.11% test accuracy
-- checkpoint_2026-01-23_19-06-09_82.26.pth: 62.83% test accuracy
-- checkpoint_2026-01-23_19-08-55_82.04.pth: 63.02% test accuracy
-- checkpoint_2026-01-23_19-11-40_81.16.pth: 62.55% test accuracy
-
-Results saved to `checkpoint_test_results.csv` and visualized in `checkpoint_accuracy_plot.png`.
+ - [x] Fix warnings when running `fake_news_bert.py`
+     - note warnings when running training (use small frac)
+     - search for documentation on specific warnings
+     - fix warnings

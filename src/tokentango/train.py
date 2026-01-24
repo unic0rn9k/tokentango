@@ -5,7 +5,7 @@ import random
 import datetime as dt
 import os
 import sys
-from torch.cuda.amp import autocast, GradScaler
+from torch.amp import autocast, GradScaler
 
 
 def list_checkpoints(checkpoints_dir="data/checkpoints"):
@@ -27,8 +27,9 @@ def load_checkpoint(model, checkpoint_path):
 
 
 def test_accuracy(model, test_x, test_y, test_cls, device, frac=0.1):
+    device_type = device.type
     with torch.no_grad():
-        with autocast():
+        with autocast(device_type=device_type):
             sample_size = max(1, int(len(test_cls) * frac))
             random_offset = random.randint(0, len(test_cls) - sample_size)
 
@@ -65,7 +66,8 @@ def train(
     num_epochs = 40
     batch_size = 32
     start_time = dt.datetime.now()
-    scaler = GradScaler()
+    device_type = device.type
+    scaler = GradScaler(device_type)
 
     total_batches = int(num_samples / batch_size)
     bar_width = 30
@@ -78,10 +80,10 @@ def train(
             optimizer.zero_grad()
 
             x = train_x[idx : idx + batch_size, :]
-            y = train_y[idx : idx + batch_size, :]
+            y = train_y[idx : idx + batch_size]
             cls_class = train_cls[idx : idx + batch_size]
 
-            with autocast():
+            with autocast(device_type=device_type):
                 hidden = model.hidden(x)
                 loss_cls = model.classify_loss(hidden, cls_class)
                 loss_mlm = model.mlm_loss(hidden, y)
