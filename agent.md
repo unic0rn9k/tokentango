@@ -5,14 +5,11 @@
 README.md
 accuracy_benchmark_results.txt
 agent.md
-checkpoint_accuracy_plot.png
 checkpoint_test_results.csv
 data/
-data/MNIST/raw/
 data/995,000_rows.csv
 data/bpe_tokenizer.json
 data/checkpoints/
-data/checkpoint.pth
 experiments/
 experiments/brute_convergence/
 notebooks/
@@ -24,7 +21,6 @@ playlist
 pyproject.toml
 scripts/
 scripts/fake_news_bert.py
-scripts/plot_checkpoint_accuracy.py
 scripts/test_checkpoints.py
 src/
 src/tokentango/
@@ -50,6 +46,7 @@ uv.lock
     - and testing code logic with small fraction of training data should only take 5 min at most.
 - Don't speak or think in Chinese
 - Don't kill running processes. If you get an Nvidia "out of memory" error, sleep in a loop til the process exits
+- Don't edit any part in agent.md, that you weren't explicitly told to. Fx don't update the formatting of unrelated todo items etc.
 
 
 # Checkpoint Selection Feature
@@ -127,16 +124,16 @@ Checkpoint metadata is displayed after loading, including:
      - unwrap and update commented checkpoint loading code
      - add helper function to detect and list available checkpoints
 
- - [x] Add checkpoint selection - web UI mode
-      - search web for marimo dropdown widget documentation
-      - add marimo dropdown widget with train/latest/specific options
-      - integrate widget value with training flow control
-      - make selection work consistently between UI and env var
+- [x] Add checkpoint selection - web UI mode
+    - search web for marimo dropdown widget documentation
+    - add marimo dropdown widget with train/latest/specific options
+    - integrate widget value with training flow control
+    - make selection work consistently between UI and env var
 
-  - [x] Fix warnings when running `fake_news_bert.py`
-      - note warnings when running training (use small frac)
-      - search for documentation on specific warnings
-      - fix warnings
+- [x] Fix warnings when running `fake_news_bert.py`
+    - note warnings when running training (use small frac)
+    - search for documentation on specific warnings
+    - fix warnings
 
 - [x] Update Project structure section
 
