@@ -66,26 +66,30 @@ def _(time, tokentango):
     print("[DATA LOADING] Starting data load...")
     data_start = time.time()
     train_frac = 0.01
-    train_x, train_y, train_cls, test_x, test_y, test_cls = (
-        tokentango.fake_news.load_data(train_frac)
-    )
+    train_data, test_data = tokentango.fake_news.load_data(train_frac)
     datatime = time.time() - data_start
     print(f"[DATA LOADING] Completed in {datatime:.2f}s")
     print(
-        f"[DATA LOADING] train_x shape={train_x.shape}, test_x shape={test_x.shape if hasattr(test_x, 'shape') else 'N/A'}"
+        f"[DATA LOADING] train_data source_tokens shape={train_data.source_tokens.shape}, test_data source_tokens shape={test_data.source_tokens.shape}"
     )
-    return test_cls, test_x, test_y, train_cls, train_frac, train_x, train_y
+    return test_data, train_data, train_frac
 
 
 @app.cell
-def _(device, test_x, test_y, torch, train_x, train_y, train_cls, test_cls):
-    train_x_1 = train_x.to(device)
-    train_y_1 = train_y.to(device)
-    train_cls_1 = train_cls.to(device)
-    test_x_1 = test_x.to(device)
-    test_y_1 = test_y.to(device)
-    test_cls_1 = test_cls.to(device)
-    return test_cls_1, test_x_1, test_y_1, train_cls_1, train_x_1, train_y_1
+def _(device, test_data, torch, train_data):
+    from tokentango.data import BertData
+
+    train_data_device = BertData(
+        train_data.source_tokens.to(device),
+        train_data.masked_tokens.to(device),
+        train_data.labels.to(device),
+    )
+    test_data_device = BertData(
+        test_data.source_tokens.to(device),
+        test_data.masked_tokens.to(device),
+        test_data.labels.to(device),
+    )
+    return test_data_device, train_data_device
 
 
 @app.cell
@@ -99,16 +103,11 @@ def _(
     device,
     model,
     os,
-    test_cls_1,
-    test_x_1,
-    test_y_1,
+    test_data_device,
     time,
     tokentango,
-    torch,
-    train_cls_1,
+    train_data_device,
     train_frac,
-    train_x_1,
-    train_y_1,
 ):
     checkpoint_mode = os.environ.get("MODEL_CHECKPOINT_PATH", "latest").lower()
 
@@ -118,12 +117,8 @@ def _(
         )
         result = tokentango.train.train(
             model,
-            train_x_1,
-            train_y_1,
-            train_cls_1,
-            test_x_1,
-            test_y_1,
-            test_cls_1,
+            train_data_device,
+            test_data_device,
             device,
             train_frac,
         )
@@ -155,12 +150,8 @@ def _(
             )
             result = tokentango.train.train(
                 model,
-                train_x_1,
-                train_y_1,
-                train_cls_1,
-                test_x_1,
-                test_y_1,
-                test_cls_1,
+                train_data_device,
+                test_data_device,
                 device,
                 train_frac,
             )
@@ -188,12 +179,8 @@ def _(
             )
             result = tokentango.train.train(
                 model,
-                train_x_1,
-                train_y_1,
-                train_cls_1,
-                test_x_1,
-                test_y_1,
-                test_cls_1,
+                train_data_device,
+                test_data_device,
                 device,
                 train_frac,
             )
@@ -202,25 +189,23 @@ def _(
 
 
 @app.cell
-def _(device, model, test_cls_1, test_x_1, test_y_1, tokentango):
-    acc = tokentango.train.test_accuracy(
-        model, test_x_1, test_y_1, test_cls_1, device, frac=1
-    )
+def _(device, model, test_data_device, tokentango):
+    acc = tokentango.train.test_accuracy(model, test_data_device, device, frac=1)
     print(f"Average test accuracy: {acc:.2f}%")
     return
 
 
 @app.cell
-def _(test_cls_1, train_cls_1):
-    print(sum((n == 1 for n in train_cls_1)))
-    print(sum((n == -1 for n in train_cls_1)))
-    print(sum((n == 1 for n in test_cls_1)))
-    print(sum((n == -1 for n in test_cls_1)))
+def _(test_data_device, train_data_device):
+    print(sum((n == 1 for n in train_data_device.labels)))
+    print(sum((n == -1 for n in train_data_device.labels)))
+    print(sum((n == 1 for n in test_data_device.labels)))
+    print(sum((n == -1 for n in test_data_device.labels)))
     return
 
 
 @app.cell
-def _(model, np, test_cls_1, test_y_1, torch):
+def _(model, np, test_data_device, torch):
     print("[CONFUSION MATRIX] Computing predictions...")
     with torch.no_grad():
         with torch.amp.autocast("cuda"):
@@ -228,14 +213,16 @@ def _(model, np, test_cls_1, test_y_1, torch):
             predictions = []
             true_labels = []
 
-            for start_idx in range(0, len(test_cls_1), batch_size):
-                end_idx = min(start_idx + batch_size, len(test_cls_1))
-                x = test_y_1[start_idx:end_idx, :]
+            for start_idx in range(0, len(test_data_device.labels), batch_size):
+                end_idx = min(start_idx + batch_size, len(test_data_device.labels))
+                x = test_data_device.masked_tokens[start_idx:end_idx, :]
                 hidden = model.hidden(x)
                 output = model.classify(hidden)
                 output_sign = np.sign(output.cpu().detach().numpy().flatten())
                 predictions.extend(output_sign)
-                true_labels.extend(test_cls_1[start_idx:end_idx].cpu().numpy())
+                true_labels.extend(
+                    test_data_device.labels[start_idx:end_idx].cpu().numpy()
+                )
 
     predictions = np.array(predictions)
     true_labels = np.array(true_labels)

@@ -6,6 +6,7 @@ import datetime as dt
 import os
 import sys
 from torch.amp import autocast, GradScaler
+from tokentango.data import BertData
 
 
 def list_checkpoints(checkpoints_dir="data/checkpoints"):
@@ -26,12 +27,12 @@ def load_checkpoint(model, checkpoint_path):
     return checkpoint
 
 
-def test_accuracy(model, test_x, test_y, test_cls, device, frac=0.1):
+def test_accuracy(model, test_data: BertData, device, frac=0.1):
     device_type = device.type
     with torch.no_grad():
         with autocast(device_type=device_type):
-            sample_size = max(1, int(len(test_cls) * frac))
-            random_offset = random.randint(0, len(test_cls) - sample_size)
+            sample_size = max(1, int(len(test_data.labels) * frac))
+            random_offset = random.randint(0, len(test_data.labels) - sample_size)
 
             batch_size = 32
             correct = 0
@@ -39,19 +40,17 @@ def test_accuracy(model, test_x, test_y, test_cls, device, frac=0.1):
                 random_offset, random_offset + sample_size, batch_size
             ):
                 end_idx = min(start_idx + batch_size, random_offset + sample_size)
-                x = test_y[start_idx:end_idx, :]
+                x = test_data.masked_tokens[start_idx:end_idx, :]
                 hidden = model.hidden(x)
                 output = model.classify(hidden)
                 output_sign = np.sign(output.cpu().detach().numpy().flatten())
-                true_sign = np.sign(test_cls[start_idx:end_idx].cpu().numpy())
+                true_sign = np.sign(test_data.labels[start_idx:end_idx].cpu().numpy())
                 correct += int(np.sum(output_sign == true_sign))
 
             return correct / sample_size * 100
 
 
-def train(
-    model, train_x, train_y, train_cls, test_x, test_y, test_cls, device, train_frac=0.8
-):
+def train(model, train_data: BertData, test_data: BertData, device, train_frac=0.8):
     print("[TRAIN] Starting training loop...")
     print(f"[TRAIN] Training set fraction: {train_frac}")
     model.train()
@@ -62,7 +61,7 @@ def train(
     cls_losses = []
     test_accuracies = []
 
-    num_samples = len(train_cls)
+    num_samples = len(train_data.labels)
     num_epochs = 40
     batch_size = 32
     start_time = dt.datetime.now()
@@ -79,14 +78,14 @@ def train(
         for sample, idx in enumerate(range(0, num_samples, batch_size)):
             optimizer.zero_grad()
 
-            x = train_x[idx : idx + batch_size, :]
-            y = train_y[idx : idx + batch_size]
-            cls_class = train_cls[idx : idx + batch_size]
+            x = train_data.source_tokens[idx : idx + batch_size, :]
+            masked_tokens = train_data.masked_tokens[idx : idx + batch_size, :]
+            cls_class = train_data.labels[idx : idx + batch_size]
 
             with autocast(device_type=device_type):
                 hidden = model.hidden(x)
                 loss_cls = model.classify_loss(hidden, cls_class)
-                loss_mlm = model.mlm_loss(hidden, y)
+                loss_mlm = model.mlm_loss(hidden, masked_tokens)
                 loss = loss_cls + loss_mlm
 
             scaler.scale(loss).backward()
@@ -122,7 +121,7 @@ def train(
                     print(pb)
 
             if sample % 100 == 0 and sample > 0:
-                ta = test_accuracy(model, test_x, test_y, test_cls, device)
+                ta = test_accuracy(model, test_data, device)
                 test_accuracies.append(ta)
 
                 now = dt.datetime.now()

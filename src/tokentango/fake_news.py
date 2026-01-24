@@ -9,6 +9,7 @@ import random
 import torch
 
 import pandas as pd
+from tokentango.data import BertData
 
 
 def load_data(frac):
@@ -106,4 +107,15 @@ def load_data(frac):
 
     split_at = int(0.8 * len(labels))
 
-    return None
+    train_source = torch.tensor(text_ids[:split_at], dtype=torch.long)
+    train_masked = torch.tensor(text_ids_masked[:split_at], dtype=torch.long)
+    train_labels = torch.tensor(labels[:split_at], dtype=torch.float32)
+
+    test_source = torch.tensor(text_ids[split_at:], dtype=torch.long)
+    test_masked = torch.tensor(text_ids_masked[split_at:], dtype=torch.long)
+    test_labels = torch.tensor(labels[split_at:], dtype=torch.float32)
+
+    train_data = BertData(train_source, train_masked, train_labels)
+    test_data = BertData(test_source, test_masked, test_labels)
+
+    return train_data, test_data

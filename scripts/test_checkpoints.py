@@ -1,5 +1,6 @@
 import torch
 import tokentango
+from tokentango.data import BertData
 import os
 import time
 from datetime import datetime
@@ -18,14 +19,20 @@ train_frac = 0.01
 
 print(f"[DATA LOADING] Starting data load with train_frac={train_frac}...")
 data_start = time.time()
-test_data = tokentango.fake_news.load_data(train_frac)
+train_data, test_data = tokentango.fake_news.load_data(train_frac)
 datatime = time.time() - data_start
 print(f"[DATA LOADING] Completed in {datatime:.2f}s")
 
-train_x = train_x.to(device)
-train_y = train_y.to(device)
-test_x = test_x.to(device)
-test_y = test_y.to(device)
+train_data = BertData(
+    train_data.source_tokens.to(device),
+    train_data.masked_tokens.to(device),
+    train_data.labels.to(device),
+)
+test_data = BertData(
+    test_data.source_tokens.to(device),
+    test_data.masked_tokens.to(device),
+    test_data.labels.to(device),
+)
 
 results = []
 
@@ -46,9 +53,7 @@ for checkpoint_path in checkpoints:
     )
 
     test_start = time.time()
-    test_acc = tokentango.train.test_accuracy(
-        model, test_masked, test_raw, test_labels, device, frac=1
-    )
+    test_acc = tokentango.train.test_accuracy(model, test_data, device, frac=1)
     testtime = time.time() - test_start
 
     results.append(
