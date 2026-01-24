@@ -10,8 +10,6 @@ import torch
 
 import pandas as pd
 
-from tokentango.data import TrainingData
-
 
 def load_data(frac):
     # train_set_large = train_set.sample(frac=1).reset_index(drop=True)
@@ -140,13 +138,4 @@ def load_data(frac):
     # val_sampler = SequentialSampler(val_data)
     # val_dataloader = DataLoader(val_data, sampler=val_sampler, batch_size=batch_size)
 
-    return TrainingData(
-        train_x=train_x,
-        train_y=train_y,
-        train_cls=train_cls,
-        test_x=test_x,
-        test_y=test_y,
-        test_cls=test_cls,
-        device=None,
-        train_frac=0.8,
-    )
+    return train_x, train_y, train_cls, test_x, test_y, test_cls

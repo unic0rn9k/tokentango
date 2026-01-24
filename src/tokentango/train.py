@@ -7,8 +7,6 @@ import os
 import sys
 from torch.amp import autocast, GradScaler
 
-from tokentango.data import CheckpointData
-
 
 def list_checkpoints(checkpoints_dir="data/checkpoints"):
     if not os.path.exists(checkpoints_dir):
@@ -25,14 +23,7 @@ def list_checkpoints(checkpoints_dir="data/checkpoints"):
 def load_checkpoint(model, checkpoint_path):
     checkpoint = torch.load(checkpoint_path, weights_only=False)
     model.load_state_dict(checkpoint["model_state_dict"])
-    return CheckpointData(
-        epoch=checkpoint.get("epoch", 0),
-        model_state_dict=checkpoint["model_state_dict"],
-        optimizer_state_dict=checkpoint.get("optimizer_state_dict", {}),
-        loss=checkpoint.get("loss", 0.0),
-        accuracy=checkpoint.get("accuracy", 0.0),
-        train_frac=checkpoint.get("train_frac", 0.8),
-    )
+    return checkpoint
 
 
 def test_accuracy(model, test_x, test_y, test_cls, device, frac=0.1):
@@ -140,23 +131,14 @@ def train(
                     f"data/checkpoints/checkpoint_{timestamp}_{ta:.2f}.pth"
                 )
 
-                checkpoint_data = CheckpointData(
-                    epoch=epoch,
-                    model_state_dict=model.state_dict(),
-                    optimizer_state_dict=optimizer.state_dict(),
-                    loss=loss.cpu().item(),
-                    accuracy=ta,
-                    train_frac=train_frac,
-                )
-
                 torch.save(
                     {
-                        "epoch": checkpoint_data.epoch,
-                        "model_state_dict": checkpoint_data.model_state_dict,
-                        "optimizer_state_dict": checkpoint_data.optimizer_state_dict,
-                        "loss": checkpoint_data.loss,
-                        "accuracy": checkpoint_data.accuracy,
-                        "train_frac": checkpoint_data.train_frac,
+                        "epoch": epoch,
+                        "model_state_dict": model.state_dict(),
+                        "optimizer_state_dict": optimizer.state_dict(),
+                        "loss": loss.cpu().item(),
+                        "accuracy": ta,
+                        "train_frac": train_frac,
                     },
                     checkpoint_name,
                 )
