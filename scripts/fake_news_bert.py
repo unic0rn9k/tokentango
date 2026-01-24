@@ -107,7 +107,7 @@ def _(mo):
 
 
 @app.cell
-def _(checkpoint_selector, checkpoint_path_input, mo):
+def _(checkpoint_path_input, checkpoint_selector, mo):
     mode_panel = mo.md(
         f"""
         **Checkpoint Selection: {checkpoint_selector.value}**
@@ -115,7 +115,7 @@ def _(checkpoint_selector, checkpoint_path_input, mo):
         {"**Checkpoint Path:** " + checkpoint_path_input.value if checkpoint_selector.value == "specific" and checkpoint_path_input.value else ""}
         """
     )
-    return (mode_panel,)
+    return
 
 
 @app.cell
@@ -123,25 +123,23 @@ def _(time, tokentango):
     print("[DATA LOADING] Starting data load...")
     data_start = time.time()
     train_frac = 0.01
-    train_x, train_y, train_cls, test_x, test_y, test_cls = (
-        tokentango.fake_news.load_data(train_frac)
-    )
+    training_data = tokentango.fake_news.load_data(train_frac)
     datatime = time.time() - data_start
     print(f"[DATA LOADING] Completed in {datatime:.2f}s")
     print(
-        f"[DATA LOADING] train_x shape={train_x.shape}, test_x shape={test_x.shape if hasattr(test_x, 'shape') else 'N/A'}"
+        f"[DATA LOADING] train_x shape={training_data.train_x.shape}, test_x shape={training_data.test_x.shape}"
     )
-    return test_cls, test_x, test_y, train_cls, train_frac, train_x, train_y
+    return training_data
 
 
 @app.cell
-def _(device, test_x, test_y, torch, train_x, train_y, train_cls, test_cls):
-    train_x_1 = train_x.to(device)
-    train_y_1 = train_y.to(device)
-    train_cls_1 = train_cls.to(device)
-    test_x_1 = test_x.to(device)
-    test_y_1 = test_y.to(device)
-    test_cls_1 = test_cls.to(device)
+def _(device, training_data):
+    train_x_1 = training_data.train_x.to(device)
+    train_y_1 = training_data.train_y.to(device)
+    train_cls_1 = training_data.train_cls.to(device)
+    test_x_1 = training_data.test_x.to(device)
+    test_y_1 = training_data.test_y.to(device)
+    test_cls_1 = training_data.test_cls.to(device)
     return test_cls_1, test_x_1, test_y_1, train_cls_1, train_x_1, train_y_1
 
 
@@ -161,11 +159,10 @@ def _(
     test_y_1,
     time,
     tokentango,
-    torch,
     train_cls_1,
-    train_frac,
     train_x_1,
     train_y_1,
+    training_data,
 ):
     checkpoint_mode = os.environ.get("MODEL_CHECKPOINT_PATH", "latest").lower()
 
@@ -182,7 +179,7 @@ def _(
             test_y_1,
             test_cls_1,
             device,
-            train_frac,
+            training_data.train_frac,
         )
         print("[STAGE 2] Training completed!")
     elif checkpoint_mode == "latest":
@@ -199,12 +196,10 @@ def _(
             checkpoint = tokentango.train.load_checkpoint(model, newest_checkpoint)
             loadtime = time.time() - load_start
             print(
-                f"[STAGE 2] Loaded checkpoint from epoch {checkpoint['epoch']} in {loadtime:.2f}s"
+                f"[STAGE 2] Loaded checkpoint from epoch {checkpoint.epoch} in {loadtime:.2f}s"
             )
-            if "accuracy" in checkpoint:
-                print(f"[STAGE 2] Checkpoint accuracy: {checkpoint['accuracy']:.2f}%")
-            checkpoint_train_frac = checkpoint.get("train_frac", 0.8)
-            print(f"[STAGE 2] Checkpoint training fraction: {checkpoint_train_frac}")
+            print(f"[STAGE 2] Checkpoint accuracy: {checkpoint.accuracy:.2f}%")
+            print(f"[STAGE 2] Checkpoint training fraction: {checkpoint.train_frac}")
             print("[STAGE 2] Skipping training - proceeding directly to validation...")
         else:
             print(
@@ -219,7 +214,7 @@ def _(
                 test_y_1,
                 test_cls_1,
                 device,
-                train_frac,
+                training_data.train_frac,
             )
             print("[STAGE 2] Training completed!")
     else:
@@ -232,12 +227,10 @@ def _(
             checkpoint = tokentango.train.load_checkpoint(model, checkpoint_path)
             loadtime = time.time() - load_start
             print(
-                f"[STAGE 2] Loaded checkpoint from epoch {checkpoint['epoch']} in {loadtime:.2f}s"
+                f"[STAGE 2] Loaded checkpoint from epoch {checkpoint.epoch} in {loadtime:.2f}s"
             )
-            if "accuracy" in checkpoint:
-                print(f"[STAGE 2] Checkpoint accuracy: {checkpoint['accuracy']:.2f}%")
-            checkpoint_train_frac = checkpoint.get("train_frac", 0.8)
-            print(f"[STAGE 2] Checkpoint training fraction: {checkpoint_train_frac}")
+            print(f"[STAGE 2] Checkpoint accuracy: {checkpoint.accuracy:.2f}%")
+            print(f"[STAGE 2] Checkpoint training fraction: {checkpoint.train_frac}")
             print("[STAGE 2] Skipping training - proceeding directly to validation...")
         else:
             print(
@@ -252,10 +245,10 @@ def _(
                 test_y_1,
                 test_cls_1,
                 device,
-                train_frac,
+                training_data.train_frac,
             )
             print("[STAGE 2] Training completed!")
-    return checkpoint_mode
+    return
 
 
 @app.cell
