@@ -6,42 +6,14 @@ app = marimo.App(width="columns")
 
 @app.cell
 def _():
-    import marimo as mo
-
-    return (mo,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    # Debug Bert notebook
-    - [x] trivial case, with predicting shifted tokens, instead of mlm.
-    - [x] trivial case, of classifying presence of marker token, at a random position.
-    - [x] Add checkpoint selection - headless mode
-    - [ ] Normalize frequency of labels across training and test samples
-    """)
-    return
-
-
-@app.cell
-def _():
-    # magic command not supported in marimo; please file an issue to add support
-    # %load_ext autoreload
-    # '%autoreload 2' command supported automatically in marimo
-
     import tokentango
-
-    return (tokentango,)
-
-
-@app.cell
-def _():
     import torch
     import numpy as np
     import os
     import time
+    import marimo as mo
 
-    return np, os, time, torch
+    return np, os, time, torch, tokentango, mo
 
 
 @app.cell
@@ -64,35 +36,6 @@ def _(torch):
 def _(torch):
     device = torch.device("cuda:0")
     return (device,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    ```py
-    # 1. Embeddings padding_idx = 0, might conflict with cls, or other tokens? (model.py)
-    # 2. xs, masks and cls classes are all made with seperate calls to train_test_split (in bert_from_scratch.py)
-    #    so maybe the cls' dont match the text
-    num_samples = 2000
-
-    xs = torch.randint(low=1, high=10, size=(num_samples,5), dtype=torch.int32)
-    xs = torch.cat([torch.zeros(num_samples, 1, dtype=torch.int), xs], dim=1).to(device)
-
-    ys = xs.clone()
-    cls_label = [float(any(n == 1 for n in xs[i,:])) for i in range(num_samples)]
-
-    split_at = int(0.2 * num_samples)
-
-    train_x = xs[:split_at, :]
-    train_y = ys[:split_at, :]
-    train_cls = cls_label[:split_at]
-
-    test_x = xs[split_at:, :]
-    test_y = ys[split_at:, :]
-    test_cls = cls_label[split_at:]
-    ```
-    """)
-    return
 
 
 @app.cell

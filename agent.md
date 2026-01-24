@@ -137,13 +137,13 @@ Checkpoint metadata is displayed after loading, including:
 
 - [x] Update Project structure section
 
-- [ ] Use data classes in train.py where appropriate
-    - Define data classes in `src/tokentango/data.py` (but first read the following files, so you know what to define)
-    - Use data classes in `src/tokentango/train.py`
-    - Use data classes in `src/tokentango/fake_news.py`
-    - Use data classes in `scripts/fake_news_bert.py`
-    - Use data classes in `scripts/test_checkpoints.py`
-    - Note that test_checkpoints might be a bit tricky, because there is actually already a bug in it regarding using the correct tensors as intended. If the bug seams obvious, you are allowed to fix it, otherwise, just make sure that test_checkpoints runs, and please add a frac parameter to this file also, so you can test the logic of this file, without needing to wait too long.
+- [x] Define BertData data class in `src/tokentango/data.py`
+
+- [ ] Update files to use BertData
+    - Use BertData in `src/tokentango/train.py`
+    - Use BertData in `src/tokentango/fake_news.py`
+    - Use BertData in `scripts/fake_news_bert.py`
+    - Use BertData in `scripts/test_checkpoints.py`
 
 - [ ] Deterministic test accuracy
     - if the frac is 1, then the function should be deterministic

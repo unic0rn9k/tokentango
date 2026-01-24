@@ -105,37 +105,5 @@ def load_data(frac):
     labels = [1.0 if n == "fake" else -1.0 for n in large_set["new_labels"]]
 
     split_at = int(0.8 * len(labels))
-    train_x = text_ids[:split_at]
-    test_x = text_ids[split_at:]
-    train_y_labels = labels[:split_at]
-    test_y_labels = labels[split_at:]
-    train_m = att_masks[:split_at]
-    test_m = att_masks[split_at:]
-    train_mlm = text_ids_masked[:split_at]
-    test_mlm = text_ids_masked[split_at:]
 
-    train_x = torch.tensor(train_x)
-    test_x = torch.tensor(test_x)
-    train_mlm = torch.tensor(train_mlm)
-    test_mlm = torch.tensor(test_mlm)
-
-    train_y = train_mlm.clone()
-    test_y = test_mlm.clone()
-
-    train_y_labels = torch.tensor(train_y_labels)
-    test_y_labels = torch.tensor(test_y_labels)
-
-    train_cls = train_y_labels
-    test_cls = test_y_labels
-
-    # batch_size = 32
-
-    # train_data = TensorDataset(train_x, train_m, train_y, train_mlm)
-    # train_sampler = RandomSampler(train_data)
-    # train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=batch_size)
-
-    # val_data = TensorDataset(val_x, val_m, val_y)
-    # val_sampler = SequentialSampler(val_data)
-    # val_dataloader = DataLoader(val_data, sampler=val_sampler, batch_size=batch_size)
-
-    return train_x, train_y, train_cls, test_x, test_y, test_cls
+    return None

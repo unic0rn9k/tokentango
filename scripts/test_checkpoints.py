@@ -14,13 +14,11 @@ checkpoints = [
 ]
 
 device = torch.device("cuda:0")
-train_frac = 0.8
+train_frac = 0.01
 
-print("[DATA LOADING] Starting data load with frac=0.8...")
+print(f"[DATA LOADING] Starting data load with train_frac={train_frac}...")
 data_start = time.time()
-train_mlm, train_x, train_y, test_mlm, test_x, test_y = tokentango.fake_news.load_data(
-    train_frac
-)
+test_data = tokentango.fake_news.load_data(train_frac)
 datatime = time.time() - data_start
 print(f"[DATA LOADING] Completed in {datatime:.2f}s")
 
@@ -49,7 +47,7 @@ for checkpoint_path in checkpoints:
 
     test_start = time.time()
     test_acc = tokentango.train.test_accuracy(
-        model, test_x, test_x, test_y, device, frac=1
+        model, test_masked, test_raw, test_labels, device, frac=1
     )
     testtime = time.time() - test_start
 
