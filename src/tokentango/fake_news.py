@@ -16,7 +16,7 @@ def load_data(frac):
     # train_set_large = train_set.sample(frac=1).reset_index(drop=True)
     large_set = (
         pd.read_csv("data/995,000_rows.csv", low_memory=False)
-        .sample(frac=frac)
+        .sample(frac=frac, random_state=42)
         .reset_index(drop=True)
     )
     large_set = large_set[["content", "type", "title"]].dropna()

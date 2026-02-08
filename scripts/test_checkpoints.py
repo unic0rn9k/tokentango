@@ -15,7 +15,7 @@ checkpoints = [
 ]
 
 device = torch.device("cuda:0")
-train_frac = 0.01
+train_frac = 0.75
 
 print(f"[DATA LOADING] Starting data load with train_frac={train_frac}...")
 data_start = time.time()

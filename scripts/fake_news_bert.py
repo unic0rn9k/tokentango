@@ -65,7 +65,7 @@ def _(checkpoint_selector, checkpoint_path_input, mo):
 def _(time, tokentango):
     print("[DATA LOADING] Starting data load...")
     data_start = time.time()
-    train_frac = 0.01
+    train_frac = 0.75
     train_data, test_data = tokentango.fake_news.load_data(train_frac)
     datatime = time.time() - data_start
     print(f"[DATA LOADING] Completed in {datatime:.2f}s")
