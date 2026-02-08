@@ -139,11 +139,18 @@ Checkpoint metadata is displayed after loading, including:
 
 - [x] Define BertData data class in `src/tokentango/data.py`
 
-- [ ] Update files to use BertData
+- [x] Update files to use BertData
     - Use BertData in `src/tokentango/train.py`
     - Use BertData in `src/tokentango/fake_news.py`
     - Use BertData in `scripts/fake_news_bert.py`
     - Use BertData in `scripts/test_checkpoints.py`
+
+- [ ] Load tokenizer if file already exists
+
+- [ ] Use float16 everywhere
+    - remve amp code
+    - ensure model is float16
+    - ensure data is cast to float16 or loaded as float16
 
 - [ ] Deterministic test accuracy
     - if the frac is 1, then the function should be deterministic
