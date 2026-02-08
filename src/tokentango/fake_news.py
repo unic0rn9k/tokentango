@@ -7,6 +7,7 @@ from tokenizers.pre_tokenizers import Whitespace
 from tokenizers.normalizers import NFD, StripAccents, Lowercase
 import random
 import torch
+import os
 
 import pandas as pd
 from tokentango.data import BertData
@@ -22,20 +23,27 @@ def load_data(frac):
     large_set = large_set[["content", "type", "title"]].dropna()
 
     # In[5]:
+    tokenizer_path = "data/bpe_tokenizer.json"
 
-    tokenizer = Tokenizer(BPE())
-    tokenizer.normalizer = NFD()
-    tokenizer.pre_tokenizer = Whitespace()
+    if os.path.exists(tokenizer_path):
+        print(f"Loading existing tokenizer from {tokenizer_path}")
+        tokenizer = Tokenizer.from_file(tokenizer_path)
+    else:
+        print(f"Tokenizer not found at {tokenizer_path}. Training new tokenizer...")
+        tokenizer = Tokenizer(BPE())
+        tokenizer.normalizer = NFD()
+        tokenizer.pre_tokenizer = Whitespace()
 
-    vocab_size = 40000
-    trainer = BpeTrainer(
-        vocab_size=vocab_size,
-        special_tokens=["[PAD]", "[UNK]", "[CLS]", "[SEP]", "[MASK]"],
-    )
+        vocab_size = 40000
+        trainer = BpeTrainer(
+            vocab_size=vocab_size,
+            special_tokens=["[PAD]", "[UNK]", "[CLS]", "[SEP]", "[MASK]"],
+        )
 
-    tokenizer.train_from_iterator(large_set["content"], trainer=trainer)
+        tokenizer.train_from_iterator(large_set["content"], trainer=trainer)
 
-    tokenizer.save("data/bpe_tokenizer.json")
+        tokenizer.save(tokenizer_path)
+        print(f"Saved new tokenizer to {tokenizer_path}")
 
     cls_token_id = tokenizer.token_to_id("[CLS]")
     mask_token_id = tokenizer.token_to_id("[MASK]")
