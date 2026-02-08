@@ -40,7 +40,8 @@ def test_accuracy(model, test_data: BertData, device, frac=0.1):
                 random_offset, random_offset + sample_size, batch_size
             ):
                 end_idx = min(start_idx + batch_size, random_offset + sample_size)
-                x = test_data.masked_tokens[start_idx:end_idx, :]
+                # x = test_data.masked_tokens[start_idx:end_idx, :]
+                x = test_data.source_tokens[start_idx:end_idx, :]
                 hidden = model.hidden(x)
                 output = model.classify(hidden)
                 output_sign = np.sign(output.cpu().detach().numpy().flatten())
@@ -62,7 +63,7 @@ def train(model, train_data: BertData, test_data: BertData, device, train_frac=0
     test_accuracies = []
 
     num_samples = len(train_data.labels)
-    num_epochs = 40
+    num_epochs = 2
     batch_size = 32
     start_time = dt.datetime.now()
     device_type = device.type
