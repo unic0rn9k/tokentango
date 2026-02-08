@@ -7,11 +7,11 @@ from datetime import datetime
 import csv
 
 checkpoints = [
-    "data/checkpoints/checkpoint_2026-01-23_19-00-38_81.51.pth",
-    "data/checkpoints/checkpoint_2026-01-23_19-03-24_81.70.pth",
-    "data/checkpoints/checkpoint_2026-01-23_19-06-09_82.26.pth",
-    "data/checkpoints/checkpoint_2026-01-23_19-08-55_82.04.pth",
-    "data/checkpoints/checkpoint_2026-01-23_19-11-40_81.16.pth",
+    "data/checkpoints/checkpoint_2026-02-08_16-24-51_60.23.pth",
+    "data/checkpoints/checkpoint_2026-02-08_16-30-57_72.29.pth",
+    "data/checkpoints/checkpoint_2026-02-08_16-39-06_80.55.pth",
+    "data/checkpoints/checkpoint_2026-02-08_16-40-07_80.92.pth",
+    "data/checkpoints/checkpoint_2026-02-08_16-41-08_80.40.pth",
 ]
 
 device = torch.device("cuda:0")
@@ -69,7 +69,7 @@ for checkpoint_path in checkpoints:
     print(f"[CHECKPOINT] Test accuracy: {test_acc:.2f}% (completed in {testtime:.2f}s)")
 
 print("\n[Saving] Writing results to CSV...")
-with open("checkpoint_test_results.csv", "w", newline="") as f:
+with open("checkpoint_test_results_rs69.csv", "w", newline="") as f:
     fieldnames = [
         "datetime",
         "checkpoint_accuracy",
@@ -82,4 +82,6 @@ with open("checkpoint_test_results.csv", "w", newline="") as f:
     for result in results:
         writer.writerow(result)
 
-print(f"[Done] Saved {len(results)} checkpoint results to checkpoint_test_results.csv")
+print(
+    f"[Done] Saved {len(results)} checkpoint results to checkpoint_test_results_rs69.csv"
+)

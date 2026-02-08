@@ -13,11 +13,11 @@ import pandas as pd
 from tokentango.data import BertData
 
 
-def load_data(frac):
+def load_data(frac, random_state=69):
     # train_set_large = train_set.sample(frac=1).reset_index(drop=True)
     large_set = (
         pd.read_csv("data/995,000_rows.csv", low_memory=False)
-        .sample(frac=frac, random_state=42)
+        .sample(frac=frac, random_state=random_state)
         .reset_index(drop=True)
     )
     large_set = large_set[["content", "type", "title"]].dropna()
@@ -74,8 +74,8 @@ def load_data(frac):
     min_count = label_counts.min()
     large_set = (
         large_set.groupby("new_labels", group_keys=False)
-        .sample(min_count, random_state=42)
-        .sample(frac=1)
+        .sample(min_count, random_state=random_state)
+        .sample(frac=1, random_state=random_state)
         .reset_index(drop=True)
     )
 

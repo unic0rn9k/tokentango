@@ -51,9 +51,20 @@ def test_accuracy(model, test_data: BertData, device, frac=0.1):
             return correct / sample_size * 100
 
 
-def train(model, train_data: BertData, test_data: BertData, device, train_frac=0.8):
+def train(
+    model,
+    train_data: BertData,
+    test_data: BertData,
+    device,
+    train_frac=0.8,
+    early_stop_threshold=80.0,
+    early_stop_iterations=3,
+):
     print("[TRAIN] Starting training loop...")
     print(f"[TRAIN] Training set fraction: {train_frac}")
+    print(
+        f"[TRAIN] Early stopping: {early_stop_iterations} iterations > {early_stop_threshold}%"
+    )
     model.train()
 
     optimizer = AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)
@@ -74,6 +85,7 @@ def train(model, train_data: BertData, test_data: BertData, device, train_frac=0
     total_progress_updates = 0
     is_tty = sys.stdout.isatty()
     ta = 0
+    high_acc_count = 0
 
     for epoch in range(0, num_epochs):
         for sample, idx in enumerate(range(0, num_samples, batch_size)):
@@ -125,6 +137,15 @@ def train(model, train_data: BertData, test_data: BertData, device, train_frac=0
                 ta = test_accuracy(model, test_data, device)
                 test_accuracies.append(ta)
 
+                # Check early stopping condition
+                if ta > early_stop_threshold:
+                    high_acc_count += 1
+                    print(
+                        f"\n[TRAIN] High accuracy: {ta:.2f}% ({high_acc_count}/{early_stop_iterations} consecutive iterations > {early_stop_threshold}%)"
+                    )
+                else:
+                    high_acc_count = 0
+
                 now = dt.datetime.now()
                 timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
                 checkpoint_name = (
@@ -161,6 +182,16 @@ def train(model, train_data: BertData, test_data: BertData, device, train_frac=0
                     f"Epoch {epoch + 1}/{num_epochs} [{sample:4d}/{total_batches}] | TA: {ta:5.2f}% | Saved checkpoint | ETA: {eta_str}\n"
                 )
                 sys.stdout.flush()
+
+                # Early stopping check
+                if high_acc_count >= early_stop_iterations:
+                    print(
+                        f"\n[TRAIN] Early stopping triggered! {high_acc_count} consecutive iterations with accuracy > {early_stop_threshold}%"
+                    )
+                    print(
+                        f"[TRAIN] Training completed at epoch {epoch + 1}, sample {sample}"
+                    )
+                    return cls_losses, mlm_losses
 
         now = dt.datetime.now()
         eta = (now - start_time) / (epoch + 1) * (num_epochs - epoch - 1)

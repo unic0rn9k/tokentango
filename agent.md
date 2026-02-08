@@ -147,11 +147,16 @@ Checkpoint metadata is displayed after loading, including:
 
 - [x] Load tokenizer if file already exists
 
-- [ ] Test bert-pretraining workflow
+- [x] Test bert-pretraining workflow
     - Check current date
     - Run `scripts/fake_news_bert.py` for training new checkpoints, stopping once training accuracy surpasses 80% for 3 iterations in a row.
     - Update checkpoints used in test_checkpoints.py to match new checkpoints (refer to current date)
     - Run `scripts/test_checkpoints.py`
+
+- [ ] Replace progress bar with tqdm
+    - uv add tqdm
+    - replace progress bar with tqdm
+    - add instructions to disable progress bar when run by agent
 
 - [ ] Use float16 everywhere
     - remve amp code

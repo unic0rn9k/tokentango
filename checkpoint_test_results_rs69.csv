@@ -1,0 +1,6 @@
+datetime,checkpoint_accuracy,test_accuracy,epoch,checkpoint_path
+2026-02-08 16:24:51,60.23,60.07369432874079,0,data/checkpoints/checkpoint_2026-02-08_16-24-51_60.23.pth
+2026-02-08 16:30:57,72.29,73.01025312399871,0,data/checkpoints/checkpoint_2026-02-08_16-30-57_72.29.pth
+2026-02-08 16:39:06,80.55,80.84588272989427,0,data/checkpoints/checkpoint_2026-02-08_16-39-06_80.55.pth
+2026-02-08 16:40:07,80.92,80.90676065363665,0,data/checkpoints/checkpoint_2026-02-08_16-40-07_80.92.pth
+2026-02-08 16:41:08,80.4,80.51425825056072,0,data/checkpoints/checkpoint_2026-02-08_16-41-08_80.40.pth
