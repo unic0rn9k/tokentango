@@ -48,6 +48,12 @@ uv.lock
 - Don't kill running processes. If you get an Nvidia "out of memory" error, sleep in a loop til the process exits
 - Don't edit any part in agent.md, that you weren't explicitly told to. Fx don't update the formatting of unrelated todo items etc.
 
+- Training and validation fractions:
+    - Use `frac=0.01` when testing code logic (should complete in ~5 min)
+    - Use `frac=0.75` for full training runs
+    - Always set `random_state` for reproducibility during experiments
+    - Run experiments with different seeds (e.g., 42, 69, 123) to verify results are consistent
+
 
 # Checkpoint Selection Feature
 The checkpoint selection feature allows you to control model checkpoint loading through the `MODEL_CHECKPOINT_PATH` environment variable when running in headless mode (console execution).
@@ -152,6 +158,45 @@ Checkpoint metadata is displayed after loading, including:
     - Run `scripts/fake_news_bert.py` for training new checkpoints, stopping once training accuracy surpasses 80% for 3 iterations in a row.
     - Update checkpoints used in test_checkpoints.py to match new checkpoints (refer to current date)
     - Run `scripts/test_checkpoints.py`
+
+- [ ] Implement TrainingConfig and Checkpoint dataclasses
+    - create TrainingConfig dataclass with fields: train_frac, batch_size, lr, optimizer_type, use_mlm, seed, device, run_name (cute unique ID, inherited when resuming), checkpoint_dir
+    - add from_env() classmethod to load from TT_ prefixed environment variables (TT_TRAIN_FRAC, TT_OPTIMIZER_TYPE, TT_USE_MLM, TT_RUN_NAME, etc.)
+    - add validate() method to check config values
+    - create Checkpoint dataclass with fields: model_state, optimizer_state, config (TrainingConfig), epoch, accuracy, timestamp, cls_losses, mlm_losses (losses accumulated since last checkpoint save)
+    - create EvaluationResult dataclass with fields: accuracy, num_samples, confusion_matrix
+    - update train(model, data, config: TrainingConfig) -> Checkpoint to save losses per iteration and return final checkpoint
+    - update test_accuracy(...) -> EvaluationResult
+    - update load_checkpoint() to return tuple[Checkpoint, model_state]
+    - update list_checkpoints() to return list[Checkpoint]
+    - ensure backward compatibility with old checkpoint format
+    - update fake_news_bert.py to use TrainingConfig.from_env() when MODEL_CHECKPOINT_PATH=train
+
+- [ ] Create checkpoint inspection script
+    - create scripts/inspect_checkpoints.py
+    - list all checkpoints with formatted display of config fields (run_name, optimizer_type, use_mlm, etc.) and metadata (epoch, accuracy, timestamp)
+    - add command line flags: --sort accuracy|timestamp, --optimizer, --use-mlm, --min-accuracy
+    - support aggregating loss histories across checkpoints for a given run_name
+
+- [ ] Experiment: test_accuracy on source vs masked tokens
+    - use existing checkpoints to avoid retraining
+    - modify test_accuracy to accept token_type parameter ('source' or 'masked')
+    - run test_accuracy with source_tokens on existing checkpoint
+    - run test_accuracy with masked_tokens on same checkpoint
+    - compare results
+
+- [ ] Experiment: MLM objective ablation study
+    - check existing checkpoints for train_frac used and presence of use_mlm in metadata
+    - if insufficient checkpoints exist, train with use_mlm=True and save checkpoint with metadata
+    - train with use_mlm=False and save checkpoint with metadata
+    - compare test_accuracy between checkpoints
+
+- [ ] Experiment: optimizer comparison (Adam, AdamW, SGD)
+    - check existing checkpoints for optimizer_type in metadata
+    - if insufficient checkpoints exist, train with Adam optimizer and save checkpoint
+    - train with AdamW optimizer and save checkpoint
+    - train with SGD optimizer and save checkpoint
+    - compare test_accuracy and convergence speed across all three
 
 - [ ] Replace progress bar with tqdm
     - uv add tqdm
