@@ -54,6 +54,18 @@ uv.lock
     - Always set `random_state` for reproducibility during experiments
     - Run experiments with different seeds (e.g., 42, 69, 123) to verify results are consistent
 
+- Environment Variables for Training Configuration (all prefixed with TT_):
+    - `TT_TRAIN_FRAC`: Fraction of data to use for training (e.g., 0.01 for testing, 0.75 for full training)
+    - `TT_BATCH_SIZE`: Batch size for training (default: 32)
+    - `TT_LR`: Learning rate (default: 1e-4)
+    - `TT_OPTIMIZER_TYPE`: Optimizer to use - "adam", "adamw", or "sgd" (default: adamw)
+    - `TT_USE_MLM`: Whether to use MLM objective - "true" or "false" (default: true)
+    - `TT_SEED`: Random seed for reproducibility (default: 42)
+    - `TT_DEVICE`: Device to use - "cuda:0", "cpu", etc. (default: cuda:0)
+    - `TT_RUN_NAME`: Custom run name (if not set, a cute random name will be generated)
+    - `TT_CHECKPOINT_DIR`: Directory to save checkpoints (default: data/checkpoints)
+    - Example: `TT_TRAIN_FRAC=0.01 TT_OPTIMIZER_TYPE=adamw TT_USE_MLM=true TT_SEED=42 uv run scripts/fake_news_bert.py`
+
 
 # Checkpoint Selection Feature
 The checkpoint selection feature allows you to control model checkpoint loading through the `MODEL_CHECKPOINT_PATH` environment variable when running in headless mode (console execution).
