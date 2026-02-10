@@ -172,7 +172,7 @@ Checkpoint metadata is displayed after loading, including:
     - ensure backward compatibility with old checkpoint format
     - update fake_news_bert.py to use TrainingConfig.from_env() when MODEL_CHECKPOINT_PATH=train
 
-- [ ] Create checkpoint inspection script
+- [x] Create checkpoint inspection script
     - create scripts/inspect_checkpoints.py
     - list all checkpoints with formatted display of config fields (run_name, optimizer_type, use_mlm, etc.) and metadata (epoch, accuracy, timestamp)
     - add command line flags: --sort accuracy|timestamp, --optimizer, --use-mlm, --min-accuracy
