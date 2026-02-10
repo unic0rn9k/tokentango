@@ -72,6 +72,7 @@ class Checkpoint:
     timestamp: str
     cls_losses: List[float] = field(default_factory=list)
     mlm_losses: List[float] = field(default_factory=list)
+    checkpoint_path: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert checkpoint to dictionary for saving."""

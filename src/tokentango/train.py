@@ -9,6 +9,7 @@ from torch.amp.autocast_mode import autocast
 from torch.amp.grad_scaler import GradScaler
 from tokentango.data import BertData
 from tokentango.config import TrainingConfig, Checkpoint, EvaluationResult
+from typing import Optional
 import uuid
 import random as rand
 
@@ -55,7 +56,8 @@ def list_checkpoints(checkpoints_dir="data/checkpoints") -> list:
         if f.startswith("checkpoint_") and f.endswith(".pth"):
             filepath = os.path.join(checkpoints_dir, f)
             try:
-                data = torch.load(filepath, weights_only=False)
+                # Use map_location to handle checkpoints from different devices
+                data = torch.load(filepath, weights_only=False, map_location="cpu")
                 checkpoint = Checkpoint.from_dict(data)
                 checkpoint.checkpoint_path = filepath  # Add path for reference
                 checkpoints.append(checkpoint)
@@ -67,9 +69,10 @@ def list_checkpoints(checkpoints_dir="data/checkpoints") -> list:
     return checkpoints
 
 
-def load_checkpoint(model, checkpoint_path) -> tuple:
-    """Load checkpoint and return (Checkpoint object, model state)."""
-    data = torch.load(checkpoint_path, weights_only=False)
+def load_checkpoint(model, checkpoint_path) -> Checkpoint:
+    """Load checkpoint and return Checkpoint object (model state already loaded into model)."""
+    # Use map_location to handle checkpoints from different devices
+    data = torch.load(checkpoint_path, weights_only=False, map_location="cpu")
     checkpoint = Checkpoint.from_dict(data)
     checkpoint.checkpoint_path = checkpoint_path
     model.load_state_dict(checkpoint.model_state)
@@ -138,7 +141,7 @@ def train(
     model,
     train_data: BertData,
     test_data: BertData,
-    config: TrainingConfig = None,
+    config: Optional[TrainingConfig] = None,
 ) -> Checkpoint:
     """Train model with given config and return final Checkpoint."""
     if config is None:
@@ -170,6 +173,8 @@ def train(
         optimizer = AdamW(model.parameters(), lr=config.lr, weight_decay=0.01)
     elif config.optimizer_type == "sgd":
         optimizer = SGD(model.parameters(), lr=config.lr, momentum=0.9)
+    else:
+        raise ValueError(f"Unknown optimizer type: {config.optimizer_type}")
 
     mlm_losses = []
     cls_losses = []
@@ -317,5 +322,26 @@ def train(
         print(
             f"Epoch {epoch + 1}/{num_epochs} completed | Loss: {loss:.4f} | MLM Loss: {mlm_loss:.4f}"
         )
+
+    # If no checkpoints were saved during training, create one at the end
+    if final_checkpoint is None:
+        print(
+            "[TRAIN] No checkpoints saved during training, creating final checkpoint..."
+        )
+        now = dt.datetime.now()
+        timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
+        checkpoint_name = f"{config.checkpoint_dir}/checkpoint_{config.run_name}_{timestamp}_final.pth"
+
+        final_checkpoint = Checkpoint(
+            model_state=model.state_dict(),
+            optimizer_state=optimizer.state_dict(),
+            config=config,
+            epoch=num_epochs - 1,
+            accuracy=0.0,
+            timestamp=timestamp,
+            cls_losses=cls_losses.copy(),
+            mlm_losses=mlm_losses.copy(),
+        )
+        save_checkpoint(final_checkpoint, checkpoint_name)
 
     return final_checkpoint

@@ -159,7 +159,7 @@ Checkpoint metadata is displayed after loading, including:
     - Update checkpoints used in test_checkpoints.py to match new checkpoints (refer to current date)
     - Run `scripts/test_checkpoints.py`
 
-- [ ] Implement TrainingConfig and Checkpoint dataclasses
+- [x] Implement TrainingConfig and Checkpoint dataclasses
     - create TrainingConfig dataclass with fields: train_frac, batch_size, lr, optimizer_type, use_mlm, seed, device, run_name (cute unique ID, inherited when resuming), checkpoint_dir
     - add from_env() classmethod to load from TT_ prefixed environment variables (TT_TRAIN_FRAC, TT_OPTIMIZER_TYPE, TT_USE_MLM, TT_RUN_NAME, etc.)
     - add validate() method to check config values
