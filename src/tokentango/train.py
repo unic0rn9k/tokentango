@@ -1,34 +1,93 @@
 import torch
-from torch.optim import AdamW
+from torch.optim import Adam, AdamW, SGD
 import numpy as np
 import random
 import datetime as dt
 import os
 import sys
-from torch.amp import autocast, GradScaler
+from torch.amp.autocast_mode import autocast
+from torch.amp.grad_scaler import GradScaler
 from tokentango.data import BertData
+from tokentango.config import TrainingConfig, Checkpoint, EvaluationResult
+import uuid
+import random as rand
 
 
-def list_checkpoints(checkpoints_dir="data/checkpoints"):
+# Cute name generator for run names
+ADJECTIVES = [
+    "happy",
+    "sleepy",
+    "grumpy",
+    "sneezy",
+    "dopey",
+    "bashful",
+    "doc",
+    "merry",
+    "jolly",
+    "silly",
+]
+NOUNS = [
+    "panda",
+    "koala",
+    "otter",
+    "penguin",
+    "llama",
+    "alpaca",
+    "capybara",
+    "quokka",
+    "narwhal",
+    "axolotl",
+]
+
+
+def generate_run_name() -> str:
+    """Generate a cute unique run name."""
+    return f"{rand.choice(ADJECTIVES)}-{rand.choice(NOUNS)}-{uuid.uuid4().hex[:6]}"
+
+
+def list_checkpoints(checkpoints_dir="data/checkpoints") -> list:
+    """List all checkpoints in directory, returning list of Checkpoint objects."""
     if not os.path.exists(checkpoints_dir):
         return []
-    checkpoint_files = []
+
+    checkpoints = []
     for f in os.listdir(checkpoints_dir):
         if f.startswith("checkpoint_") and f.endswith(".pth"):
             filepath = os.path.join(checkpoints_dir, f)
-            checkpoint_files.append((filepath, os.path.getmtime(filepath)))
-    checkpoint_files.sort(key=lambda x: x[1], reverse=True)
-    return checkpoint_files
+            try:
+                data = torch.load(filepath, weights_only=False)
+                checkpoint = Checkpoint.from_dict(data)
+                checkpoint.checkpoint_path = filepath  # Add path for reference
+                checkpoints.append(checkpoint)
+            except Exception as e:
+                print(f"Warning: Could not load checkpoint {filepath}: {e}")
+
+    # Sort by timestamp (newest first)
+    checkpoints.sort(key=lambda x: x.timestamp, reverse=True)
+    return checkpoints
 
 
-def load_checkpoint(model, checkpoint_path):
-    checkpoint = torch.load(checkpoint_path, weights_only=False)
-    model.load_state_dict(checkpoint["model_state_dict"])
+def load_checkpoint(model, checkpoint_path) -> tuple:
+    """Load checkpoint and return (Checkpoint object, model state)."""
+    data = torch.load(checkpoint_path, weights_only=False)
+    checkpoint = Checkpoint.from_dict(data)
+    checkpoint.checkpoint_path = checkpoint_path
+    model.load_state_dict(checkpoint.model_state)
     return checkpoint
 
 
-def test_accuracy(model, test_data: BertData, device, frac=0.1):
+def save_checkpoint(checkpoint: Checkpoint, filepath: str) -> str:
+    """Save checkpoint to file and return path."""
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    torch.save(checkpoint.to_dict(), filepath)
+    return filepath
+
+
+def test_accuracy(model, test_data: BertData, device, frac=0.1) -> EvaluationResult:
+    """Test model accuracy and return EvaluationResult."""
     device_type = device.type
+    model.eval()
+
     with torch.no_grad():
         with autocast(device_type=device_type):
             sample_size = max(1, int(len(test_data.labels) * frac))
@@ -36,38 +95,81 @@ def test_accuracy(model, test_data: BertData, device, frac=0.1):
 
             batch_size = 32
             correct = 0
+            all_predictions = []
+            all_labels = []
+
             for start_idx in range(
                 random_offset, random_offset + sample_size, batch_size
             ):
                 end_idx = min(start_idx + batch_size, random_offset + sample_size)
-                # x = test_data.masked_tokens[start_idx:end_idx, :]
                 x = test_data.source_tokens[start_idx:end_idx, :]
                 hidden = model.hidden(x)
                 output = model.classify(hidden)
                 output_sign = np.sign(output.cpu().detach().numpy().flatten())
                 true_sign = np.sign(test_data.labels[start_idx:end_idx].cpu().numpy())
                 correct += int(np.sum(output_sign == true_sign))
+                all_predictions.extend(output_sign)
+                all_labels.extend(true_sign)
 
-            return correct / sample_size * 100
+            accuracy = correct / sample_size * 100
+
+            # Build confusion matrix
+            tp = sum(
+                1 for p, t in zip(all_predictions, all_labels) if p == 1 and t == 1
+            )
+            tn = sum(
+                1 for p, t in zip(all_predictions, all_labels) if p == -1 and t == -1
+            )
+            fp = sum(
+                1 for p, t in zip(all_predictions, all_labels) if p == 1 and t == -1
+            )
+            fn = sum(
+                1 for p, t in zip(all_predictions, all_labels) if p == -1 and t == 1
+            )
+            confusion_matrix = np.array([[tn, fp], [fn, tp]])
+
+    model.train()
+    return EvaluationResult(
+        accuracy=accuracy, num_samples=sample_size, confusion_matrix=confusion_matrix
+    )
 
 
 def train(
     model,
     train_data: BertData,
     test_data: BertData,
-    device,
-    train_frac=0.8,
-    early_stop_threshold=80.0,
-    early_stop_iterations=3,
-):
-    print("[TRAIN] Starting training loop...")
-    print(f"[TRAIN] Training set fraction: {train_frac}")
-    print(
-        f"[TRAIN] Early stopping: {early_stop_iterations} iterations > {early_stop_threshold}%"
-    )
+    config: TrainingConfig = None,
+) -> Checkpoint:
+    """Train model with given config and return final Checkpoint."""
+    if config is None:
+        config = TrainingConfig()
+
+    config.validate()
+
+    # Set random seed
+    random.seed(config.seed)
+    np.random.seed(config.seed)
+    torch.manual_seed(config.seed)
+
+    # Generate run name if not provided
+    if config.run_name is None:
+        config.run_name = generate_run_name()
+
+    device = torch.device(config.device)
+    model = model.to(device)
     model.train()
 
-    optimizer = AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)
+    print(f"[TRAIN] Starting training run: {config.run_name}")
+    print(f"[TRAIN] Training set fraction: {config.train_frac}")
+    print(f"[TRAIN] Optimizer: {config.optimizer_type}, MLM: {config.use_mlm}")
+
+    # Create optimizer
+    if config.optimizer_type == "adam":
+        optimizer = Adam(model.parameters(), lr=config.lr)
+    elif config.optimizer_type == "adamw":
+        optimizer = AdamW(model.parameters(), lr=config.lr, weight_decay=0.01)
+    elif config.optimizer_type == "sgd":
+        optimizer = SGD(model.parameters(), lr=config.lr, momentum=0.9)
 
     mlm_losses = []
     cls_losses = []
@@ -75,17 +177,20 @@ def train(
 
     num_samples = len(train_data.labels)
     num_epochs = 2
-    batch_size = 32
+    batch_size = config.batch_size
     start_time = dt.datetime.now()
     device_type = device.type
     scaler = GradScaler(device_type)
 
     total_batches = int(num_samples / batch_size)
     bar_width = 30
-    total_progress_updates = 0
     is_tty = sys.stdout.isatty()
     ta = 0
     high_acc_count = 0
+    early_stop_threshold = 80.0
+    early_stop_iterations = 3
+
+    final_checkpoint = None
 
     for epoch in range(0, num_epochs):
         for sample, idx in enumerate(range(0, num_samples, batch_size)):
@@ -98,8 +203,13 @@ def train(
             with autocast(device_type=device_type):
                 hidden = model.hidden(x)
                 loss_cls = model.classify_loss(hidden, cls_class)
-                loss_mlm = model.mlm_loss(hidden, masked_tokens)
-                loss = loss_cls + loss_mlm
+
+                if config.use_mlm:
+                    loss_mlm = model.mlm_loss(hidden, masked_tokens)
+                    loss = loss_cls + loss_mlm
+                else:
+                    loss_mlm = torch.tensor(0.0)
+                    loss = loss_cls
 
             scaler.scale(loss).backward()
             scaler.step(optimizer)
@@ -134,7 +244,8 @@ def train(
                     print(pb)
 
             if sample % 100 == 0 and sample > 0:
-                ta = test_accuracy(model, test_data, device)
+                result = test_accuracy(model, test_data, device)
+                ta = result.accuracy
                 test_accuracies.append(ta)
 
                 # Check early stopping condition
@@ -148,21 +259,22 @@ def train(
 
                 now = dt.datetime.now()
                 timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
-                checkpoint_name = (
-                    f"data/checkpoints/checkpoint_{timestamp}_{ta:.2f}.pth"
+                checkpoint_name = f"{config.checkpoint_dir}/checkpoint_{config.run_name}_{timestamp}_{ta:.2f}.pth"
+
+                # Create checkpoint with losses since last save
+                checkpoint = Checkpoint(
+                    model_state=model.state_dict(),
+                    optimizer_state=optimizer.state_dict(),
+                    config=config,
+                    epoch=epoch,
+                    accuracy=ta,
+                    timestamp=timestamp,
+                    cls_losses=cls_losses.copy(),
+                    mlm_losses=mlm_losses.copy(),
                 )
 
-                torch.save(
-                    {
-                        "epoch": epoch,
-                        "model_state_dict": model.state_dict(),
-                        "optimizer_state_dict": optimizer.state_dict(),
-                        "loss": loss.cpu().item(),
-                        "accuracy": ta,
-                        "train_frac": train_frac,
-                    },
-                    checkpoint_name,
-                )
+                save_checkpoint(checkpoint, checkpoint_name)
+                final_checkpoint = checkpoint
 
                 elapsed = dt.datetime.now() - start_time
                 batches_per_sec = (
@@ -183,6 +295,10 @@ def train(
                 )
                 sys.stdout.flush()
 
+                # Clear accumulated losses after saving
+                cls_losses = []
+                mlm_losses = []
+
                 # Early stopping check
                 if high_acc_count >= early_stop_iterations:
                     print(
@@ -191,7 +307,7 @@ def train(
                     print(
                         f"[TRAIN] Training completed at epoch {epoch + 1}, sample {sample}"
                     )
-                    return cls_losses, mlm_losses
+                    return final_checkpoint
 
         now = dt.datetime.now()
         eta = (now - start_time) / (epoch + 1) * (num_epochs - epoch - 1)
@@ -202,4 +318,4 @@ def train(
             f"Epoch {epoch + 1}/{num_epochs} completed | Loss: {loss:.4f} | MLM Loss: {mlm_loss:.4f}"
         )
 
-    return cls_losses, mlm_losses
+    return final_checkpoint

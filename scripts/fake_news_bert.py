@@ -109,53 +109,57 @@ def _(
     train_data_device,
     train_frac,
 ):
+    from tokentango.config import TrainingConfig
+
     checkpoint_mode = os.environ.get("MODEL_CHECKPOINT_PATH", "latest").lower()
 
     if checkpoint_mode == "train":
         print(
             "[STAGE 1] MODEL_CHECKPOINT_PATH=train: Starting training from scratch..."
         )
+        config = TrainingConfig.from_env()
+        config.train_frac = train_frac
         result = tokentango.train.train(
             model,
             train_data_device,
             test_data_device,
-            device,
-            train_frac,
+            config,
         )
-        print("[STAGE 2] Training completed!")
+        print(f"[STAGE 2] Training completed! Run: {result.config.run_name}")
     elif checkpoint_mode == "latest":
         print(
             "[STAGE 1] MODEL_CHECKPOINT_PATH=latest: Looking for latest checkpoint..."
         )
         checkpoints_dir = "data/checkpoints"
-        checkpoint_files = tokentango.train.list_checkpoints(checkpoints_dir)
+        checkpoints = tokentango.train.list_checkpoints(checkpoints_dir)
 
-        if checkpoint_files:
-            newest_checkpoint = checkpoint_files[0][0]
-            print(f"[STAGE 2] Found checkpoint: {newest_checkpoint}, loading...")
+        if checkpoints:
+            newest_checkpoint = checkpoints[0]
+            checkpoint_path = newest_checkpoint.checkpoint_path
+            print(f"[STAGE 2] Found checkpoint: {checkpoint_path}, loading...")
             load_start = time.time()
-            checkpoint = tokentango.train.load_checkpoint(model, newest_checkpoint)
+            checkpoint = tokentango.train.load_checkpoint(model, checkpoint_path)
             loadtime = time.time() - load_start
             print(
-                f"[STAGE 2] Loaded checkpoint from epoch {checkpoint['epoch']} in {loadtime:.2f}s"
+                f"[STAGE 2] Loaded checkpoint from epoch {checkpoint.epoch} in {loadtime:.2f}s"
             )
-            if "accuracy" in checkpoint:
-                print(f"[STAGE 2] Checkpoint accuracy: {checkpoint['accuracy']:.2f}%")
-            checkpoint_train_frac = checkpoint.get("train_frac", 0.8)
-            print(f"[STAGE 2] Checkpoint training fraction: {checkpoint_train_frac}")
+            print(f"[STAGE 2] Checkpoint accuracy: {checkpoint.accuracy:.2f}%")
+            print(f"[STAGE 2] Training fraction: {checkpoint.config.train_frac}")
+            print(f"[STAGE 2] Run name: {checkpoint.config.run_name}")
             print("[STAGE 2] Skipping training - proceeding directly to validation...")
         else:
             print(
                 f"[STAGE 2] No checkpoint found in {checkpoints_dir}, starting training..."
             )
+            config = TrainingConfig.from_env()
+            config.train_frac = train_frac
             result = tokentango.train.train(
                 model,
                 train_data_device,
                 test_data_device,
-                device,
-                train_frac,
+                config,
             )
-            print("[STAGE 2] Training completed!")
+            print(f"[STAGE 2] Training completed! Run: {result.config.run_name}")
     else:
         checkpoint_path = os.environ.get("MODEL_CHECKPOINT_PATH")
         print(
@@ -166,32 +170,37 @@ def _(
             checkpoint = tokentango.train.load_checkpoint(model, checkpoint_path)
             loadtime = time.time() - load_start
             print(
-                f"[STAGE 2] Loaded checkpoint from epoch {checkpoint['epoch']} in {loadtime:.2f}s"
+                f"[STAGE 2] Loaded checkpoint from epoch {checkpoint.epoch} in {loadtime:.2f}s"
             )
-            if "accuracy" in checkpoint:
-                print(f"[STAGE 2] Checkpoint accuracy: {checkpoint['accuracy']:.2f}%")
-            checkpoint_train_frac = checkpoint.get("train_frac", 0.8)
-            print(f"[STAGE 2] Checkpoint training fraction: {checkpoint_train_frac}")
+            print(f"[STAGE 2] Checkpoint accuracy: {checkpoint.accuracy:.2f}%")
+            print(f"[STAGE 2] Training fraction: {checkpoint.config.train_frac}")
+            print(f"[STAGE 2] Run name: {checkpoint.config.run_name}")
             print("[STAGE 2] Skipping training - proceeding directly to validation...")
         else:
             print(
                 f"[STAGE 2] Checkpoint file not found: {checkpoint_path}, starting training..."
             )
+            config = TrainingConfig.from_env()
+            config.train_frac = train_frac
             result = tokentango.train.train(
                 model,
                 train_data_device,
                 test_data_device,
-                device,
-                train_frac,
+                config,
             )
-            print("[STAGE 2] Training completed!")
+            print(f"[STAGE 2] Training completed! Run: {result.config.run_name}")
     return checkpoint_mode
 
 
 @app.cell
 def _(device, model, test_data_device, tokentango):
-    acc = tokentango.train.test_accuracy(model, test_data_device, device, frac=1)
-    print(f"Average test accuracy: {acc:.2f}%")
+    eval_result = tokentango.train.test_accuracy(
+        model, test_data_device, device, frac=1
+    )
+    print(f"Average test accuracy: {eval_result.accuracy:.2f}%")
+    print(f"Samples tested: {eval_result.num_samples}")
+    if eval_result.confusion_matrix is not None:
+        print(f"Confusion matrix:\n{eval_result.confusion_matrix}")
     return
 
 
