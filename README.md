@@ -1,10 +1,10 @@
 ### Main interesting files:
-  - [https://github.com/unic0rn9k/tokentango/blob/master/src/tokentango/model.py](Model definition)
-  - [https://github.com/unic0rn9k/tokentango/blob/master/src/tokentango/train.py](Training loop)
-  - [https://github.com/unic0rn9k/tokentango/blob/master/scripts/fake_news_bert.py](Marimo notebook / script for running training)
+- [Model definition](https://github.com/unic0rn9k/tokentango/blob/master/src/tokentango/model.py)
+- [Training loop](https://github.com/unic0rn9k/tokentango/blob/master/src/tokentango/train.py)
+- [Marimo notebook / script for running training](https://github.com/unic0rn9k/tokentango/blob/master/scripts/fake_news_bert.py)
 
 ### Data set used for training:
- - https://github.com/several27/FakeNewsCorpus
+- https://github.com/several27/FakeNewsCorpus
 
 ### Notes
-Repo might note be entirely up to date. Newer changes can be found on the development branch.
+Repo might not be entirely up to date. Newer changes can be found on the development branch.
