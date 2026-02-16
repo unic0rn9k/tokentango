@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass, field
 import os
-import torch
 from typing import Optional, Dict, Any, List
 
 
@@ -13,12 +12,14 @@ class TrainingConfig:
     train_frac: float = 0.8
     batch_size: int = 32
     lr: float = 1e-4
-    optimizer_type: str = "adamw"  # adam, adamw, sgd
+    optimizer_type: str = "AdamW"  # Adam, AdamW, SGD
     use_mlm: bool = True
     seed: int = 42
     device: str = "cuda:0"
     run_name: Optional[str] = None  # Cute unique ID, inherited when resuming
     checkpoint_dir: str = "data/checkpoints"
+
+    opts = {"adam": "Adam", "adamw": "AdamW", "sgd": "SGD"}
 
     @classmethod
     def from_env(cls) -> "TrainingConfig":
@@ -32,7 +33,7 @@ class TrainingConfig:
         if "TT_LR" in os.environ:
             config.lr = float(os.environ["TT_LR"])
         if "TT_OPTIMIZER_TYPE" in os.environ:
-            config.optimizer_type = os.environ["TT_OPTIMIZER_TYPE"].lower()
+            config.optimizer_type = opts[os.environ["TT_OPTIMIZER_TYPE"].lower()]
         if "TT_USE_MLM" in os.environ:
             config.use_mlm = os.environ["TT_USE_MLM"].lower() in ("true", "1", "yes")
         if "TT_SEED" in os.environ:
@@ -54,10 +55,6 @@ class TrainingConfig:
             raise ValueError(f"batch_size must be positive, got {self.batch_size}")
         if self.lr <= 0:
             raise ValueError(f"lr must be positive, got {self.lr}")
-        if self.optimizer_type not in ("adam", "adamw", "sgd"):
-            raise ValueError(
-                f"optimizer_type must be adam, adamw, or sgd, got {self.optimizer_type}"
-            )
 
 
 @dataclass

@@ -86,8 +86,18 @@ def save_checkpoint(checkpoint: Checkpoint, filepath: str) -> str:
     return filepath
 
 
-def test_accuracy(model, test_data: BertData, device, frac=0.1) -> EvaluationResult:
-    """Test model accuracy and return EvaluationResult."""
+def test_accuracy(
+    model, test_data: BertData, device, frac=0.1, use_masked_tokens=False
+) -> EvaluationResult:
+    """Test model accuracy and return EvaluationResult.
+
+    Args:
+        model: The model to test
+        test_data: BertData containing source_tokens, masked_tokens, and labels
+        device: Device to run on
+        frac: Fraction of test data to use
+        use_masked_tokens: If True, use masked_tokens instead of source_tokens for input
+    """
     device_type = device.type
     model.eval()
 
@@ -105,7 +115,10 @@ def test_accuracy(model, test_data: BertData, device, frac=0.1) -> EvaluationRes
                 random_offset, random_offset + sample_size, batch_size
             ):
                 end_idx = min(start_idx + batch_size, random_offset + sample_size)
-                x = test_data.source_tokens[start_idx:end_idx, :]
+                if use_masked_tokens:
+                    x = test_data.masked_tokens[start_idx:end_idx, :]
+                else:
+                    x = test_data.source_tokens[start_idx:end_idx, :]
                 hidden = model.hidden(x)
                 output = model.classify(hidden)
                 output_sign = np.sign(output.cpu().detach().numpy().flatten())
@@ -167,12 +180,12 @@ def train(
     print(f"[TRAIN] Optimizer: {config.optimizer_type}, MLM: {config.use_mlm}")
 
     # Create optimizer
-    if config.optimizer_type == "adam":
+    if config.optimizer_type == "Adam":
         optimizer = Adam(model.parameters(), lr=config.lr)
-    elif config.optimizer_type == "adamw":
+    elif config.optimizer_type == "AdamW":
         optimizer = AdamW(model.parameters(), lr=config.lr, weight_decay=0.01)
-    elif config.optimizer_type == "sgd":
-        optimizer = SGD(model.parameters(), lr=config.lr, momentum=0.9)
+    elif config.optimizer_type == "SGD":
+        optimizer = SGD(model.parameters(), lr=config.lr)
     else:
         raise ValueError(f"Unknown optimizer type: {config.optimizer_type}")
 
@@ -206,13 +219,14 @@ def train(
             cls_class = train_data.labels[idx : idx + batch_size]
 
             with autocast(device_type=device_type):
-                hidden = model.hidden(x)
-                loss_cls = model.classify_loss(hidden, cls_class)
-
                 if config.use_mlm:
+                    hidden = model.hidden(masked_tokens)
+                    loss_cls = model.classify_loss(hidden, cls_class)
                     loss_mlm = model.mlm_loss(hidden, masked_tokens)
                     loss = loss_cls + loss_mlm
                 else:
+                    hidden = model.hidden(x)
+                    loss_cls = model.classify_loss(hidden, cls_class)
                     loss_mlm = torch.tensor(0.0)
                     loss = loss_cls
 
