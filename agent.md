@@ -47,6 +47,7 @@ uv.lock
 - Don't speak or think in Chinese
 - Don't kill running processes. If you get an Nvidia "out of memory" error, sleep in a loop til the process exits
 - Don't edit any part in agent.md, that you weren't explicitly told to. Fx don't update the formatting of unrelated todo items etc.
+- Use uv for all python operations. eg `uv run scripts/fake_news_bert.py`, `uv add tqdm`, etc. When in doubt, use uv --help
 
 - Training and validation fractions:
     - Use `frac=0.01` when testing code logic (should complete in ~5 min)
@@ -190,21 +191,23 @@ Checkpoint metadata is displayed after loading, including:
     - add command line flags: --sort accuracy|timestamp, --optimizer, --use-mlm, --min-accuracy
     - support aggregating loss histories across checkpoints for a given run_name
 
+- [ ] Use getattr instead of if-else for optimizer selection in train.py
+
 - [ ] Experiment: test_accuracy on source vs masked tokens
-    - use existing checkpoints to avoid retraining
-    - modify test_accuracy to accept token_type parameter ('source' or 'masked')
-    - run test_accuracy with source_tokens on existing checkpoint
+    - make a new directory for checkpoint test results
+    - modify test_checkpoints.py to take a message as argument, to use in as name of the result file, concatenated to the checkpoint id (ensure it never overwrites an existing file)
+    - run test_accuracy with source_tokens on existing checkpoint to avoid retraining
     - run test_accuracy with masked_tokens on same checkpoint
     - compare results
 
 - [ ] Experiment: MLM objective ablation study
-    - check existing checkpoints for train_frac used and presence of use_mlm in metadata
-    - if insufficient checkpoints exist, train with use_mlm=True and save checkpoint with metadata
-    - train with use_mlm=False and save checkpoint with metadata
+    - check existing checkpoints for training configurations (assume use_mlm=True if not specified in metadata)
+    - perhaps run scripts/inspect_checkpoints.py for previous step
+    - train with use_mlm=False
     - compare test_accuracy between checkpoints
 
 - [ ] Experiment: optimizer comparison (Adam, AdamW, SGD)
-    - check existing checkpoints for optimizer_type in metadata
+    - check existing checkpoints for optimizer_type in metadata, and consider 
     - if insufficient checkpoints exist, train with Adam optimizer and save checkpoint
     - train with AdamW optimizer and save checkpoint
     - train with SGD optimizer and save checkpoint
