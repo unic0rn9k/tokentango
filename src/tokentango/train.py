@@ -1,5 +1,4 @@
 import torch
-from torch.optim import Adam, AdamW, SGD
 import numpy as np
 import random
 import datetime as dt
@@ -12,6 +11,7 @@ from tokentango.config import TrainingConfig, Checkpoint, EvaluationResult
 from typing import Optional
 import uuid
 import random as rand
+import torch.optim as optim
 
 
 # Cute name generator for run names
@@ -179,15 +179,14 @@ def train(
     print(f"[TRAIN] Training set fraction: {config.train_frac}")
     print(f"[TRAIN] Optimizer: {config.optimizer_type}, MLM: {config.use_mlm}")
 
-    # Create optimizer
-    if config.optimizer_type == "Adam":
-        optimizer = Adam(model.parameters(), lr=config.lr)
-    elif config.optimizer_type == "AdamW":
-        optimizer = AdamW(model.parameters(), lr=config.lr, weight_decay=0.01)
-    elif config.optimizer_type == "SGD":
-        optimizer = SGD(model.parameters(), lr=config.lr)
-    else:
-        raise ValueError(f"Unknown optimizer type: {config.optimizer_type}")
+    optimizer_kwargs = {
+        "Adam": {},
+        "AdamW": {"weight_decay": 0.01},
+        "SGD": {}
+    }
+
+    OptimizerClass = getattr(optim, config.optimizer_type)
+    optimizer = OptimizerClass(model.parameters(), lr=config.lr, **optimizer_kwargs.get(config.optimizer_type, {}))
 
     mlm_losses = []
     cls_losses = []
