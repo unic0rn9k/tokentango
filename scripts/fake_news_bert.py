@@ -63,16 +63,20 @@ def _(checkpoint_selector, checkpoint_path_input, mo):
 
 @app.cell
 def _(time, tokentango):
+    from tokentango.config import TrainingConfig
+
     print("[DATA LOADING] Starting data load...")
     data_start = time.time()
-    train_frac = 0.75
-    train_data, test_data = tokentango.fake_news.load_data(train_frac)
+    config = TrainingConfig.from_env()
+    train_data, test_data = tokentango.fake_news.load_data(
+        config.train_frac, random_state=config.seed
+    )
     datatime = time.time() - data_start
     print(f"[DATA LOADING] Completed in {datatime:.2f}s")
     print(
         f"[DATA LOADING] train_data source_tokens shape={train_data.source_tokens.shape}, test_data source_tokens shape={test_data.source_tokens.shape}"
     )
-    return test_data, train_data, train_frac
+    return test_data, train_data, config
 
 
 @app.cell
@@ -100,6 +104,7 @@ def _(device, tokentango):
 
 @app.cell
 def _(
+    config,
     device,
     model,
     os,
@@ -107,18 +112,13 @@ def _(
     time,
     tokentango,
     train_data_device,
-    train_frac,
 ):
-    from tokentango.config import TrainingConfig
-
     checkpoint_mode = os.environ.get("MODEL_CHECKPOINT_PATH", "latest").lower()
 
     if checkpoint_mode == "train":
         print(
             "[STAGE 1] MODEL_CHECKPOINT_PATH=train: Starting training from scratch..."
         )
-        config = TrainingConfig.from_env()
-        config.train_frac = train_frac
         result = tokentango.train.train(
             model,
             train_data_device,
@@ -145,14 +145,23 @@ def _(
             )
             print(f"[STAGE 2] Checkpoint accuracy: {checkpoint.accuracy:.2f}%")
             print(f"[STAGE 2] Training fraction: {checkpoint.config.train_frac}")
-            print(f"[STAGE 2] Run name: {checkpoint.config.run_name}")
-            print("[STAGE 2] Skipping training - proceeding directly to validation...")
+            print(f"[STAGE 2] Previous run name: {checkpoint.config.run_name}")
+            # Continue training with modified run_name
+            config.run_name = (
+                f"{checkpoint.config.run_name}-{tokentango.train.generate_run_name()}"
+            )
+            print(f"[STAGE 2] Continuing training with new run name: {config.run_name}")
+            result = tokentango.train.train(
+                model,
+                train_data_device,
+                test_data_device,
+                config,
+            )
+            print(f"[STAGE 2] Training completed! Run: {result.config.run_name}")
         else:
             print(
                 f"[STAGE 2] No checkpoint found in {checkpoints_dir}, starting training..."
             )
-            config = TrainingConfig.from_env()
-            config.train_frac = train_frac
             result = tokentango.train.train(
                 model,
                 train_data_device,
@@ -174,14 +183,23 @@ def _(
             )
             print(f"[STAGE 2] Checkpoint accuracy: {checkpoint.accuracy:.2f}%")
             print(f"[STAGE 2] Training fraction: {checkpoint.config.train_frac}")
-            print(f"[STAGE 2] Run name: {checkpoint.config.run_name}")
-            print("[STAGE 2] Skipping training - proceeding directly to validation...")
+            print(f"[STAGE 2] Previous run name: {checkpoint.config.run_name}")
+            # Continue training with modified run_name
+            config.run_name = (
+                f"{checkpoint.config.run_name}-{tokentango.train.generate_run_name()}"
+            )
+            print(f"[STAGE 2] Continuing training with new run name: {config.run_name}")
+            result = tokentango.train.train(
+                model,
+                train_data_device,
+                test_data_device,
+                config,
+            )
+            print(f"[STAGE 2] Training completed! Run: {result.config.run_name}")
         else:
             print(
                 f"[STAGE 2] Checkpoint file not found: {checkpoint_path}, starting training..."
             )
-            config = TrainingConfig.from_env()
-            config.train_frac = train_frac
             result = tokentango.train.train(
                 model,
                 train_data_device,

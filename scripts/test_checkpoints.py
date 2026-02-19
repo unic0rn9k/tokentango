@@ -27,11 +27,15 @@ checkpoints = [
 ]
 
 device = torch.device("cuda:0")
-train_frac = 0.01
 
-print(f"[DATA LOADING] Starting data load with train_frac={train_frac}...")
+from tokentango.config import TrainingConfig
+
+config = TrainingConfig.from_env()
+print(f"[DATA LOADING] Starting data load with train_frac={config.train_frac}...")
 data_start = time.time()
-train_data, test_data = tokentango.fake_news.load_data(train_frac)
+train_data, test_data = tokentango.fake_news.load_data(
+    config.train_frac, random_state=config.seed
+)
 datatime = time.time() - data_start
 print(f"[DATA LOADING] Completed in {datatime:.2f}s")
 

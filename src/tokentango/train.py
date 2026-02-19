@@ -162,12 +162,7 @@ def train(
 
     config.validate()
 
-    # Set random seed
-    random.seed(config.seed)
-    np.random.seed(config.seed)
-    torch.manual_seed(config.seed)
-
-    # Generate run name if not provided
+    # Generate run name if not provided (BEFORE setting seeds to ensure randomness)
     if config.run_name is None:
         config.run_name = generate_run_name()
 
@@ -179,14 +174,14 @@ def train(
     print(f"[TRAIN] Training set fraction: {config.train_frac}")
     print(f"[TRAIN] Optimizer: {config.optimizer_type}, MLM: {config.use_mlm}")
 
-    optimizer_kwargs = {
-        "Adam": {},
-        "AdamW": {"weight_decay": 0.01},
-        "SGD": {}
-    }
+    optimizer_kwargs = {"Adam": {}, "AdamW": {"weight_decay": 0.01}, "SGD": {}}
 
     OptimizerClass = getattr(optim, config.optimizer_type)
-    optimizer = OptimizerClass(model.parameters(), lr=config.lr, **optimizer_kwargs.get(config.optimizer_type, {}))
+    optimizer = OptimizerClass(
+        model.parameters(),
+        lr=config.lr,
+        **optimizer_kwargs.get(config.optimizer_type, {}),
+    )
 
     mlm_losses = []
     cls_losses = []

@@ -19,12 +19,12 @@ class TrainingConfig:
     run_name: Optional[str] = None  # Cute unique ID, inherited when resuming
     checkpoint_dir: str = "data/checkpoints"
 
-    opts = {"adam": "Adam", "adamw": "AdamW", "sgd": "SGD"}
-
     @classmethod
     def from_env(cls) -> "TrainingConfig":
         """Load configuration from environment variables with TT_ prefix."""
         config = cls()
+
+        opts = {k.lower(): k for k in ["Adam", "AdamW", "SGD"]}
 
         if "TT_TRAIN_FRAC" in os.environ:
             config.train_frac = float(os.environ["TT_TRAIN_FRAC"])
