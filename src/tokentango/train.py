@@ -216,7 +216,7 @@ def train(
                 if config.use_mlm:
                     hidden = model.hidden(masked_tokens)
                     loss_cls = model.classify_loss(hidden, cls_class)
-                    loss_mlm = model.mlm_loss(hidden, masked_tokens)
+                    loss_mlm = model.mlm_loss(hidden, x)
                     loss = loss_cls + loss_mlm
                 else:
                     hidden = model.hidden(x)
