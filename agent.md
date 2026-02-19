@@ -6,30 +6,39 @@ README.md
 accuracy_benchmark_results.txt
 agent.md
 checkpoint_test_results.csv
+checkpoint_test_results_rs69.csv
+cuda_info.py
 data/
 data/995,000_rows.csv
 data/bpe_tokenizer.json
 data/checkpoints/
+data/MNIST/
 experiments/
 experiments/brute_convergence/
+experiments/checkpoint_test_results/
 notebooks/
 notebooks/diffusion.ipynb
 notebooks/fake_news_bert.ipynb
 notebooks/trivial_bert.ipynb
 notebooks/very_experimental.ipynb
+old_note.md
 playlist
 pyproject.toml
 scripts/
 scripts/fake_news_bert.py
+scripts/inspect_checkpoints.py
 scripts/test_checkpoints.py
 src/
 src/tokentango/
 src/tokentango/__init__.py
 src/tokentango/bert_from_scratch.py
+src/tokentango/config.py
+src/tokentango/data.py
 src/tokentango/fake_news.py
 src/tokentango/main.py
 src/tokentango/model.py
 src/tokentango/train.py
+train_mlm_comp.sh
 uv.lock
 ```
 
@@ -92,15 +101,42 @@ MODEL_CHECKPOINT_PATH=data/checkpoints/checkpoint_2026-01-23_20-54-31_50.00.pth 
 ```
 
 
-# Implementation Details
-The feature is implemented with two helper functions in `src/tokentango/train.py`:
-- `list_checkpoints(checkpoints_dir)`: Returns a sorted list of checkpoints (newest first)
-- `load_checkpoint(model, checkpoint_path)`: Loads checkpoint and returns metadata including epoch, accuracy, and training fraction
+# Checkpoint Management
 
-Checkpoint metadata is displayed after loading, including:
-- Epoch number
-- Checkpoint accuracy
-- Training fraction used during checkpoint creation
+Checkpoint loading and saving is handled by helper functions in `src/tokentango/train.py`:
+
+**`list_checkpoints(checkpoints_dir)`**
+Returns all available checkpoints sorted by timestamp (newest first). Each checkpoint is loaded as a `Checkpoint` dataclass object with the checkpoint file path attached.
+
+**`load_checkpoint(model, checkpoint_path)`**
+Loads model weights and optimizer state from a checkpoint file into the provided model. Returns a `Checkpoint` dataclass containing full metadata.
+
+**`save_checkpoint(checkpoint, filepath)`**
+Saves a Checkpoint dataclass to disk and returns the saved file path.
+
+## Checkpoint Metadata
+
+When a checkpoint is loaded, the following metadata is available:
+
+- **epoch**: Training epoch when checkpoint was saved
+- **accuracy**: Model accuracy at save time
+- **config**: Complete `TrainingConfig` object including:
+  - train_frac, batch_size, lr, optimizer_type, use_mlm, seed, device, run_name, checkpoint_dir
+- **cls_losses**: Classification losses accumulated since last checkpoint save
+- **mlm_losses**: MLM losses accumulated since last checkpoint save
+- **timestamp**: ISO format timestamp when saved
+
+Note: Losses arrays are cleared after each checkpoint save to track per-interval loss history.
+
+## Early Stopping
+
+The training loop implements automatic early stopping to prevent overfitting:
+
+- **Trigger condition**: Test accuracy > 80% for 3 consecutive validation iterations
+- **Validation frequency**: Every 100 batches
+- **Action**: Training terminates immediately and returns the final checkpoint
+
+Early stopping helps avoid unnecessary computation once the model has converged to good performance.
 
 # TODO
 - [x] add logic to `fake_news_bert.py` to make it load `checkpoint.pth`
@@ -178,8 +214,8 @@ Checkpoint metadata is displayed after loading, including:
     - add validate() method to check config values
     - create Checkpoint dataclass with fields: model_state, optimizer_state, config (TrainingConfig), epoch, accuracy, timestamp, cls_losses, mlm_losses (losses accumulated since last checkpoint save)
     - create EvaluationResult dataclass with fields: accuracy, num_samples, confusion_matrix
-    - update train(model, data, config: TrainingConfig) -> Checkpoint to save losses per iteration and return final checkpoint
-    - update test_accuracy(...) -> EvaluationResult
+    - update train(model, train_data: BertData, test_data: BertData, config: Optional[TrainingConfig] = None) -> Checkpoint to save losses per iteration and return final checkpoint
+    - update test_accuracy(model, test_data: BertData, device, frac=0.1, use_masked_tokens=False) -> EvaluationResult
     - update load_checkpoint() to return tuple[Checkpoint, model_state]
     - update list_checkpoints() to return list[Checkpoint]
     - ensure backward compatibility with old checkpoint format
