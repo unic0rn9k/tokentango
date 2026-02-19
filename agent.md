@@ -227,7 +227,16 @@ Early stopping helps avoid unnecessary computation once the model has converged 
     - add command line flags: --sort accuracy|timestamp, --optimizer, --use-mlm, --min-accuracy
     - support aggregating loss histories across checkpoints for a given run_name
 
-- [ ] Use getattr instead of if-else for optimizer selection in train.py
+- [x] Use getattr instead of if-else for optimizer selection in train.py
+
+- [ ] Compact previous todos into documentation
+
+- [ ] Optimize memory efficiency of entire codebase
+    - remve amp code
+    - ensure model is float16
+    - rewrite src/tokentango/bert_from_scratch.py to process rows from training data csv in batches
+    - ensure data is loaded as float16
+    - Ensure all tensors are f16
 
 - [ ] Experiment: test_accuracy on source vs masked tokens
     - make a new directory for checkpoint test results
@@ -253,11 +262,6 @@ Early stopping helps avoid unnecessary computation once the model has converged 
     - uv add tqdm
     - replace progress bar with tqdm
     - add instructions to disable progress bar when run by agent
-
-- [ ] Use float16 everywhere
-    - remve amp code
-    - ensure model is float16
-    - ensure data is cast to float16 or loaded as float16
 
 - [ ] Deterministic test accuracy
     - if the frac is 1, then the function should be deterministic
