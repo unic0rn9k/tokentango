@@ -46,8 +46,10 @@ def generate_run_name() -> str:
     return f"{rand.choice(ADJECTIVES)}-{rand.choice(NOUNS)}-{uuid.uuid4().hex[:6]}"
 
 
-def list_checkpoints(checkpoints_dir="data/checkpoints") -> list:
+def list_checkpoints(checkpoints_dir="data/checkpoints", meta_only=False) -> list:
     """List all checkpoints in directory, returning list of Checkpoint objects."""
+    if not meta_only:
+        print(f"WARN: Loading all checkpoints in {checkpoints_dir}")
     if not os.path.exists(checkpoints_dir):
         return []
 
@@ -57,7 +59,8 @@ def list_checkpoints(checkpoints_dir="data/checkpoints") -> list:
             filepath = os.path.join(checkpoints_dir, f)
             try:
                 # Use map_location to handle checkpoints from different devices
-                data = torch.load(filepath, weights_only=False, map_location="cpu")
+                dev = "meta" if meta_only else "cpu"
+                data = torch.load(filepath, weights_only=False, map_location=dev)
                 checkpoint = Checkpoint.from_dict(data)
                 checkpoint.checkpoint_path = filepath  # Add path for reference
                 checkpoints.append(checkpoint)
@@ -199,7 +202,7 @@ def train(
     is_tty = sys.stdout.isatty()
     ta = 0
     high_acc_count = 0
-    early_stop_threshold = 80.0
+    early_stop_threshold = 99.0
     early_stop_iterations = 3
 
     final_checkpoint = None
