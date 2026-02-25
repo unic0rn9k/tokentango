@@ -10,6 +10,5 @@
 Repo might not be entirely up to date. Newer changes can be found on the development branch.
 
 ### Preliminary results
-<img width="1616" height="540" alt="newplot(90)" src="https://github.com/user-attachments/assets/f8bfbbec-d685-47bf-a479-537dce20400e" />
-<img width="1616" height="540" alt="newplot(92)" src="https://github.com/user-attachments/assets/3bc4d2db-2d85-420d-a3d0-a5ba854615bb" />
-
+<img width="1136" height="540" alt="newplot(94)" src="https://github.com/user-attachments/assets/13ad0754-8786-48c1-86a0-ebd2e1a7bca3" />
+<img width="1136" height="540" alt="newplot(93)" src="https://github.com/user-attachments/assets/29147569-5154-4cf4-b67c-7df0338e2369" />
