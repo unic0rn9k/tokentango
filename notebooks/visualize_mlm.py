@@ -11,12 +11,14 @@ def _():
     import datetime as dt
     import numpy as np
     from copy import copy
-    return copy, dt, go, np, tt
+    return dt, go, np, tt
 
 
 @app.cell
 def _():
-    runs_of_interest = {'silly-llama-03248e', 'jolly-quokka-b92ef4'}
+    #runs_of_interest = {'silly-llama-03248e', 'jolly-quokka-b92ef4'}
+    #runs_of_interest = {'doc-otter-4e6ab5','happy-alpaca-1a941e'}
+    runs_of_interest = {'silly-penguin-eda9ce', 'sleepy-llama-d7b8b2'}
     return (runs_of_interest,)
 
 
@@ -82,33 +84,37 @@ def _(cls_ts, mlm_ts, np):
 
     mlm_ts2 = interp_100(mlm_ts)
     cls_ts2 = interp_100(cls_ts)
-    return cls_ts2, mlm_ts2
+    return
 
 
 @app.cell
-def _(cls_run, copy, mlm_run, np):
-    mlm_loss = [copy(c.cls_losses) for c in mlm_run]
-    cls_loss = [copy(c.cls_losses) for c in cls_run]
+def _(cls_run, mlm_run, np):
+    #mlm_loss = [copy(c.cls_losses) for c in mlm_run]
+    #cls_loss = [copy(c.cls_losses) for c in cls_run]
 
-    mlm_loss[0].pop(0)
-    cls_loss[0].pop(0)
+    #mlm_loss[0].pop(0)
+    #cls_loss[0].pop(0)
 
-    mlm_loss = np.array(mlm_loss)
-    cls_loss = np.array(cls_loss)
+    #mlm_loss = np.array(mlm_loss)
+    #cls_loss = np.array(cls_loss)
+
+    mlm_loss = [np.mean(c.cls_losses) for c in mlm_run]
+    cls_loss = [np.mean(c.cls_losses) for c in cls_run]
     return cls_loss, mlm_loss
 
 
 @app.cell
-def _(cls_loss, cls_ts, cls_ts2, go, mlm_loss, mlm_ts, mlm_ts2):
+def _(cls_loss, cls_ts, go, mlm_loss, mlm_ts):
     go.Figure(data=[
-        go.Scatter(x=mlm_ts2, y=mlm_loss.flatten(), name="MLM + CLS"),
-        go.Scatter(x=cls_ts2, y=cls_loss.flatten(), name="CLS only"),
-
-        go.Scatter(x=mlm_ts, y=mlm_loss.mean(axis=1), name="avg MLM + CLS"),
-        go.Scatter(x=cls_ts, y=cls_loss.mean(axis=1), name="avg CLS only"),
+        #go.Scatter(x=mlm_ts2, y=mlm_loss.flatten(), name="MLM + CLS"),
+        #go.Scatter(x=cls_ts2, y=cls_loss.flatten(), name="CLS only"),
+        #go.Scatter(x=mlm_ts, y=mlm_loss.mean(axis=1), name="avg MLM + CLS"),
+        #go.Scatter(x=cls_ts, y=cls_loss.mean(axis=1), name="avg CLS only"),
+        go.Scatter(x=mlm_ts, y=mlm_loss, name="MLM + CLS"),
+        go.Scatter(x=cls_ts, y=cls_loss, name="CLS only"),
     ]).update_layout(
         xaxis_title="Training duration (minutes)",
-        yaxis_title="Accuracy on classification task (%)",
+        yaxis_title="CLS loss (smooth L1 loss)",
     )
     return
 
