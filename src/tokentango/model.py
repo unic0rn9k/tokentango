@@ -1,20 +1,17 @@
-import numpy as np
 import torch
-from torch.optim import Adam, AdamW
-from torch import nn, functional as F
+from torch import nn
 import math
 
 EMBEDDING_DIM = 32
 
 
 class BertClassifier(nn.Module):
-    def __init__(self, max_seq_len, vocab_size, device):
+    def __init__(self, max_seq_len, vocab_size, device="cuda", dtype=torch.float16):
         super(BertClassifier, self).__init__()
         # self.bert = DistilBertModel.from_pretrained('distilbert-base-uncased', output_attentions=False, output_hidden_states=False)
         # self.out = nn.Linear(self.bert.config.dim, 1)
 
         self.vocab_size = vocab_size
-        self.device = device
 
         self.encoder_layer = nn.TransformerEncoderLayer(d_model=EMBEDDING_DIM, nhead=4)
         self.use_nested_tensor = True
@@ -49,7 +46,7 @@ class BertClassifier(nn.Module):
         )  # Shape: (1, sequence_length, embedding_size)
         expanded_positional_encoding = expanded_positional_encoding.expand(
             x.shape[0], -1, -1
-        ).to(self.device)  # Shape: (batch_size, sequence_length, embedding_size)
+        ).to(x.device)  # Shape: (batch_size, sequence_length, embedding_size)
         x += expanded_positional_encoding[: x.size(0), : x.size(1), : x.size(2)]
         return x
 

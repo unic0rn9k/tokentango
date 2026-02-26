@@ -1,10 +1,9 @@
-from torch.utils.data import TensorDataset, DataLoader, RandomSampler, SequentialSampler
 
 from tokenizers import Tokenizer
 from tokenizers.models import BPE
 from tokenizers.trainers import BpeTrainer
 from tokenizers.pre_tokenizers import Whitespace
-from tokenizers.normalizers import NFD, StripAccents, Lowercase
+from tokenizers.normalizers import NFD
 import random
 import torch
 import os
@@ -48,6 +47,7 @@ def load_data(frac, random_state=69):
     cls_token_id = tokenizer.token_to_id("[CLS]")
     mask_token_id = tokenizer.token_to_id("[MASK]")
     pad_token_id = tokenizer.token_to_id("[PAD]")
+    special_tokens_ids = [cls_token_id, mask_token_id, pad_token_id]
 
     # In[6]:
 
@@ -90,8 +90,10 @@ def load_data(frac, random_state=69):
 
     def mask_random_elements(sequence, mask_probability=0.15):
         masked_sequence = sequence[:]
-        for idx in range(len(sequence)):
-            if random.random() < mask_probability and sequence[idx] != pad_token_id:
+        for idx in range(1, len(sequence)):
+            if sequence[idx] in special_tokens_ids:
+                continue
+            if random.random() < mask_probability:
                 masked_sequence[idx] = mask_token_id
         return masked_sequence
 

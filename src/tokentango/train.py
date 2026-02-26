@@ -4,8 +4,6 @@ import random
 import datetime as dt
 import os
 import sys
-from torch.amp.autocast_mode import autocast
-from torch.amp.grad_scaler import GradScaler
 from tokentango.data import BertData
 from tokentango.config import TrainingConfig, Checkpoint, EvaluationResult
 from typing import Optional
@@ -105,47 +103,46 @@ def test_accuracy(
     model.eval()
 
     with torch.no_grad():
-        with autocast(device_type=device_type):
-            sample_size = max(1, int(len(test_data.labels) * frac))
-            random_offset = random.randint(0, len(test_data.labels) - sample_size)
+        sample_size = max(1, int(len(test_data.labels) * frac))
+        random_offset = random.randint(0, len(test_data.labels) - sample_size)
 
-            batch_size = 32
-            correct = 0
-            all_predictions = []
-            all_labels = []
+        batch_size = 32
+        correct = 0
+        all_predictions = []
+        all_labels = []
 
-            for start_idx in range(
-                random_offset, random_offset + sample_size, batch_size
-            ):
-                end_idx = min(start_idx + batch_size, random_offset + sample_size)
-                if use_masked_tokens:
-                    x = test_data.masked_tokens[start_idx:end_idx, :]
-                else:
-                    x = test_data.source_tokens[start_idx:end_idx, :]
-                hidden = model.hidden(x)
-                output = model.classify(hidden)
-                output_sign = np.sign(output.cpu().detach().numpy().flatten())
-                true_sign = np.sign(test_data.labels[start_idx:end_idx].cpu().numpy())
-                correct += int(np.sum(output_sign == true_sign))
-                all_predictions.extend(output_sign)
-                all_labels.extend(true_sign)
+        for start_idx in range(
+            random_offset, random_offset + sample_size, batch_size
+        ):
+            end_idx = min(start_idx + batch_size, random_offset + sample_size)
+            if use_masked_tokens:
+                x = test_data.masked_tokens[start_idx:end_idx, :]
+            else:
+                x = test_data.source_tokens[start_idx:end_idx, :]
+            hidden = model.hidden(x)
+            output = model.classify(hidden)
+            output_sign = np.sign(output.cpu().detach().numpy().flatten())
+            true_sign = np.sign(test_data.labels[start_idx:end_idx].cpu().numpy())
+            correct += int(np.sum(output_sign == true_sign))
+            all_predictions.extend(output_sign)
+            all_labels.extend(true_sign)
 
-            accuracy = correct / sample_size * 100
+        accuracy = correct / sample_size * 100
 
-            # Build confusion matrix
-            tp = sum(
-                1 for p, t in zip(all_predictions, all_labels) if p == 1 and t == 1
-            )
-            tn = sum(
-                1 for p, t in zip(all_predictions, all_labels) if p == -1 and t == -1
-            )
-            fp = sum(
-                1 for p, t in zip(all_predictions, all_labels) if p == 1 and t == -1
-            )
-            fn = sum(
-                1 for p, t in zip(all_predictions, all_labels) if p == -1 and t == 1
-            )
-            confusion_matrix = np.array([[tn, fp], [fn, tp]])
+        # Build confusion matrix
+        tp = sum(
+            1 for p, t in zip(all_predictions, all_labels) if p == 1 and t == 1
+        )
+        tn = sum(
+            1 for p, t in zip(all_predictions, all_labels) if p == -1 and t == -1
+        )
+        fp = sum(
+            1 for p, t in zip(all_predictions, all_labels) if p == 1 and t == -1
+        )
+        fn = sum(
+            1 for p, t in zip(all_predictions, all_labels) if p == -1 and t == 1
+        )
+        confusion_matrix = np.array([[tn, fp], [fn, tp]])
 
     model.train()
     return EvaluationResult(
@@ -195,7 +192,6 @@ def train(
     batch_size = config.batch_size
     start_time = dt.datetime.now()
     device_type = device.type
-    scaler = GradScaler(device_type)
 
     total_batches = int(num_samples / batch_size)
     bar_width = 30
@@ -215,21 +211,19 @@ def train(
             masked_tokens = train_data.masked_tokens[idx : idx + batch_size, :]
             cls_class = train_data.labels[idx : idx + batch_size]
 
-            with autocast(device_type=device_type):
-                if config.use_mlm:
-                    hidden = model.hidden(masked_tokens)
-                    loss_cls = model.classify_loss(hidden, cls_class)
-                    loss_mlm = model.mlm_loss(hidden, x)
-                    loss = loss_cls + loss_mlm
-                else:
-                    hidden = model.hidden(x)
-                    loss_cls = model.classify_loss(hidden, cls_class)
-                    loss_mlm = torch.tensor(0.0)
-                    loss = loss_cls
+            if config.use_mlm:
+                hidden = model.hidden(masked_tokens)
+                loss_cls = model.classify_loss(hidden, cls_class)
+                loss_mlm = model.mlm_loss(hidden, x)
+                loss = loss_cls + loss_mlm
+            else:
+                hidden = model.hidden(x)
+                loss_cls = model.classify_loss(hidden, cls_class)
+                loss_mlm = torch.tensor(0.0)
+                loss = loss_cls
 
-            scaler.scale(loss).backward()
-            scaler.step(optimizer)
-            scaler.update()
+            loss.backward()
+            optimizer.step()
 
             mlm_losses.append(loss_mlm.cpu().item())
             cls_losses.append(loss_cls.cpu().item())
