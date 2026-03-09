@@ -85,7 +85,7 @@ Examples:
 
     # Load all checkpoints
     print(f"Loading checkpoints from {args.checkpoint_dir}...")
-    checkpoints = list_checkpoints(args.checkpoint_dir)
+    checkpoints = list_checkpoints(args.checkpoint_dir, meta_only=True)
 
     if not checkpoints:
         print("No checkpoints found.")

@@ -1,0 +1,872 @@
+/home/bigbox/Projects/tokentango/.venv/lib/python3.13/site-packages/torch/nn/modules/transformer.py:382: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  warnings.warn(
+TokenTango
+CUDA available: True
+Number of GPUs: 1
+GPU 0: NVIDIA GeForce GTX 1080
+  Memory: 8.51 GB
+  CUDA Capability: 6.1
+[DATA LOADING] Starting data load...
+Loading existing tokenizer from data/bpe_tokenizer.json
+new_labels
+reliable    330551
+fake        166115
+Name: count, dtype: int64
+0.5
+[DATA LOADING] Completed in 758.89s
+[DATA LOADING] train_data source_tokens shape=torch.Size([265784, 300]), test_data source_tokens shape=torch.Size([66446, 300])
+[STAGE 1] MODEL_CHECKPOINT_PATH=data/checkpoints/checkpoint_zany-tapir-e3a1f1_2026-03-06_19-10-35_93.02.pth: Loading specific checkpoint...
+[STAGE 2] Loaded checkpoint from epoch 9 in 0.06s
+[STAGE 2] Checkpoint accuracy: 93.02%
+[STAGE 2] Training fraction: 0.8
+[STAGE 2] Previous run name: zany-tapir-e3a1f1
+[STAGE 2] Continuing training with new run name: zany-tapir-e3a1f1-witty-capybara-79c070
+[TRAIN] Starting training run: zany-tapir-e3a1f1-witty-capybara-79c070
+[TRAIN] Training set fraction: 0.8
+[TRAIN] Optimizer: Adam, MLM: True
+Epoch 1/10 [ 100/8305] | TA: 86.60% | Saved checkpoint | ETA: 6:49:51
+Epoch 1/10 [ 200/8305] | TA: 87.03% | Saved checkpoint | ETA: 6:48:55
+Epoch 1/10 [ 300/8305] | TA: 86.74% | Saved checkpoint | ETA: 6:48:07
+Epoch 1/10 [ 400/8305] | TA: 87.57% | Saved checkpoint | ETA: 6:47:31
+Epoch 1/10 [ 500/8305] | TA: 88.09% | Saved checkpoint | ETA: 6:47:06
+Epoch 1/10 [ 600/8305] | TA: 87.28% | Saved checkpoint | ETA: 6:46:36
+Epoch 1/10 [ 700/8305] | TA: 88.46% | Saved checkpoint | ETA: 6:46:07
+Epoch 1/10 [ 800/8305] | TA: 89.01% | Saved checkpoint | ETA: 6:45:30
+Epoch 1/10 [ 900/8305] | TA: 88.83% | Saved checkpoint | ETA: 6:44:54
+Epoch 1/10 [1000/8305] | TA: 88.98% | Saved checkpoint | ETA: 6:44:28
+Epoch 1/10 [1100/8305] | TA: 90.64% | Saved checkpoint | ETA: 6:44:03
+Epoch 1/10 [1200/8305] | TA: 90.59% | Saved checkpoint | ETA: 6:43:33
+Epoch 1/10 [1300/8305] | TA: 90.88% | Saved checkpoint | ETA: 6:43:00
+Epoch 1/10 [1400/8305] | TA: 91.12% | Saved checkpoint | ETA: 6:42:31
+Epoch 1/10 [1500/8305] | TA: 91.20% | Saved checkpoint | ETA: 6:42:01
+Epoch 1/10 [1600/8305] | TA: 90.32% | Saved checkpoint | ETA: 6:41:32
+Epoch 1/10 [1700/8305] | TA: 90.94% | Saved checkpoint | ETA: 6:41:03
+Epoch 1/10 [1800/8305] | TA: 91.16% | Saved checkpoint | ETA: 6:40:37
+Epoch 1/10 [1900/8305] | TA: 91.20% | Saved checkpoint | ETA: 6:40:11
+Epoch 1/10 [2000/8305] | TA: 90.82% | Saved checkpoint | ETA: 6:39:41
+Epoch 1/10 [2100/8305] | TA: 91.16% | Saved checkpoint | ETA: 6:39:12
+Epoch 1/10 [2200/8305] | TA: 91.13% | Saved checkpoint | ETA: 6:38:47
+Epoch 1/10 [2300/8305] | TA: 90.85% | Saved checkpoint | ETA: 6:38:21
+Epoch 1/10 [2400/8305] | TA: 90.56% | Saved checkpoint | ETA: 6:37:52
+Epoch 1/10 [2500/8305] | TA: 90.04% | Saved checkpoint | ETA: 6:37:25
+Epoch 1/10 [2600/8305] | TA: 90.23% | Saved checkpoint | ETA: 6:36:56
+Epoch 1/10 [2700/8305] | TA: 90.17% | Saved checkpoint | ETA: 6:36:28
+Epoch 1/10 [2800/8305] | TA: 90.59% | Saved checkpoint | ETA: 6:36:00
+Epoch 1/10 [2900/8305] | TA: 91.30% | Saved checkpoint | ETA: 6:35:31
+Epoch 1/10 [3000/8305] | TA: 91.54% | Saved checkpoint | ETA: 6:35:03
+Epoch 1/10 [3100/8305] | TA: 90.77% | Saved checkpoint | ETA: 6:34:33
+Epoch 1/10 [3200/8305] | TA: 91.26% | Saved checkpoint | ETA: 6:34:01
+Epoch 1/10 [3300/8305] | TA: 91.18% | Saved checkpoint | ETA: 6:33:32
+Epoch 1/10 [3400/8305] | TA: 91.27% | Saved checkpoint | ETA: 6:33:02
+Epoch 1/10 [3500/8305] | TA: 90.85% | Saved checkpoint | ETA: 6:32:33
+Epoch 1/10 [3600/8305] | TA: 91.00% | Saved checkpoint | ETA: 6:32:05
+Epoch 1/10 [3700/8305] | TA: 90.82% | Saved checkpoint | ETA: 6:31:35
+Epoch 1/10 [3800/8305] | TA: 91.44% | Saved checkpoint | ETA: 6:31:07
+Epoch 1/10 [3900/8305] | TA: 91.50% | Saved checkpoint | ETA: 6:30:39
+Epoch 1/10 [4000/8305] | TA: 91.42% | Saved checkpoint | ETA: 6:30:11
+Epoch 1/10 [4100/8305] | TA: 91.35% | Saved checkpoint | ETA: 6:29:42
+Epoch 1/10 [4200/8305] | TA: 91.69% | Saved checkpoint | ETA: 6:29:11
+Epoch 1/10 [4300/8305] | TA: 90.44% | Saved checkpoint | ETA: 6:28:43
+Epoch 1/10 [4400/8305] | TA: 91.45% | Saved checkpoint | ETA: 6:28:14
+Epoch 1/10 [4500/8305] | TA: 91.54% | Saved checkpoint | ETA: 6:27:46
+Epoch 1/10 [4600/8305] | TA: 91.65% | Saved checkpoint | ETA: 6:27:15
+Epoch 1/10 [4700/8305] | TA: 91.53% | Saved checkpoint | ETA: 6:26:45
+Epoch 1/10 [4800/8305] | TA: 90.65% | Saved checkpoint | ETA: 6:26:17
+Epoch 1/10 [4900/8305] | TA: 90.19% | Saved checkpoint | ETA: 6:25:48
+Epoch 1/10 [5000/8305] | TA: 92.29% | Saved checkpoint | ETA: 6:25:19
+Epoch 1/10 [5100/8305] | TA: 91.68% | Saved checkpoint | ETA: 6:24:50
+Epoch 1/10 [5200/8305] | TA: 91.72% | Saved checkpoint | ETA: 6:24:22
+Epoch 1/10 [5300/8305] | TA: 90.77% | Saved checkpoint | ETA: 6:23:53
+Epoch 1/10 [5400/8305] | TA: 91.96% | Saved checkpoint | ETA: 6:23:24
+Epoch 1/10 [5500/8305] | TA: 91.09% | Saved checkpoint | ETA: 6:22:55
+Epoch 1/10 [5600/8305] | TA: 91.74% | Saved checkpoint | ETA: 6:22:26
+Epoch 1/10 [5700/8305] | TA: 91.71% | Saved checkpoint | ETA: 6:21:57
+Epoch 1/10 [5800/8305] | TA: 91.90% | Saved checkpoint | ETA: 6:21:28
+Epoch 1/10 [5900/8305] | TA: 91.18% | Saved checkpoint | ETA: 6:20:58
+Epoch 1/10 [6000/8305] | TA: 91.15% | Saved checkpoint | ETA: 6:20:28
+Epoch 1/10 [6100/8305] | TA: 91.47% | Saved checkpoint | ETA: 6:19:59
+Epoch 1/10 [6200/8305] | TA: 91.90% | Saved checkpoint | ETA: 6:19:29
+Epoch 1/10 [6300/8305] | TA: 91.71% | Saved checkpoint | ETA: 6:19:00
+Epoch 1/10 [6400/8305] | TA: 90.77% | Saved checkpoint | ETA: 6:18:31
+Epoch 1/10 [6500/8305] | TA: 91.48% | Saved checkpoint | ETA: 6:18:01
+Epoch 1/10 [6600/8305] | TA: 91.21% | Saved checkpoint | ETA: 6:17:32
+Epoch 1/10 [6700/8305] | TA: 91.50% | Saved checkpoint | ETA: 6:17:02
+Epoch 1/10 [6800/8305] | TA: 91.78% | Saved checkpoint | ETA: 6:16:33
+Epoch 1/10 [6900/8305] | TA: 92.07% | Saved checkpoint | ETA: 6:16:04
+Epoch 1/10 [7000/8305] | TA: 91.77% | Saved checkpoint | ETA: 6:15:34
+Epoch 1/10 [7100/8305] | TA: 92.38% | Saved checkpoint | ETA: 6:15:05
+Epoch 1/10 [7200/8305] | TA: 91.23% | Saved checkpoint | ETA: 6:14:35
+Epoch 1/10 [7300/8305] | TA: 91.09% | Saved checkpoint | ETA: 6:14:06
+Epoch 1/10 [7400/8305] | TA: 91.72% | Saved checkpoint | ETA: 6:13:37
+Epoch 1/10 [7500/8305] | TA: 91.20% | Saved checkpoint | ETA: 6:13:07
+Epoch 1/10 [7600/8305] | TA: 92.20% | Saved checkpoint | ETA: 6:12:38
+Epoch 1/10 [7700/8305] | TA: 92.19% | Saved checkpoint | ETA: 6:12:08
+Epoch 1/10 [7800/8305] | TA: 92.26% | Saved checkpoint | ETA: 6:11:38
+Epoch 1/10 [7900/8305] | TA: 91.59% | Saved checkpoint | ETA: 6:11:08
+Epoch 1/10 [8000/8305] | TA: 91.44% | Saved checkpoint | ETA: 6:10:38
+Epoch 1/10 [8100/8305] | TA: 91.69% | Saved checkpoint | ETA: 6:10:08
+Epoch 1/10 [8200/8305] | TA: 91.56% | Saved checkpoint | ETA: 6:09:38
+Epoch 1/10 [8300/8305] | TA: 91.86% | Saved checkpoint | ETA: 6:09:07
+Epoch 1/10 completed | Loss: 0.0943 | MLM Loss: 1.1238
+Epoch 2/10 [ 100/8305] | TA: 91.63% | Saved checkpoint | ETA: 21 days, 7:19:19
+Epoch 2/10 [ 200/8305] | TA: 91.59% | Saved checkpoint | ETA: 10 days, 19:39:29
+Epoch 2/10 [ 300/8305] | TA: 91.20% | Saved checkpoint | ETA: 7 days, 7:12:47
+Epoch 2/10 [ 400/8305] | TA: 92.20% | Saved checkpoint | ETA: 5 days, 12:52:12
+Epoch 2/10 [ 500/8305] | TA: 91.80% | Saved checkpoint | ETA: 4 days, 11:26:07
+Epoch 2/10 [ 600/8305] | TA: 91.75% | Saved checkpoint | ETA: 3 days, 18:27:37
+Epoch 2/10 [ 700/8305] | TA: 91.39% | Saved checkpoint | ETA: 3 days, 6:19:38
+Epoch 2/10 [ 800/8305] | TA: 92.41% | Saved checkpoint | ETA: 2 days, 21:13:20
+Epoch 2/10 [ 900/8305] | TA: 91.62% | Saved checkpoint | ETA: 2 days, 14:08:04
+Epoch 2/10 [1000/8305] | TA: 91.48% | Saved checkpoint | ETA: 2 days, 8:27:42
+Epoch 2/10 [1100/8305] | TA: 91.95% | Saved checkpoint | ETA: 2 days, 3:49:04
+Epoch 2/10 [1200/8305] | TA: 91.99% | Saved checkpoint | ETA: 1 day, 23:56:43
+Epoch 2/10 [1300/8305] | TA: 92.14% | Saved checkpoint | ETA: 1 day, 20:39:54
+Epoch 2/10 [1400/8305] | TA: 91.98% | Saved checkpoint | ETA: 1 day, 17:51:15
+Epoch 2/10 [1500/8305] | TA: 91.68% | Saved checkpoint | ETA: 1 day, 15:25:04
+Epoch 2/10 [1600/8305] | TA: 92.07% | Saved checkpoint | ETA: 1 day, 13:17:05
+Epoch 2/10 [1700/8305] | TA: 92.07% | Saved checkpoint | ETA: 1 day, 11:24:01
+Epoch 2/10 [1800/8305] | TA: 91.51% | Saved checkpoint | ETA: 1 day, 9:43:29
+Epoch 2/10 [1900/8305] | TA: 92.07% | Saved checkpoint | ETA: 1 day, 8:13:27
+Epoch 2/10 [2000/8305] | TA: 91.90% | Saved checkpoint | ETA: 1 day, 6:52:23
+Epoch 2/10 [2100/8305] | TA: 92.16% | Saved checkpoint | ETA: 1 day, 5:38:59
+Epoch 2/10 [2200/8305] | TA: 91.87% | Saved checkpoint | ETA: 1 day, 4:32:12
+Epoch 2/10 [2300/8305] | TA: 92.16% | Saved checkpoint | ETA: 1 day, 3:31:09
+Epoch 2/10 [2400/8305] | TA: 92.62% | Saved checkpoint | ETA: 1 day, 2:35:09
+Epoch 2/10 [2500/8305] | TA: 91.09% | Saved checkpoint | ETA: 1 day, 1:43:37
+Epoch 2/10 [2600/8305] | TA: 92.46% | Saved checkpoint | ETA: 1 day, 0:55:58
+Epoch 2/10 [2700/8305] | TA: 91.95% | Saved checkpoint | ETA: 1 day, 0:11:50
+Epoch 2/10 [2800/8305] | TA: 91.87% | Saved checkpoint | ETA: 23:30:50
+Epoch 2/10 [2900/8305] | TA: 91.38% | Saved checkpoint | ETA: 22:52:37
+Epoch 2/10 [3000/8305] | TA: 91.68% | Saved checkpoint | ETA: 22:16:54
+Epoch 2/10 [3100/8305] | TA: 92.31% | Saved checkpoint | ETA: 21:43:29
+Epoch 2/10 [3200/8305] | TA: 91.99% | Saved checkpoint | ETA: 21:12:07
+Epoch 2/10 [3300/8305] | TA: 92.31% | Saved checkpoint | ETA: 20:42:36
+Epoch 2/10 [3400/8305] | TA: 92.02% | Saved checkpoint | ETA: 20:14:49
+Epoch 2/10 [3500/8305] | TA: 92.20% | Saved checkpoint | ETA: 19:48:35
+Epoch 2/10 [3600/8305] | TA: 91.80% | Saved checkpoint | ETA: 19:23:47
+Epoch 2/10 [3700/8305] | TA: 92.08% | Saved checkpoint | ETA: 19:00:18
+Epoch 2/10 [3800/8305] | TA: 92.38% | Saved checkpoint | ETA: 18:38:01
+Epoch 2/10 [3900/8305] | TA: 92.04% | Saved checkpoint | ETA: 18:16:51
+Epoch 2/10 [4000/8305] | TA: 92.35% | Saved checkpoint | ETA: 17:56:42
+Epoch 2/10 [4100/8305] | TA: 91.96% | Saved checkpoint | ETA: 17:37:30
+Epoch 2/10 [4200/8305] | TA: 92.13% | Saved checkpoint | ETA: 17:19:13
+Epoch 2/10 [4300/8305] | TA: 92.01% | Saved checkpoint | ETA: 17:01:45
+Epoch 2/10 [4400/8305] | TA: 92.28% | Saved checkpoint | ETA: 16:45:03
+Epoch 2/10 [4500/8305] | TA: 92.52% | Saved checkpoint | ETA: 16:29:04
+Epoch 2/10 [4600/8305] | TA: 92.50% | Saved checkpoint | ETA: 16:13:46
+Epoch 2/10 [4700/8305] | TA: 91.90% | Saved checkpoint | ETA: 15:59:05
+Epoch 2/10 [4800/8305] | TA: 92.11% | Saved checkpoint | ETA: 15:44:59
+Epoch 2/10 [4900/8305] | TA: 91.77% | Saved checkpoint | ETA: 15:31:28
+Epoch 2/10 [5000/8305] | TA: 92.10% | Saved checkpoint | ETA: 15:18:29
+Epoch 2/10 [5100/8305] | TA: 92.11% | Saved checkpoint | ETA: 15:05:59
+Epoch 2/10 [5200/8305] | TA: 92.07% | Saved checkpoint | ETA: 14:53:56
+Epoch 2/10 [5300/8305] | TA: 92.17% | Saved checkpoint | ETA: 14:42:19
+Epoch 2/10 [5400/8305] | TA: 92.19% | Saved checkpoint | ETA: 14:31:06
+Epoch 2/10 [5500/8305] | TA: 92.26% | Saved checkpoint | ETA: 14:20:18
+Epoch 2/10 [5600/8305] | TA: 92.34% | Saved checkpoint | ETA: 14:09:52
+Epoch 2/10 [5700/8305] | TA: 92.29% | Saved checkpoint | ETA: 13:59:44
+Epoch 2/10 [5800/8305] | TA: 91.81% | Saved checkpoint | ETA: 13:49:58
+Epoch 2/10 [5900/8305] | TA: 91.77% | Saved checkpoint | ETA: 13:40:31
+Epoch 2/10 [6000/8305] | TA: 92.50% | Saved checkpoint | ETA: 13:31:23
+Epoch 2/10 [6100/8305] | TA: 91.69% | Saved checkpoint | ETA: 13:22:30
+Epoch 2/10 [6200/8305] | TA: 92.37% | Saved checkpoint | ETA: 13:13:55
+Epoch 2/10 [6300/8305] | TA: 92.32% | Saved checkpoint | ETA: 13:05:34
+Epoch 2/10 [6400/8305] | TA: 91.96% | Saved checkpoint | ETA: 12:57:25
+Epoch 2/10 [6500/8305] | TA: 92.29% | Saved checkpoint | ETA: 12:49:32
+Epoch 2/10 [6600/8305] | TA: 91.53% | Saved checkpoint | ETA: 12:41:52
+Epoch 2/10 [6700/8305] | TA: 92.38% | Saved checkpoint | ETA: 12:34:27
+Epoch 2/10 [6800/8305] | TA: 91.84% | Saved checkpoint | ETA: 12:27:14
+Epoch 2/10 [6900/8305] | TA: 91.71% | Saved checkpoint | ETA: 12:20:12
+Epoch 2/10 [7000/8305] | TA: 92.40% | Saved checkpoint | ETA: 12:13:23
+Epoch 2/10 [7100/8305] | TA: 91.96% | Saved checkpoint | ETA: 12:06:43
+Epoch 2/10 [7200/8305] | TA: 92.29% | Saved checkpoint | ETA: 12:00:14
+Epoch 2/10 [7300/8305] | TA: 92.40% | Saved checkpoint | ETA: 11:53:54
+Epoch 2/10 [7400/8305] | TA: 92.32% | Saved checkpoint | ETA: 11:47:44
+Epoch 2/10 [7500/8305] | TA: 92.02% | Saved checkpoint | ETA: 11:41:43
+Epoch 2/10 [7600/8305] | TA: 91.96% | Saved checkpoint | ETA: 11:35:51
+Epoch 2/10 [7700/8305] | TA: 91.80% | Saved checkpoint | ETA: 11:30:07
+Epoch 2/10 [7800/8305] | TA: 92.46% | Saved checkpoint | ETA: 11:24:31
+Epoch 2/10 [7900/8305] | TA: 92.40% | Saved checkpoint | ETA: 11:19:03
+Epoch 2/10 [8000/8305] | TA: 92.04% | Saved checkpoint | ETA: 11:13:42
+Epoch 2/10 [8100/8305] | TA: 91.66% | Saved checkpoint | ETA: 11:08:29
+Epoch 2/10 [8200/8305] | TA: 91.99% | Saved checkpoint | ETA: 11:03:23
+Epoch 2/10 [8300/8305] | TA: 92.34% | Saved checkpoint | ETA: 10:58:23
+Epoch 2/10 completed | Loss: 0.0902 | MLM Loss: 0.9957
+Epoch 3/10 [ 100/8305] | TA: 92.20% | Saved checkpoint | ETA: 37 days, 18:08:44
+Epoch 3/10 [ 200/8305] | TA: 92.19% | Saved checkpoint | ETA: 19 days, 1:21:39
+Epoch 3/10 [ 300/8305] | TA: 92.01% | Saved checkpoint | ETA: 12 days, 18:45:58
+Epoch 3/10 [ 400/8305] | TA: 92.19% | Saved checkpoint | ETA: 9 days, 15:16:51
+Epoch 3/10 [ 500/8305] | TA: 92.29% | Saved checkpoint | ETA: 7 days, 17:55:29
+Epoch 3/10 [ 600/8305] | TA: 92.23% | Saved checkpoint | ETA: 6 days, 11:39:37
+Epoch 3/10 [ 700/8305] | TA: 92.26% | Saved checkpoint | ETA: 5 days, 14:01:42
+Epoch 3/10 [ 800/8305] | TA: 92.25% | Saved checkpoint | ETA: 4 days, 21:47:43
+Epoch 3/10 [ 900/8305] | TA: 92.13% | Saved checkpoint | ETA: 4 days, 9:09:53
+Epoch 3/10 [1000/8305] | TA: 92.50% | Saved checkpoint | ETA: 3 days, 23:03:21
+Epoch 3/10 [1100/8305] | TA: 92.28% | Saved checkpoint | ETA: 3 days, 14:46:59
+Epoch 3/10 [1200/8305] | TA: 92.23% | Saved checkpoint | ETA: 3 days, 7:53:08
+Epoch 3/10 [1300/8305] | TA: 92.72% | Saved checkpoint | ETA: 3 days, 2:02:49
+Epoch 3/10 [1400/8305] | TA: 92.62% | Saved checkpoint | ETA: 2 days, 21:02:24
+Epoch 3/10 [1500/8305] | TA: 92.10% | Saved checkpoint | ETA: 2 days, 16:42:02
+Epoch 3/10 [1600/8305] | TA: 92.05% | Saved checkpoint | ETA: 2 days, 12:54:04
+Epoch 3/10 [1700/8305] | TA: 92.26% | Saved checkpoint | ETA: 2 days, 9:32:53
+Epoch 3/10 [1800/8305] | TA: 92.25% | Saved checkpoint | ETA: 2 days, 6:33:59
+Epoch 3/10 [1900/8305] | TA: 92.14% | Saved checkpoint | ETA: 2 days, 3:53:51
+Epoch 3/10 [2000/8305] | TA: 92.28% | Saved checkpoint | ETA: 2 days, 1:29:39
+Epoch 3/10 [2100/8305] | TA: 92.41% | Saved checkpoint | ETA: 1 day, 23:19:09
+Epoch 3/10 [2200/8305] | TA: 91.84% | Saved checkpoint | ETA: 1 day, 21:20:27
+Epoch 3/10 [2300/8305] | TA: 92.02% | Saved checkpoint | ETA: 1 day, 19:32:01
+Epoch 3/10 [2400/8305] | TA: 91.93% | Saved checkpoint | ETA: 1 day, 17:52:34
+Epoch 3/10 [2500/8305] | TA: 91.90% | Saved checkpoint | ETA: 1 day, 16:21:01
+Epoch 3/10 [2600/8305] | TA: 92.16% | Saved checkpoint | ETA: 1 day, 14:56:30
+Epoch 3/10 [2700/8305] | TA: 91.98% | Saved checkpoint | ETA: 1 day, 13:38:11
+Epoch 3/10 [2800/8305] | TA: 91.77% | Saved checkpoint | ETA: 1 day, 12:25:26
+Epoch 3/10 [2900/8305] | TA: 91.95% | Saved checkpoint | ETA: 1 day, 11:17:40
+Epoch 3/10 [3000/8305] | TA: 92.19% | Saved checkpoint | ETA: 1 day, 10:14:23
+Epoch 3/10 [3100/8305] | TA: 92.26% | Saved checkpoint | ETA: 1 day, 9:15:07
+Epoch 3/10 [3200/8305] | TA: 91.96% | Saved checkpoint | ETA: 1 day, 8:19:33
+Epoch 3/10 [3300/8305] | TA: 92.50% | Saved checkpoint | ETA: 1 day, 7:27:19
+Epoch 3/10 [3400/8305] | TA: 91.75% | Saved checkpoint | ETA: 1 day, 6:38:06
+Epoch 3/10 [3500/8305] | TA: 91.83% | Saved checkpoint | ETA: 1 day, 5:51:43
+Epoch 3/10 [3600/8305] | TA: 92.67% | Saved checkpoint | ETA: 1 day, 5:07:50
+Epoch 3/10 [3700/8305] | TA: 92.02% | Saved checkpoint | ETA: 1 day, 4:26:20
+Epoch 3/10 [3800/8305] | TA: 91.68% | Saved checkpoint | ETA: 1 day, 3:46:59
+Epoch 3/10 [3900/8305] | TA: 91.81% | Saved checkpoint | ETA: 1 day, 3:09:38
+Epoch 3/10 [4000/8305] | TA: 92.46% | Saved checkpoint | ETA: 1 day, 2:34:08
+Epoch 3/10 [4100/8305] | TA: 92.17% | Saved checkpoint | ETA: 1 day, 2:00:16
+Epoch 3/10 [4200/8305] | TA: 91.87% | Saved checkpoint | ETA: 1 day, 1:28:00
+Epoch 3/10 [4300/8305] | TA: 92.78% | Saved checkpoint | ETA: 1 day, 0:57:14
+Epoch 3/10 [4400/8305] | TA: 92.13% | Saved checkpoint | ETA: 1 day, 0:27:50
+Epoch 3/10 [4500/8305] | TA: 92.73% | Saved checkpoint | ETA: 23:59:45
+Epoch 3/10 [4600/8305] | TA: 92.22% | Saved checkpoint | ETA: 23:32:52
+Epoch 3/10 [4700/8305] | TA: 92.35% | Saved checkpoint | ETA: 23:07:05
+Epoch 3/10 [4800/8305] | TA: 92.17% | Saved checkpoint | ETA: 22:42:23
+Epoch 3/10 [4900/8305] | TA: 92.38% | Saved checkpoint | ETA: 22:18:39
+Epoch 3/10 [5000/8305] | TA: 92.05% | Saved checkpoint | ETA: 21:55:51
+Epoch 3/10 [5100/8305] | TA: 92.99% | Saved checkpoint | ETA: 21:33:56
+Epoch 3/10 [5200/8305] | TA: 92.47% | Saved checkpoint | ETA: 21:12:51
+Epoch 3/10 [5300/8305] | TA: 92.53% | Saved checkpoint | ETA: 20:52:32
+Epoch 3/10 [5400/8305] | TA: 92.32% | Saved checkpoint | ETA: 20:32:57
+Epoch 3/10 [5500/8305] | TA: 91.90% | Saved checkpoint | ETA: 20:14:03
+Epoch 3/10 [5600/8305] | TA: 91.69% | Saved checkpoint | ETA: 19:55:49
+Epoch 3/10 [5700/8305] | TA: 92.26% | Saved checkpoint | ETA: 19:38:12
+Epoch 3/10 [5800/8305] | TA: 91.87% | Saved checkpoint | ETA: 19:21:11
+Epoch 3/10 [5900/8305] | TA: 91.71% | Saved checkpoint | ETA: 19:04:43
+Epoch 3/10 [6000/8305] | TA: 92.79% | Saved checkpoint | ETA: 18:48:48
+Epoch 3/10 [6100/8305] | TA: 92.25% | Saved checkpoint | ETA: 18:33:22
+Epoch 3/10 [6200/8305] | TA: 92.14% | Saved checkpoint | ETA: 18:18:26
+Epoch 3/10 [6300/8305] | TA: 92.01% | Saved checkpoint | ETA: 18:03:57
+Epoch 3/10 [6400/8305] | TA: 92.55% | Saved checkpoint | ETA: 17:49:54
+Epoch 3/10 [6500/8305] | TA: 92.40% | Saved checkpoint | ETA: 17:36:17
+Epoch 3/10 [6600/8305] | TA: 92.34% | Saved checkpoint | ETA: 17:23:03
+Epoch 3/10 [6700/8305] | TA: 92.43% | Saved checkpoint | ETA: 17:10:12
+Epoch 3/10 [6800/8305] | TA: 92.41% | Saved checkpoint | ETA: 16:57:42
+Epoch 3/10 [6900/8305] | TA: 92.49% | Saved checkpoint | ETA: 16:45:34
+Epoch 3/10 [7000/8305] | TA: 92.53% | Saved checkpoint | ETA: 16:33:45
+Epoch 3/10 [7100/8305] | TA: 92.44% | Saved checkpoint | ETA: 16:22:16
+Epoch 3/10 [7200/8305] | TA: 92.26% | Saved checkpoint | ETA: 16:11:05
+Epoch 3/10 [7300/8305] | TA: 92.58% | Saved checkpoint | ETA: 16:00:11
+Epoch 3/10 [7400/8305] | TA: 92.66% | Saved checkpoint | ETA: 15:49:34
+Epoch 3/10 [7500/8305] | TA: 92.62% | Saved checkpoint | ETA: 15:39:13
+Epoch 3/10 [7600/8305] | TA: 92.37% | Saved checkpoint | ETA: 15:29:09
+Epoch 3/10 [7700/8305] | TA: 91.99% | Saved checkpoint | ETA: 15:19:18
+Epoch 3/10 [7800/8305] | TA: 92.35% | Saved checkpoint | ETA: 15:09:43
+Epoch 3/10 [7900/8305] | TA: 92.61% | Saved checkpoint | ETA: 15:00:20
+Epoch 3/10 [8000/8305] | TA: 92.41% | Saved checkpoint | ETA: 14:51:12
+Epoch 3/10 [8100/8305] | TA: 92.50% | Saved checkpoint | ETA: 14:42:15
+Epoch 3/10 [8200/8305] | TA: 92.73% | Saved checkpoint | ETA: 14:33:32
+Epoch 3/10 [8300/8305] | TA: 91.90% | Saved checkpoint | ETA: 14:25:01
+Epoch 3/10 completed | Loss: 0.0875 | MLM Loss: 0.9096
+Epoch 4/10 [ 100/8305] | TA: 92.17% | Saved checkpoint | ETA: 49 days, 11:44:54
+Epoch 4/10 [ 200/8305] | TA: 91.93% | Saved checkpoint | ETA: 24 days, 22:11:22
+Epoch 4/10 [ 300/8305] | TA: 91.78% | Saved checkpoint | ETA: 16 days, 16:21:27
+Epoch 4/10 [ 400/8305] | TA: 92.59% | Saved checkpoint | ETA: 12 days, 13:11:24
+Epoch 4/10 [ 500/8305] | TA: 92.38% | Saved checkpoint | ETA: 10 days, 1:36:21
+Epoch 4/10 [ 600/8305] | TA: 92.46% | Saved checkpoint | ETA: 8 days, 9:50:59
+Epoch 4/10 [ 700/8305] | TA: 92.37% | Saved checkpoint | ETA: 7 days, 5:25:57
+Epoch 4/10 [ 800/8305] | TA: 92.67% | Saved checkpoint | ETA: 6 days, 8:06:33
+Epoch 4/10 [ 900/8305] | TA: 92.66% | Saved checkpoint | ETA: 5 days, 15:31:03
+Epoch 4/10 [1000/8305] | TA: 92.73% | Saved checkpoint | ETA: 5 days, 2:14:21
+Epoch 4/10 [1100/8305] | TA: 92.11% | Saved checkpoint | ETA: 4 days, 15:22:19
+Epoch 4/10 [1200/8305] | TA: 92.35% | Saved checkpoint | ETA: 4 days, 6:18:38
+Epoch 4/10 [1300/8305] | TA: 92.07% | Saved checkpoint | ETA: 3 days, 22:38:35
+Epoch 4/10 [1400/8305] | TA: 92.07% | Saved checkpoint | ETA: 3 days, 16:04:03
+Epoch 4/10 [1500/8305] | TA: 92.13% | Saved checkpoint | ETA: 3 days, 10:22:03
+Epoch 4/10 [1600/8305] | TA: 92.44% | Saved checkpoint | ETA: 3 days, 5:22:44
+Epoch 4/10 [1700/8305] | TA: 92.20% | Saved checkpoint | ETA: 3 days, 0:58:36
+Epoch 4/10 [1800/8305] | TA: 91.74% | Saved checkpoint | ETA: 2 days, 21:03:44
+Epoch 4/10 [1900/8305] | TA: 92.43% | Saved checkpoint | ETA: 2 days, 17:33:28
+Epoch 4/10 [2000/8305] | TA: 92.23% | Saved checkpoint | ETA: 2 days, 14:24:10
+Epoch 4/10 [2100/8305] | TA: 92.43% | Saved checkpoint | ETA: 2 days, 11:32:53
+Epoch 4/10 [2200/8305] | TA: 92.23% | Saved checkpoint | ETA: 2 days, 8:57:03
+Epoch 4/10 [2300/8305] | TA: 92.38% | Saved checkpoint | ETA: 2 days, 6:34:45
+Epoch 4/10 [2400/8305] | TA: 92.69% | Saved checkpoint | ETA: 2 days, 4:24:17
+Epoch 4/10 [2500/8305] | TA: 92.19% | Saved checkpoint | ETA: 2 days, 2:24:11
+Epoch 4/10 [2600/8305] | TA: 92.08% | Saved checkpoint | ETA: 2 days, 0:33:17
+Epoch 4/10 [2700/8305] | TA: 92.55% | Saved checkpoint | ETA: 1 day, 22:50:35
+Epoch 4/10 [2800/8305] | TA: 92.16% | Saved checkpoint | ETA: 1 day, 21:15:08
+Epoch 4/10 [2900/8305] | TA: 92.28% | Saved checkpoint | ETA: 1 day, 19:46:14
+Epoch 4/10 [3000/8305] | TA: 91.57% | Saved checkpoint | ETA: 1 day, 18:23:15
+Epoch 4/10 [3100/8305] | TA: 91.62% | Saved checkpoint | ETA: 1 day, 17:05:35
+Epoch 4/10 [3200/8305] | TA: 92.35% | Saved checkpoint | ETA: 1 day, 15:52:43
+Epoch 4/10 [3300/8305] | TA: 92.55% | Saved checkpoint | ETA: 1 day, 14:44:11
+Epoch 4/10 [3400/8305] | TA: 92.05% | Saved checkpoint | ETA: 1 day, 13:39:39
+Epoch 4/10 [3500/8305] | TA: 92.13% | Saved checkpoint | ETA: 1 day, 12:38:49
+Epoch 4/10 [3600/8305] | TA: 92.32% | Saved checkpoint | ETA: 1 day, 11:41:23
+Epoch 4/10 [3700/8305] | TA: 92.41% | Saved checkpoint | ETA: 1 day, 10:47:00
+Epoch 4/10 [3800/8305] | TA: 92.10% | Saved checkpoint | ETA: 1 day, 9:55:28
+Epoch 4/10 [3900/8305] | TA: 92.10% | Saved checkpoint | ETA: 1 day, 9:06:33
+Epoch 4/10 [4000/8305] | TA: 92.25% | Saved checkpoint | ETA: 1 day, 8:20:03
+Epoch 4/10 [4100/8305] | TA: 92.53% | Saved checkpoint | ETA: 1 day, 7:35:48
+Epoch 4/10 [4200/8305] | TA: 92.11% | Saved checkpoint | ETA: 1 day, 6:53:37
+Epoch 4/10 [4300/8305] | TA: 92.08% | Saved checkpoint | ETA: 1 day, 6:13:23
+Epoch 4/10 [4400/8305] | TA: 92.64% | Saved checkpoint | ETA: 1 day, 5:34:58
+Epoch 4/10 [4500/8305] | TA: 92.58% | Saved checkpoint | ETA: 1 day, 4:58:13
+Epoch 4/10 [4600/8305] | TA: 92.53% | Saved checkpoint | ETA: 1 day, 4:23:04
+Epoch 4/10 [4700/8305] | TA: 92.53% | Saved checkpoint | ETA: 1 day, 3:49:22
+Epoch 4/10 [4800/8305] | TA: 92.53% | Saved checkpoint | ETA: 1 day, 3:17:03
+Epoch 4/10 [4900/8305] | TA: 92.23% | Saved checkpoint | ETA: 1 day, 2:46:02
+Epoch 4/10 [5000/8305] | TA: 93.00% | Saved checkpoint | ETA: 1 day, 2:16:15
+Epoch 4/10 [5100/8305] | TA: 91.51% | Saved checkpoint | ETA: 1 day, 1:47:37
+Epoch 4/10 [5200/8305] | TA: 92.58% | Saved checkpoint | ETA: 1 day, 1:20:03
+Epoch 4/10 [5300/8305] | TA: 92.20% | Saved checkpoint | ETA: 1 day, 0:53:31
+Epoch 4/10 [5400/8305] | TA: 92.75% | Saved checkpoint | ETA: 1 day, 0:27:57
+Epoch 4/10 [5500/8305] | TA: 92.43% | Saved checkpoint | ETA: 1 day, 0:03:17
+Epoch 4/10 [5600/8305] | TA: 92.72% | Saved checkpoint | ETA: 23:39:29
+Epoch 4/10 [5700/8305] | TA: 92.17% | Saved checkpoint | ETA: 23:16:31
+Epoch 4/10 [5800/8305] | TA: 92.16% | Saved checkpoint | ETA: 22:54:18
+Epoch 4/10 [5900/8305] | TA: 92.28% | Saved checkpoint | ETA: 22:32:50
+Epoch 4/10 [6000/8305] | TA: 92.90% | Saved checkpoint | ETA: 22:12:04
+Epoch 4/10 [6100/8305] | TA: 92.53% | Saved checkpoint | ETA: 21:51:58
+Epoch 4/10 [6200/8305] | TA: 91.74% | Saved checkpoint | ETA: 21:32:29
+Epoch 4/10 [6300/8305] | TA: 92.20% | Saved checkpoint | ETA: 21:13:37
+Epoch 4/10 [6400/8305] | TA: 92.62% | Saved checkpoint | ETA: 20:55:19
+Epoch 4/10 [6500/8305] | TA: 92.26% | Saved checkpoint | ETA: 20:37:33
+Epoch 4/10 [6600/8305] | TA: 91.93% | Saved checkpoint | ETA: 20:20:20
+Epoch 4/10 [6700/8305] | TA: 92.19% | Saved checkpoint | ETA: 20:03:36
+Epoch 4/10 [6800/8305] | TA: 92.46% | Saved checkpoint | ETA: 19:47:21
+Epoch 4/10 [6900/8305] | TA: 92.53% | Saved checkpoint | ETA: 19:31:33
+Epoch 4/10 [7000/8305] | TA: 92.38% | Saved checkpoint | ETA: 19:16:12
+Epoch 4/10 [7100/8305] | TA: 91.87% | Saved checkpoint | ETA: 19:01:16
+Epoch 4/10 [7200/8305] | TA: 92.56% | Saved checkpoint | ETA: 18:46:43
+Epoch 4/10 [7300/8305] | TA: 92.31% | Saved checkpoint | ETA: 18:32:34
+Epoch 4/10 [7400/8305] | TA: 92.69% | Saved checkpoint | ETA: 18:18:47
+Epoch 4/10 [7500/8305] | TA: 92.64% | Saved checkpoint | ETA: 18:05:21
+Epoch 4/10 [7600/8305] | TA: 92.67% | Saved checkpoint | ETA: 17:52:16
+Epoch 4/10 [7700/8305] | TA: 92.66% | Saved checkpoint | ETA: 17:39:30
+Epoch 4/10 [7800/8305] | TA: 92.56% | Saved checkpoint | ETA: 17:27:03
+Epoch 4/10 [7900/8305] | TA: 92.40% | Saved checkpoint | ETA: 17:14:54
+Epoch 4/10 [8000/8305] | TA: 92.19% | Saved checkpoint | ETA: 17:03:03
+Epoch 4/10 [8100/8305] | TA: 92.38% | Saved checkpoint | ETA: 16:51:29
+Epoch 4/10 [8200/8305] | TA: 91.75% | Saved checkpoint | ETA: 16:40:11
+Epoch 4/10 [8300/8305] | TA: 91.78% | Saved checkpoint | ETA: 16:29:08
+Epoch 4/10 completed | Loss: 0.0872 | MLM Loss: 0.8907
+Epoch 5/10 [ 100/8305] | TA: 91.95% | Saved checkpoint | ETA: 56 days, 12:19:37
+Epoch 5/10 [ 200/8305] | TA: 92.69% | Saved checkpoint | ETA: 28 days, 10:12:41
+Epoch 5/10 [ 300/8305] | TA: 91.38% | Saved checkpoint | ETA: 19 days, 0:00:30
+Epoch 5/10 [ 400/8305] | TA: 92.56% | Saved checkpoint | ETA: 14 days, 6:37:14
+Epoch 5/10 [ 500/8305] | TA: 92.49% | Saved checkpoint | ETA: 11 days, 10:29:14
+Epoch 5/10 [ 600/8305] | TA: 92.41% | Saved checkpoint | ETA: 9 days, 13:01:25
+Epoch 5/10 [ 700/8305] | TA: 92.58% | Saved checkpoint | ETA: 8 days, 4:32:09
+Epoch 5/10 [ 800/8305] | TA: 92.79% | Saved checkpoint | ETA: 7 days, 4:09:26
+Epoch 5/10 [ 900/8305] | TA: 92.23% | Saved checkpoint | ETA: 6 days, 9:11:09
+Epoch 5/10 [1000/8305] | TA: 92.31% | Saved checkpoint | ETA: 5 days, 18:00:16
+Epoch 5/10 [1100/8305] | TA: 92.91% | Saved checkpoint | ETA: 5 days, 5:34:38
+Epoch 5/10 [1200/8305] | TA: 92.37% | Saved checkpoint | ETA: 4 days, 19:13:11
+Epoch 5/10 [1300/8305] | TA: 91.71% | Saved checkpoint | ETA: 4 days, 10:27:12
+Epoch 5/10 [1400/8305] | TA: 92.78% | Saved checkpoint | ETA: 4 days, 2:56:15
+Epoch 5/10 [1500/8305] | TA: 92.43% | Saved checkpoint | ETA: 3 days, 20:25:20
+Epoch 5/10 [1600/8305] | TA: 92.47% | Saved checkpoint | ETA: 3 days, 14:43:11
+Epoch 5/10 [1700/8305] | TA: 92.99% | Saved checkpoint | ETA: 3 days, 9:41:13
+Epoch 5/10 [1800/8305] | TA: 92.85% | Saved checkpoint | ETA: 3 days, 5:12:43
+Epoch 5/10 [1900/8305] | TA: 93.12% | Saved checkpoint | ETA: 3 days, 1:12:25
+Epoch 5/10 [2000/8305] | TA: 92.76% | Saved checkpoint | ETA: 2 days, 21:36:05
+Epoch 5/10 [2100/8305] | TA: 92.62% | Saved checkpoint | ETA: 2 days, 18:20:19
+Epoch 5/10 [2200/8305] | TA: 91.74% | Saved checkpoint | ETA: 2 days, 15:22:14
+Epoch 5/10 [2300/8305] | TA: 92.52% | Saved checkpoint | ETA: 2 days, 12:39:39
+Epoch 5/10 [2400/8305] | TA: 92.69% | Saved checkpoint | ETA: 2 days, 10:10:31
+Epoch 5/10 [2500/8305] | TA: 91.62% | Saved checkpoint | ETA: 2 days, 7:53:17
+Epoch 5/10 [2600/8305] | TA: 92.07% | Saved checkpoint | ETA: 2 days, 5:46:31
+Epoch 5/10 [2700/8305] | TA: 92.73% | Saved checkpoint | ETA: 2 days, 3:49:10
+Epoch 5/10 [2800/8305] | TA: 92.02% | Saved checkpoint | ETA: 2 days, 2:00:09
+Epoch 5/10 [2900/8305] | TA: 92.41% | Saved checkpoint | ETA: 2 days, 0:18:37
+Epoch 5/10 [3000/8305] | TA: 92.14% | Saved checkpoint | ETA: 1 day, 22:43:49
+Epoch 5/10 [3100/8305] | TA: 92.29% | Saved checkpoint | ETA: 1 day, 21:15:06
+Epoch 5/10 [3200/8305] | TA: 92.84% | Saved checkpoint | ETA: 1 day, 19:51:54
+Epoch 5/10 [3300/8305] | TA: 92.23% | Saved checkpoint | ETA: 1 day, 18:33:42
+Epoch 5/10 [3400/8305] | TA: 92.40% | Saved checkpoint | ETA: 1 day, 17:20:05
+Epoch 5/10 [3500/8305] | TA: 92.44% | Saved checkpoint | ETA: 1 day, 16:10:36
+Epoch 5/10 [3600/8305] | TA: 92.22% | Saved checkpoint | ETA: 1 day, 15:04:59
+Epoch 5/10 [3700/8305] | TA: 92.47% | Saved checkpoint | ETA: 1 day, 14:02:54
+Epoch 5/10 [3800/8305] | TA: 92.72% | Saved checkpoint | ETA: 1 day, 13:04:01
+Epoch 5/10 [3900/8305] | TA: 92.75% | Saved checkpoint | ETA: 1 day, 12:08:09
+Epoch 5/10 [4000/8305] | TA: 93.30% | Saved checkpoint | ETA: 1 day, 11:15:03
+Epoch 5/10 [4100/8305] | TA: 92.56% | Saved checkpoint | ETA: 1 day, 10:24:32
+Epoch 5/10 [4200/8305] | TA: 92.52% | Saved checkpoint | ETA: 1 day, 9:36:23
+Epoch 5/10 [4300/8305] | TA: 92.99% | Saved checkpoint | ETA: 1 day, 8:50:27
+Epoch 5/10 [4400/8305] | TA: 92.56% | Saved checkpoint | ETA: 1 day, 8:06:35
+Epoch 5/10 [4500/8305] | TA: 92.69% | Saved checkpoint | ETA: 1 day, 7:24:39
+Epoch 5/10 [4600/8305] | TA: 92.62% | Saved checkpoint | ETA: 1 day, 6:44:30
+Epoch 5/10 [4700/8305] | TA: 93.02% | Saved checkpoint | ETA: 1 day, 6:06:03
+Epoch 5/10 [4800/8305] | TA: 91.92% | Saved checkpoint | ETA: 1 day, 5:29:11
+Epoch 5/10 [4900/8305] | TA: 92.64% | Saved checkpoint | ETA: 1 day, 4:53:47
+Epoch 5/10 [5000/8305] | TA: 92.35% | Saved checkpoint | ETA: 1 day, 4:19:48
+Epoch 5/10 [5100/8305] | TA: 92.76% | Saved checkpoint | ETA: 1 day, 3:47:08
+Epoch 5/10 [5200/8305] | TA: 92.02% | Saved checkpoint | ETA: 1 day, 3:15:42
+Epoch 5/10 [5300/8305] | TA: 92.47% | Saved checkpoint | ETA: 1 day, 2:45:25
+Epoch 5/10 [5400/8305] | TA: 92.82% | Saved checkpoint | ETA: 1 day, 2:16:15
+Epoch 5/10 [5500/8305] | TA: 92.82% | Saved checkpoint | ETA: 1 day, 1:48:08
+Epoch 5/10 [5600/8305] | TA: 92.19% | Saved checkpoint | ETA: 1 day, 1:20:59
+Epoch 5/10 [5700/8305] | TA: 92.31% | Saved checkpoint | ETA: 1 day, 0:54:47
+Epoch 5/10 [5800/8305] | TA: 92.38% | Saved checkpoint | ETA: 1 day, 0:29:27
+Epoch 5/10 [5900/8305] | TA: 92.35% | Saved checkpoint | ETA: 1 day, 0:04:59
+Epoch 5/10 [6000/8305] | TA: 92.23% | Saved checkpoint | ETA: 23:41:18
+Epoch 5/10 [6100/8305] | TA: 91.86% | Saved checkpoint | ETA: 23:18:22
+Epoch 5/10 [6200/8305] | TA: 91.93% | Saved checkpoint | ETA: 22:56:10
+Epoch 5/10 [6300/8305] | TA: 92.40% | Saved checkpoint | ETA: 22:34:39
+Epoch 5/10 [6400/8305] | TA: 92.90% | Saved checkpoint | ETA: 22:13:47
+Epoch 5/10 [6500/8305] | TA: 92.10% | Saved checkpoint | ETA: 21:53:33
+Epoch 5/10 [6600/8305] | TA: 92.34% | Saved checkpoint | ETA: 21:33:55
+Epoch 5/10 [6700/8305] | TA: 92.49% | Saved checkpoint | ETA: 21:14:50
+Epoch 5/10 [6800/8305] | TA: 92.41% | Saved checkpoint | ETA: 20:56:19
+Epoch 5/10 [6900/8305] | TA: 92.44% | Saved checkpoint | ETA: 20:38:20
+Epoch 5/10 [7000/8305] | TA: 92.55% | Saved checkpoint | ETA: 20:20:51
+Epoch 5/10 [7100/8305] | TA: 91.38% | Saved checkpoint | ETA: 20:03:50
+Epoch 5/10 [7200/8305] | TA: 91.96% | Saved checkpoint | ETA: 19:47:17
+Epoch 5/10 [7300/8305] | TA: 92.66% | Saved checkpoint | ETA: 19:31:10
+Epoch 5/10 [7400/8305] | TA: 92.73% | Saved checkpoint | ETA: 19:15:28
+Epoch 5/10 [7500/8305] | TA: 92.72% | Saved checkpoint | ETA: 19:00:10
+Epoch 5/10 [7600/8305] | TA: 92.53% | Saved checkpoint | ETA: 18:45:17
+Epoch 5/10 [7700/8305] | TA: 92.56% | Saved checkpoint | ETA: 18:30:45
+Epoch 5/10 [7800/8305] | TA: 92.66% | Saved checkpoint | ETA: 18:16:35
+Epoch 5/10 [7900/8305] | TA: 92.58% | Saved checkpoint | ETA: 18:02:46
+Epoch 5/10 [8000/8305] | TA: 92.52% | Saved checkpoint | ETA: 17:49:17
+Epoch 5/10 [8100/8305] | TA: 92.40% | Saved checkpoint | ETA: 17:36:07
+Epoch 5/10 [8200/8305] | TA: 92.67% | Saved checkpoint | ETA: 17:23:16
+Epoch 5/10 [8300/8305] | TA: 92.58% | Saved checkpoint | ETA: 17:10:43
+Epoch 5/10 completed | Loss: 0.0791 | MLM Loss: 0.8801
+Epoch 6/10 [ 100/8305] | TA: 92.91% | Saved checkpoint | ETA: 58 days, 19:52:31
+Epoch 6/10 [ 200/8305] | TA: 92.87% | Saved checkpoint | ETA: 29 days, 13:26:29
+Epoch 6/10 [ 300/8305] | TA: 91.74% | Saved checkpoint | ETA: 19 days, 17:44:11
+Epoch 6/10 [ 400/8305] | TA: 92.66% | Saved checkpoint | ETA: 14 days, 19:35:08
+Epoch 6/10 [ 500/8305] | TA: 92.43% | Saved checkpoint | ETA: 11 days, 20:35:51
+Epoch 6/10 [ 600/8305] | TA: 93.09% | Saved checkpoint | ETA: 9 days, 21:13:47
+Epoch 6/10 [ 700/8305] | TA: 92.72% | Saved checkpoint | ETA: 8 days, 11:22:30
+Epoch 6/10 [ 800/8305] | TA: 92.73% | Saved checkpoint | ETA: 7 days, 9:58:09
+Epoch 6/10 [ 900/8305] | TA: 92.82% | Saved checkpoint | ETA: 6 days, 14:12:07
+Epoch 6/10 [1000/8305] | TA: 92.88% | Saved checkpoint | ETA: 5 days, 22:22:56
+Epoch 6/10 [1100/8305] | TA: 91.89% | Saved checkpoint | ETA: 5 days, 9:26:06
+Epoch 6/10 [1200/8305] | TA: 92.20% | Saved checkpoint | ETA: 4 days, 22:38:33
+Epoch 6/10 [1300/8305] | TA: 92.73% | Saved checkpoint | ETA: 4 days, 13:30:27
+Epoch 6/10 [1400/8305] | TA: 92.11% | Saved checkpoint | ETA: 4 days, 5:40:32
+Epoch 6/10 [1500/8305] | TA: 92.49% | Saved checkpoint | ETA: 3 days, 22:53:11
+Epoch 6/10 [1600/8305] | TA: 92.75% | Saved checkpoint | ETA: 3 days, 16:56:38
+Epoch 6/10 [1700/8305] | TA: 92.40% | Saved checkpoint | ETA: 3 days, 11:41:59
+Epoch 6/10 [1800/8305] | TA: 92.66% | Saved checkpoint | ETA: 3 days, 7:02:12
+Epoch 6/10 [1900/8305] | TA: 92.96% | Saved checkpoint | ETA: 3 days, 2:51:47
+Epoch 6/10 [2000/8305] | TA: 92.20% | Saved checkpoint | ETA: 2 days, 23:06:21
+Epoch 6/10 [2100/8305] | TA: 93.18% | Saved checkpoint | ETA: 2 days, 19:42:20
+Epoch 6/10 [2200/8305] | TA: 92.46% | Saved checkpoint | ETA: 2 days, 16:36:48
+Epoch 6/10 [2300/8305] | TA: 92.40% | Saved checkpoint | ETA: 2 days, 13:47:23
+Epoch 6/10 [2400/8305] | TA: 92.67% | Saved checkpoint | ETA: 2 days, 11:11:59
+Epoch 6/10 [2500/8305] | TA: 92.23% | Saved checkpoint | ETA: 2 days, 8:48:59
+Epoch 6/10 [2600/8305] | TA: 93.02% | Saved checkpoint | ETA: 2 days, 6:36:57
+Epoch 6/10 [2700/8305] | TA: 92.53% | Saved checkpoint | ETA: 2 days, 4:34:41
+Epoch 6/10 [2800/8305] | TA: 92.28% | Saved checkpoint | ETA: 2 days, 2:41:06
+Epoch 6/10 [2900/8305] | TA: 92.37% | Saved checkpoint | ETA: 2 days, 0:55:18
+Epoch 6/10 [3000/8305] | TA: 92.35% | Saved checkpoint | ETA: 1 day, 23:16:31
+Epoch 6/10 [3100/8305] | TA: 91.95% | Saved checkpoint | ETA: 1 day, 21:44:05
+Epoch 6/10 [3200/8305] | TA: 92.37% | Saved checkpoint | ETA: 1 day, 20:17:24
+Epoch 6/10 [3300/8305] | TA: 92.67% | Saved checkpoint | ETA: 1 day, 18:55:56
+Epoch 6/10 [3400/8305] | TA: 92.53% | Saved checkpoint | ETA: 1 day, 17:39:14
+Epoch 6/10 [3500/8305] | TA: 92.56% | Saved checkpoint | ETA: 1 day, 16:26:50
+Epoch 6/10 [3600/8305] | TA: 92.52% | Saved checkpoint | ETA: 1 day, 15:18:27
+Epoch 6/10 [3700/8305] | TA: 92.23% | Saved checkpoint | ETA: 1 day, 14:13:46
+Epoch 6/10 [3800/8305] | TA: 92.79% | Saved checkpoint | ETA: 1 day, 13:12:28
+Epoch 6/10 [3900/8305] | TA: 92.75% | Saved checkpoint | ETA: 1 day, 12:14:15
+Epoch 6/10 [4000/8305] | TA: 92.32% | Saved checkpoint | ETA: 1 day, 11:18:56
+Epoch 6/10 [4100/8305] | TA: 92.75% | Saved checkpoint | ETA: 1 day, 10:26:18
+Epoch 6/10 [4200/8305] | TA: 92.64% | Saved checkpoint | ETA: 1 day, 9:36:09
+Epoch 6/10 [4300/8305] | TA: 92.70% | Saved checkpoint | ETA: 1 day, 8:48:17
+Epoch 6/10 [4400/8305] | TA: 92.11% | Saved checkpoint | ETA: 1 day, 8:02:35
+Epoch 6/10 [4500/8305] | TA: 92.34% | Saved checkpoint | ETA: 1 day, 7:18:53
+Epoch 6/10 [4600/8305] | TA: 91.98% | Saved checkpoint | ETA: 1 day, 6:37:04
+Epoch 6/10 [4700/8305] | TA: 92.05% | Saved checkpoint | ETA: 1 day, 5:57:01
+Epoch 6/10 [4800/8305] | TA: 92.94% | Saved checkpoint | ETA: 1 day, 5:18:36
+Epoch 6/10 [4900/8305] | TA: 92.81% | Saved checkpoint | ETA: 1 day, 4:41:44
+Epoch 6/10 [5000/8305] | TA: 92.53% | Saved checkpoint | ETA: 1 day, 4:06:19
+Epoch 6/10 [5100/8305] | TA: 92.55% | Saved checkpoint | ETA: 1 day, 3:32:17
+Epoch 6/10 [5200/8305] | TA: 92.61% | Saved checkpoint | ETA: 1 day, 2:59:32
+Epoch 6/10 [5300/8305] | TA: 92.05% | Saved checkpoint | ETA: 1 day, 2:28:00
+Epoch 6/10 [5400/8305] | TA: 92.70% | Saved checkpoint | ETA: 1 day, 1:57:36
+Epoch 6/10 [5500/8305] | TA: 93.08% | Saved checkpoint | ETA: 1 day, 1:28:18
+Epoch 6/10 [5600/8305] | TA: 92.64% | Saved checkpoint | ETA: 1 day, 1:00:01
+Epoch 6/10 [5700/8305] | TA: 91.87% | Saved checkpoint | ETA: 1 day, 0:32:43
+Epoch 6/10 [5800/8305] | TA: 92.81% | Saved checkpoint | ETA: 1 day, 0:06:21
+Epoch 6/10 [5900/8305] | TA: 92.79% | Saved checkpoint | ETA: 23:40:51
+Epoch 6/10 [6000/8305] | TA: 92.19% | Saved checkpoint | ETA: 23:16:11
+Epoch 6/10 [6100/8305] | TA: 93.08% | Saved checkpoint | ETA: 22:52:19
+Epoch 6/10 [6200/8305] | TA: 92.52% | Saved checkpoint | ETA: 22:29:13
+Epoch 6/10 [6300/8305] | TA: 92.64% | Saved checkpoint | ETA: 22:06:49
+Epoch 6/10 [6400/8305] | TA: 91.87% | Saved checkpoint | ETA: 21:45:06
+Epoch 6/10 [6500/8305] | TA: 93.27% | Saved checkpoint | ETA: 21:24:02
+Epoch 6/10 [6600/8305] | TA: 92.49% | Saved checkpoint | ETA: 21:03:36
+Epoch 6/10 [6700/8305] | TA: 91.99% | Saved checkpoint | ETA: 20:43:46
+Epoch 6/10 [6800/8305] | TA: 92.49% | Saved checkpoint | ETA: 20:24:30
+Epoch 6/10 [6900/8305] | TA: 92.58% | Saved checkpoint | ETA: 20:05:47
+Epoch 6/10 [7000/8305] | TA: 92.07% | Saved checkpoint | ETA: 19:47:34
+Epoch 6/10 [7100/8305] | TA: 92.40% | Saved checkpoint | ETA: 19:29:52
+Epoch 6/10 [7200/8305] | TA: 92.58% | Saved checkpoint | ETA: 19:12:39
+Epoch 6/10 [7300/8305] | TA: 92.13% | Saved checkpoint | ETA: 18:55:52
+Epoch 6/10 [7400/8305] | TA: 92.25% | Saved checkpoint | ETA: 18:39:33
+Epoch 6/10 [7500/8305] | TA: 91.77% | Saved checkpoint | ETA: 18:23:38
+Epoch 6/10 [7600/8305] | TA: 92.23% | Saved checkpoint | ETA: 18:08:08
+Epoch 6/10 [7700/8305] | TA: 92.35% | Saved checkpoint | ETA: 17:53:02
+Epoch 6/10 [7800/8305] | TA: 92.19% | Saved checkpoint | ETA: 17:38:17
+Epoch 6/10 [7900/8305] | TA: 92.56% | Saved checkpoint | ETA: 17:23:55
+Epoch 6/10 [8000/8305] | TA: 92.35% | Saved checkpoint | ETA: 17:09:53
+Epoch 6/10 [8100/8305] | TA: 92.53% | Saved checkpoint | ETA: 16:56:11
+Epoch 6/10 [8200/8305] | TA: 92.17% | Saved checkpoint | ETA: 16:42:49
+Epoch 6/10 [8300/8305] | TA: 92.97% | Saved checkpoint | ETA: 16:29:45
+Epoch 6/10 completed | Loss: 0.0990 | MLM Loss: 0.8739
+Epoch 7/10 [ 100/8305] | TA: 92.88% | Saved checkpoint | ETA: 56 days, 10:19:56
+Epoch 7/10 [ 200/8305] | TA: 92.78% | Saved checkpoint | ETA: 28 days, 7:50:24
+Epoch 7/10 [ 300/8305] | TA: 92.34% | Saved checkpoint | ETA: 18 days, 21:30:29
+Epoch 7/10 [ 400/8305] | TA: 92.53% | Saved checkpoint | ETA: 14 days, 4:03:29
+Epoch 7/10 [ 500/8305] | TA: 92.82% | Saved checkpoint | ETA: 11 days, 7:53:38
+Epoch 7/10 [ 600/8305] | TA: 92.79% | Saved checkpoint | ETA: 9 days, 10:24:38
+Epoch 7/10 [ 700/8305] | TA: 92.59% | Saved checkpoint | ETA: 8 days, 1:54:06
+Epoch 7/10 [ 800/8305] | TA: 92.81% | Saved checkpoint | ETA: 7 days, 1:30:28
+Epoch 7/10 [ 900/8305] | TA: 92.64% | Saved checkpoint | ETA: 6 days, 6:31:37
+Epoch 7/10 [1000/8305] | TA: 92.50% | Saved checkpoint | ETA: 5 days, 15:20:12
+Epoch 7/10 [1100/8305] | TA: 92.23% | Saved checkpoint | ETA: 5 days, 2:54:15
+Epoch 7/10 [1200/8305] | TA: 92.90% | Saved checkpoint | ETA: 4 days, 16:32:25
+Epoch 7/10 [1300/8305] | TA: 92.47% | Saved checkpoint | ETA: 4 days, 7:46:07
+Epoch 7/10 [1400/8305] | TA: 92.85% | Saved checkpoint | ETA: 4 days, 0:14:53
+Epoch 7/10 [1500/8305] | TA: 92.55% | Saved checkpoint | ETA: 3 days, 17:43:41
+Epoch 7/10 [1600/8305] | TA: 92.82% | Saved checkpoint | ETA: 3 days, 12:01:15
+Epoch 7/10 [1700/8305] | TA: 92.32% | Saved checkpoint | ETA: 3 days, 6:59:03
+Epoch 7/10 [1800/8305] | TA: 92.75% | Saved checkpoint | ETA: 3 days, 2:30:23
+Epoch 7/10 [1900/8305] | TA: 92.69% | Saved checkpoint | ETA: 2 days, 22:29:56
+Epoch 7/10 [2000/8305] | TA: 92.20% | Saved checkpoint | ETA: 2 days, 18:53:28
+Epoch 7/10 [2100/8305] | TA: 92.59% | Saved checkpoint | ETA: 2 days, 15:37:34
+Epoch 7/10 [2200/8305] | TA: 92.69% | Saved checkpoint | ETA: 2 days, 12:39:25
+Epoch 7/10 [2300/8305] | TA: 92.46% | Saved checkpoint | ETA: 2 days, 9:56:43
+Epoch 7/10 [2400/8305] | TA: 92.56% | Saved checkpoint | ETA: 2 days, 7:27:30
+Epoch 7/10 [2500/8305] | TA: 93.03% | Saved checkpoint | ETA: 2 days, 5:10:10
+Epoch 7/10 [2600/8305] | TA: 92.13% | Saved checkpoint | ETA: 2 days, 3:03:23
+Epoch 7/10 [2700/8305] | TA: 92.50% | Saved checkpoint | ETA: 2 days, 1:05:56
+Epoch 7/10 [2800/8305] | TA: 92.49% | Saved checkpoint | ETA: 1 day, 23:16:52
+Epoch 7/10 [2900/8305] | TA: 92.70% | Saved checkpoint | ETA: 1 day, 21:35:16
+Epoch 7/10 [3000/8305] | TA: 92.76% | Saved checkpoint | ETA: 1 day, 20:00:24
+Epoch 7/10 [3100/8305] | TA: 92.75% | Saved checkpoint | ETA: 1 day, 18:31:37
+Epoch 7/10 [3200/8305] | TA: 92.66% | Saved checkpoint | ETA: 1 day, 17:08:21
+Epoch 7/10 [3300/8305] | TA: 92.59% | Saved checkpoint | ETA: 1 day, 15:50:06
+Epoch 7/10 [3400/8305] | TA: 92.62% | Saved checkpoint | ETA: 1 day, 14:36:25
+Epoch 7/10 [3500/8305] | TA: 92.28% | Saved checkpoint | ETA: 1 day, 13:26:55
+Epoch 7/10 [3600/8305] | TA: 92.67% | Saved checkpoint | ETA: 1 day, 12:21:15
+Epoch 7/10 [3700/8305] | TA: 92.75% | Saved checkpoint | ETA: 1 day, 11:19:06
+Epoch 7/10 [3800/8305] | TA: 92.69% | Saved checkpoint | ETA: 1 day, 10:20:12
+Epoch 7/10 [3900/8305] | TA: 92.78% | Saved checkpoint | ETA: 1 day, 9:24:19
+Epoch 7/10 [4000/8305] | TA: 92.78% | Saved checkpoint | ETA: 1 day, 8:31:11
+Epoch 7/10 [4100/8305] | TA: 92.82% | Saved checkpoint | ETA: 1 day, 7:40:37
+Epoch 7/10 [4200/8305] | TA: 92.44% | Saved checkpoint | ETA: 1 day, 6:52:27
+Epoch 7/10 [4300/8305] | TA: 92.88% | Saved checkpoint | ETA: 1 day, 6:06:29
+Epoch 7/10 [4400/8305] | TA: 92.76% | Saved checkpoint | ETA: 1 day, 5:22:35
+Epoch 7/10 [4500/8305] | TA: 92.75% | Saved checkpoint | ETA: 1 day, 4:40:37
+Epoch 7/10 [4600/8305] | TA: 92.85% | Saved checkpoint | ETA: 1 day, 4:00:28
+Epoch 7/10 [4700/8305] | TA: 92.50% | Saved checkpoint | ETA: 1 day, 3:21:59
+Epoch 7/10 [4800/8305] | TA: 92.38% | Saved checkpoint | ETA: 1 day, 2:45:04
+Epoch 7/10 [4900/8305] | TA: 92.44% | Saved checkpoint | ETA: 1 day, 2:09:38
+Epoch 7/10 [5000/8305] | TA: 92.75% | Saved checkpoint | ETA: 1 day, 1:35:37
+Epoch 7/10 [5100/8305] | TA: 92.64% | Saved checkpoint | ETA: 1 day, 1:02:54
+Epoch 7/10 [5200/8305] | TA: 92.43% | Saved checkpoint | ETA: 1 day, 0:31:27
+Epoch 7/10 [5300/8305] | TA: 92.59% | Saved checkpoint | ETA: 1 day, 0:01:09
+Epoch 7/10 [5400/8305] | TA: 92.52% | Saved checkpoint | ETA: 23:31:58
+Epoch 7/10 [5500/8305] | TA: 92.61% | Saved checkpoint | ETA: 23:03:49
+Epoch 7/10 [5600/8305] | TA: 92.78% | Saved checkpoint | ETA: 22:36:39
+Epoch 7/10 [5700/8305] | TA: 92.56% | Saved checkpoint | ETA: 22:10:26
+Epoch 7/10 [5800/8305] | TA: 92.41% | Saved checkpoint | ETA: 21:45:04
+Epoch 7/10 [5900/8305] | TA: 93.02% | Saved checkpoint | ETA: 21:20:35
+Epoch 7/10 [6000/8305] | TA: 92.61% | Saved checkpoint | ETA: 20:56:53
+Epoch 7/10 [6100/8305] | TA: 92.35% | Saved checkpoint | ETA: 20:33:57
+Epoch 7/10 [6200/8305] | TA: 92.93% | Saved checkpoint | ETA: 20:11:44
+Epoch 7/10 [6300/8305] | TA: 92.79% | Saved checkpoint | ETA: 19:50:12
+Epoch 7/10 [6400/8305] | TA: 92.91% | Saved checkpoint | ETA: 19:29:20
+Epoch 7/10 [6500/8305] | TA: 92.75% | Saved checkpoint | ETA: 19:09:06
+Epoch 7/10 [6600/8305] | TA: 92.32% | Saved checkpoint | ETA: 18:49:28
+Epoch 7/10 [6700/8305] | TA: 92.88% | Saved checkpoint | ETA: 18:30:23
+Epoch 7/10 [6800/8305] | TA: 93.11% | Saved checkpoint | ETA: 18:11:52
+Epoch 7/10 [6900/8305] | TA: 92.78% | Saved checkpoint | ETA: 17:53:52
+Epoch 7/10 [7000/8305] | TA: 91.95% | Saved checkpoint | ETA: 17:36:22
+Epoch 7/10 [7100/8305] | TA: 92.56% | Saved checkpoint | ETA: 17:19:20
+Epoch 7/10 [7200/8305] | TA: 93.09% | Saved checkpoint | ETA: 17:02:46
+Epoch 7/10 [7300/8305] | TA: 92.72% | Saved checkpoint | ETA: 16:46:39
+Epoch 7/10 [7400/8305] | TA: 92.20% | Saved checkpoint | ETA: 16:30:57
+Epoch 7/10 [7500/8305] | TA: 92.75% | Saved checkpoint | ETA: 16:15:39
+Epoch 7/10 [7600/8305] | TA: 92.66% | Saved checkpoint | ETA: 16:00:45
+Epoch 7/10 [7700/8305] | TA: 92.05% | Saved checkpoint | ETA: 15:46:13
+Epoch 7/10 [7800/8305] | TA: 92.66% | Saved checkpoint | ETA: 15:32:03
+Epoch 7/10 [7900/8305] | TA: 92.85% | Saved checkpoint | ETA: 15:18:14
+Epoch 7/10 [8000/8305] | TA: 92.76% | Saved checkpoint | ETA: 15:04:45
+Epoch 7/10 [8100/8305] | TA: 92.88% | Saved checkpoint | ETA: 14:51:34
+Epoch 7/10 [8200/8305] | TA: 92.59% | Saved checkpoint | ETA: 14:38:43
+Epoch 7/10 [8300/8305] | TA: 92.52% | Saved checkpoint | ETA: 14:26:09
+Epoch 7/10 completed | Loss: 0.0966 | MLM Loss: 0.8697
+Epoch 8/10 [ 100/8305] | TA: 92.82% | Saved checkpoint | ETA: 49 days, 7:35:41
+Epoch 8/10 [ 200/8305] | TA: 92.90% | Saved checkpoint | ETA: 24 days, 17:21:56
+Epoch 8/10 [ 300/8305] | TA: 92.43% | Saved checkpoint | ETA: 16 days, 11:18:23
+Epoch 8/10 [ 400/8305] | TA: 92.50% | Saved checkpoint | ETA: 12 days, 8:01:37
+Epoch 8/10 [ 500/8305] | TA: 92.76% | Saved checkpoint | ETA: 9 days, 20:22:35
+Epoch 8/10 [ 600/8305] | TA: 92.81% | Saved checkpoint | ETA: 8 days, 4:34:25
+Epoch 8/10 [ 700/8305] | TA: 92.85% | Saved checkpoint | ETA: 7 days, 0:07:29
+Epoch 8/10 [ 800/8305] | TA: 92.75% | Saved checkpoint | ETA: 6 days, 2:46:37
+Epoch 8/10 [ 900/8305] | TA: 92.81% | Saved checkpoint | ETA: 5 days, 10:10:00
+Epoch 8/10 [1000/8305] | TA: 92.97% | Saved checkpoint | ETA: 4 days, 20:52:23
+Epoch 8/10 [1100/8305] | TA: 92.44% | Saved checkpoint | ETA: 4 days, 9:59:35
+Epoch 8/10 [1200/8305] | TA: 92.69% | Saved checkpoint | ETA: 4 days, 0:55:24
+Epoch 8/10 [1300/8305] | TA: 93.03% | Saved checkpoint | ETA: 3 days, 17:14:46
+Epoch 8/10 [1400/8305] | TA: 92.59% | Saved checkpoint | ETA: 3 days, 10:39:51
+Epoch 8/10 [1500/8305] | TA: 92.41% | Saved checkpoint | ETA: 3 days, 4:57:29
+Epoch 8/10 [1600/8305] | TA: 92.64% | Saved checkpoint | ETA: 2 days, 23:57:50
+Epoch 8/10 [1700/8305] | TA: 92.78% | Saved checkpoint | ETA: 2 days, 19:33:21
+Epoch 8/10 [1800/8305] | TA: 92.64% | Saved checkpoint | ETA: 2 days, 15:38:10
+Epoch 8/10 [1900/8305] | TA: 93.06% | Saved checkpoint | ETA: 2 days, 12:07:41
+Epoch 8/10 [2000/8305] | TA: 92.58% | Saved checkpoint | ETA: 2 days, 8:58:12
+Epoch 8/10 [2100/8305] | TA: 92.79% | Saved checkpoint | ETA: 2 days, 6:06:42
+Epoch 8/10 [2200/8305] | TA: 92.52% | Saved checkpoint | ETA: 2 days, 3:30:45
+Epoch 8/10 [2300/8305] | TA: 92.52% | Saved checkpoint | ETA: 2 days, 1:08:18
+Epoch 8/10 [2400/8305] | TA: 92.61% | Saved checkpoint | ETA: 1 day, 22:57:40
+Epoch 8/10 [2500/8305] | TA: 92.62% | Saved checkpoint | ETA: 1 day, 20:57:27
+Epoch 8/10 [2600/8305] | TA: 91.87% | Saved checkpoint | ETA: 1 day, 19:06:26
+Epoch 8/10 [2700/8305] | TA: 92.46% | Saved checkpoint | ETA: 1 day, 17:23:35
+Epoch 8/10 [2800/8305] | TA: 92.73% | Saved checkpoint | ETA: 1 day, 15:48:03
+Epoch 8/10 [2900/8305] | TA: 93.14% | Saved checkpoint | ETA: 1 day, 14:19:04
+Epoch 8/10 [3000/8305] | TA: 92.34% | Saved checkpoint | ETA: 1 day, 12:56:00
+Epoch 8/10 [3100/8305] | TA: 92.52% | Saved checkpoint | ETA: 1 day, 11:38:15
+Epoch 8/10 [3200/8305] | TA: 93.00% | Saved checkpoint | ETA: 1 day, 10:25:20
+Epoch 8/10 [3300/8305] | TA: 93.14% | Saved checkpoint | ETA: 1 day, 9:16:48
+Epoch 8/10 [3400/8305] | TA: 92.78% | Saved checkpoint | ETA: 1 day, 8:12:16
+Epoch 8/10 [3500/8305] | TA: 92.75% | Saved checkpoint | ETA: 1 day, 7:11:24
+Epoch 8/10 [3600/8305] | TA: 92.31% | Saved checkpoint | ETA: 1 day, 6:13:52
+Epoch 8/10 [3700/8305] | TA: 92.90% | Saved checkpoint | ETA: 1 day, 5:19:26
+Epoch 8/10 [3800/8305] | TA: 92.76% | Saved checkpoint | ETA: 1 day, 4:27:50
+Epoch 8/10 [3900/8305] | TA: 92.66% | Saved checkpoint | ETA: 1 day, 3:38:51
+Epoch 8/10 [4000/8305] | TA: 93.23% | Saved checkpoint | ETA: 1 day, 2:52:17
+Epoch 8/10 [4100/8305] | TA: 92.97% | Saved checkpoint | ETA: 1 day, 2:07:58
+Epoch 8/10 [4200/8305] | TA: 92.73% | Saved checkpoint | ETA: 1 day, 1:25:45
+Epoch 8/10 [4300/8305] | TA: 92.62% | Saved checkpoint | ETA: 1 day, 0:45:28
+Epoch 8/10 [4400/8305] | TA: 92.55% | Saved checkpoint | ETA: 1 day, 0:06:59
+Epoch 8/10 [4500/8305] | TA: 93.11% | Saved checkpoint | ETA: 23:30:12
+Epoch 8/10 [4600/8305] | TA: 92.31% | Saved checkpoint | ETA: 22:54:59
+Epoch 8/10 [4700/8305] | TA: 92.62% | Saved checkpoint | ETA: 22:21:15
+Epoch 8/10 [4800/8305] | TA: 92.64% | Saved checkpoint | ETA: 21:48:53
+Epoch 8/10 [4900/8305] | TA: 92.64% | Saved checkpoint | ETA: 21:17:50
+Epoch 8/10 [5000/8305] | TA: 92.69% | Saved checkpoint | ETA: 20:48:00
+Epoch 8/10 [5100/8305] | TA: 92.46% | Saved checkpoint | ETA: 20:19:19
+Epoch 8/10 [5200/8305] | TA: 92.67% | Saved checkpoint | ETA: 19:51:44
+Epoch 8/10 [5300/8305] | TA: 92.52% | Saved checkpoint | ETA: 19:25:09
+Epoch 8/10 [5400/8305] | TA: 92.44% | Saved checkpoint | ETA: 18:59:32
+Epoch 8/10 [5500/8305] | TA: 93.03% | Saved checkpoint | ETA: 18:34:51
+Epoch 8/10 [5600/8305] | TA: 93.18% | Saved checkpoint | ETA: 18:11:01
+Epoch 8/10 [5700/8305] | TA: 92.26% | Saved checkpoint | ETA: 17:48:00
+Epoch 8/10 [5800/8305] | TA: 92.13% | Saved checkpoint | ETA: 17:25:46
+Epoch 8/10 [5900/8305] | TA: 92.62% | Saved checkpoint | ETA: 17:04:16
+Epoch 8/10 [6000/8305] | TA: 92.87% | Saved checkpoint | ETA: 16:43:28
+Epoch 8/10 [6100/8305] | TA: 93.18% | Saved checkpoint | ETA: 16:23:20
+Epoch 8/10 [6200/8305] | TA: 92.67% | Saved checkpoint | ETA: 16:03:50
+Epoch 8/10 [6300/8305] | TA: 92.91% | Saved checkpoint | ETA: 15:44:56
+Epoch 8/10 [6400/8305] | TA: 92.79% | Saved checkpoint | ETA: 15:26:36
+Epoch 8/10 [6500/8305] | TA: 92.08% | Saved checkpoint | ETA: 15:08:50
+Epoch 8/10 [6600/8305] | TA: 92.62% | Saved checkpoint | ETA: 14:51:35
+Epoch 8/10 [6700/8305] | TA: 93.00% | Saved checkpoint | ETA: 14:34:50
+Epoch 8/10 [6800/8305] | TA: 92.56% | Saved checkpoint | ETA: 14:18:34
+Epoch 8/10 [6900/8305] | TA: 92.75% | Saved checkpoint | ETA: 14:02:45
+Epoch 8/10 [7000/8305] | TA: 92.76% | Saved checkpoint | ETA: 13:47:22
+Epoch 8/10 [7100/8305] | TA: 91.89% | Saved checkpoint | ETA: 13:32:25
+Epoch 8/10 [7200/8305] | TA: 92.69% | Saved checkpoint | ETA: 13:17:51
+Epoch 8/10 [7300/8305] | TA: 92.90% | Saved checkpoint | ETA: 13:03:41
+Epoch 8/10 [7400/8305] | TA: 93.02% | Saved checkpoint | ETA: 12:49:53
+Epoch 8/10 [7500/8305] | TA: 92.76% | Saved checkpoint | ETA: 12:36:26
+Epoch 8/10 [7600/8305] | TA: 92.69% | Saved checkpoint | ETA: 12:23:19
+Epoch 8/10 [7700/8305] | TA: 92.96% | Saved checkpoint | ETA: 12:10:32
+Epoch 8/10 [7800/8305] | TA: 92.85% | Saved checkpoint | ETA: 11:58:05
+Epoch 8/10 [7900/8305] | TA: 92.56% | Saved checkpoint | ETA: 11:45:55
+Epoch 8/10 [8000/8305] | TA: 93.06% | Saved checkpoint | ETA: 11:34:03
+Epoch 8/10 [8100/8305] | TA: 93.15% | Saved checkpoint | ETA: 11:22:28
+Epoch 8/10 [8200/8305] | TA: 93.09% | Saved checkpoint | ETA: 11:11:09
+Epoch 8/10 [8300/8305] | TA: 92.35% | Saved checkpoint | ETA: 11:00:05
+Epoch 8/10 completed | Loss: 0.0849 | MLM Loss: 0.8665
+Epoch 9/10 [ 100/8305] | TA: 92.81% | Saved checkpoint | ETA: 37 days, 11:54:29
+Epoch 9/10 [ 200/8305] | TA: 92.76% | Saved checkpoint | ETA: 18 days, 18:07:45
+Epoch 9/10 [ 300/8305] | TA: 92.69% | Saved checkpoint | ETA: 12 days, 11:12:06
+Epoch 9/10 [ 400/8305] | TA: 93.08% | Saved checkpoint | ETA: 9 days, 7:32:43
+Epoch 9/10 [ 500/8305] | TA: 92.85% | Saved checkpoint | ETA: 7 days, 10:05:11
+Epoch 9/10 [ 600/8305] | TA: 92.67% | Saved checkpoint | ETA: 6 days, 3:45:13
+Epoch 9/10 [ 700/8305] | TA: 92.53% | Saved checkpoint | ETA: 5 days, 6:04:23
+Epoch 9/10 [ 800/8305] | TA: 92.47% | Saved checkpoint | ETA: 4 days, 13:48:11
+Epoch 9/10 [ 900/8305] | TA: 92.50% | Saved checkpoint | ETA: 4 days, 1:08:36
+Epoch 9/10 [1000/8305] | TA: 92.73% | Saved checkpoint | ETA: 3 days, 15:00:39
+Epoch 9/10 [1100/8305] | TA: 92.82% | Saved checkpoint | ETA: 3 days, 6:43:02
+Epoch 9/10 [1200/8305] | TA: 92.43% | Saved checkpoint | ETA: 2 days, 23:48:14
+Epoch 9/10 [1300/8305] | TA: 92.34% | Saved checkpoint | ETA: 2 days, 17:57:08
+Epoch 9/10 [1400/8305] | TA: 92.64% | Saved checkpoint | ETA: 2 days, 12:56:04
+Epoch 9/10 [1500/8305] | TA: 92.05% | Saved checkpoint | ETA: 2 days, 8:35:03
+Epoch 9/10 [1600/8305] | TA: 92.46% | Saved checkpoint | ETA: 2 days, 4:46:35
+Epoch 9/10 [1700/8305] | TA: 92.84% | Saved checkpoint | ETA: 2 days, 1:24:55
+Epoch 9/10 [1800/8305] | TA: 92.62% | Saved checkpoint | ETA: 1 day, 22:25:35
+Epoch 9/10 [1900/8305] | TA: 93.03% | Saved checkpoint | ETA: 1 day, 19:45:05
+Epoch 9/10 [2000/8305] | TA: 92.79% | Saved checkpoint | ETA: 1 day, 17:20:33
+Epoch 9/10 [2100/8305] | TA: 92.90% | Saved checkpoint | ETA: 1 day, 15:09:44
+Epoch 9/10 [2200/8305] | TA: 92.55% | Saved checkpoint | ETA: 1 day, 13:10:47
+Epoch 9/10 [2300/8305] | TA: 91.93% | Saved checkpoint | ETA: 1 day, 11:22:07
+Epoch 9/10 [2400/8305] | TA: 92.70% | Saved checkpoint | ETA: 1 day, 9:42:28
+Epoch 9/10 [2500/8305] | TA: 92.81% | Saved checkpoint | ETA: 1 day, 8:10:44
+Epoch 9/10 [2600/8305] | TA: 93.14% | Saved checkpoint | ETA: 1 day, 6:46:01
+Epoch 9/10 [2700/8305] | TA: 92.79% | Saved checkpoint | ETA: 1 day, 5:27:33
+Epoch 9/10 [2800/8305] | TA: 92.26% | Saved checkpoint | ETA: 1 day, 4:14:37
+Epoch 9/10 [2900/8305] | TA: 92.62% | Saved checkpoint | ETA: 1 day, 3:06:42
+Epoch 9/10 [3000/8305] | TA: 92.85% | Saved checkpoint | ETA: 1 day, 2:03:17
+Epoch 9/10 [3100/8305] | TA: 92.64% | Saved checkpoint | ETA: 1 day, 1:03:55
+Epoch 9/10 [3200/8305] | TA: 92.66% | Saved checkpoint | ETA: 1 day, 0:08:14
+Epoch 9/10 [3300/8305] | TA: 92.41% | Saved checkpoint | ETA: 23:15:54
+Epoch 9/10 [3400/8305] | TA: 92.93% | Saved checkpoint | ETA: 22:26:36
+Epoch 9/10 [3500/8305] | TA: 92.35% | Saved checkpoint | ETA: 21:40:06
+Epoch 9/10 [3600/8305] | TA: 92.93% | Saved checkpoint | ETA: 20:56:09
+Epoch 9/10 [3700/8305] | TA: 92.58% | Saved checkpoint | ETA: 20:14:33
+Epoch 9/10 [3800/8305] | TA: 92.81% | Saved checkpoint | ETA: 19:35:07
+Epoch 9/10 [3900/8305] | TA: 92.69% | Saved checkpoint | ETA: 18:57:40
+Epoch 9/10 [4000/8305] | TA: 92.53% | Saved checkpoint | ETA: 18:22:04
+Epoch 9/10 [4100/8305] | TA: 92.02% | Saved checkpoint | ETA: 17:48:10
+Epoch 9/10 [4200/8305] | TA: 92.76% | Saved checkpoint | ETA: 17:15:53
+Epoch 9/10 [4300/8305] | TA: 92.93% | Saved checkpoint | ETA: 16:45:04
+Epoch 9/10 [4400/8305] | TA: 92.84% | Saved checkpoint | ETA: 16:15:37
+Epoch 9/10 [4500/8305] | TA: 92.75% | Saved checkpoint | ETA: 15:47:28
+Epoch 9/10 [4600/8305] | TA: 92.78% | Saved checkpoint | ETA: 15:20:31
+Epoch 9/10 [4700/8305] | TA: 92.78% | Saved checkpoint | ETA: 14:54:42
+Epoch 9/10 [4800/8305] | TA: 92.59% | Saved checkpoint | ETA: 14:29:56
+Epoch 9/10 [4900/8305] | TA: 92.78% | Saved checkpoint | ETA: 14:06:09
+Epoch 9/10 [5000/8305] | TA: 93.24% | Saved checkpoint | ETA: 13:43:18
+Epoch 9/10 [5100/8305] | TA: 93.03% | Saved checkpoint | ETA: 13:21:20
+Epoch 9/10 [5200/8305] | TA: 92.66% | Saved checkpoint | ETA: 13:00:11
+Epoch 9/10 [5300/8305] | TA: 92.34% | Saved checkpoint | ETA: 12:39:49
+Epoch 9/10 [5400/8305] | TA: 92.79% | Saved checkpoint | ETA: 12:20:11
+Epoch 9/10 [5500/8305] | TA: 92.76% | Saved checkpoint | ETA: 12:01:15
+Epoch 9/10 [5600/8305] | TA: 93.14% | Saved checkpoint | ETA: 11:42:59
+Epoch 9/10 [5700/8305] | TA: 91.96% | Saved checkpoint | ETA: 11:25:20
+Epoch 9/10 [5800/8305] | TA: 92.62% | Saved checkpoint | ETA: 11:08:16
+Epoch 9/10 [5900/8305] | TA: 93.21% | Saved checkpoint | ETA: 10:51:46
+Epoch 9/10 [6000/8305] | TA: 92.35% | Saved checkpoint | ETA: 10:35:48
+Epoch 9/10 [6100/8305] | TA: 93.03% | Saved checkpoint | ETA: 10:20:21
+Epoch 9/10 [6200/8305] | TA: 93.00% | Saved checkpoint | ETA: 10:05:22
+Epoch 9/10 [6300/8305] | TA: 93.39% | Saved checkpoint | ETA: 9:50:51
+Epoch 9/10 [6400/8305] | TA: 92.10% | Saved checkpoint | ETA: 9:36:46
+Epoch 9/10 [6500/8305] | TA: 92.88% | Saved checkpoint | ETA: 9:23:06
+Epoch 9/10 [6600/8305] | TA: 92.82% | Saved checkpoint | ETA: 9:09:50
+Epoch 9/10 [6700/8305] | TA: 93.02% | Saved checkpoint | ETA: 8:56:57
+Epoch 9/10 [6800/8305] | TA: 92.99% | Saved checkpoint | ETA: 8:44:26
+Epoch 9/10 [6900/8305] | TA: 92.84% | Saved checkpoint | ETA: 8:32:16
+Epoch 9/10 [7000/8305] | TA: 91.69% | Saved checkpoint | ETA: 8:20:26
+Epoch 9/10 [7100/8305] | TA: 92.14% | Saved checkpoint | ETA: 8:08:55
+Epoch 9/10 [7200/8305] | TA: 92.14% | Saved checkpoint | ETA: 7:57:42
+Epoch 9/10 [7300/8305] | TA: 92.59% | Saved checkpoint | ETA: 7:46:47
+Epoch 9/10 [7400/8305] | TA: 92.90% | Saved checkpoint | ETA: 7:36:09
+Epoch 9/10 [7500/8305] | TA: 92.67% | Saved checkpoint | ETA: 7:25:47
+Epoch 9/10 [7600/8305] | TA: 92.75% | Saved checkpoint | ETA: 7:15:41
+Epoch 9/10 [7700/8305] | TA: 93.14% | Saved checkpoint | ETA: 7:05:50
+Epoch 9/10 [7800/8305] | TA: 92.56% | Saved checkpoint | ETA: 6:56:13
+Epoch 9/10 [7900/8305] | TA: 92.52% | Saved checkpoint | ETA: 6:46:50
+Epoch 9/10 [8000/8305] | TA: 92.91% | Saved checkpoint | ETA: 6:37:40
+Epoch 9/10 [8100/8305] | TA: 92.90% | Saved checkpoint | ETA: 6:28:43
+Epoch 9/10 [8200/8305] | TA: 93.12% | Saved checkpoint | ETA: 6:19:58
+Epoch 9/10 [8300/8305] | TA: 92.43% | Saved checkpoint | ETA: 6:11:26
+Epoch 9/10 completed | Loss: 0.0942 | MLM Loss: 0.8640
+Epoch 10/10 [ 100/8305] | TA: 93.18% | Saved checkpoint | ETA: 20 days, 23:04:20
+Epoch 10/10 [ 200/8305] | TA: 92.70% | Saved checkpoint | ETA: 10 days, 10:02:25
+Epoch 10/10 [ 300/8305] | TA: 92.79% | Saved checkpoint | ETA: 6 days, 21:07:51
+Epoch 10/10 [ 400/8305] | TA: 92.40% | Saved checkpoint | ETA: 5 days, 2:33:55
+Epoch 10/10 [ 500/8305] | TA: 92.94% | Saved checkpoint | ETA: 4 days, 0:59:20
+Epoch 10/10 [ 600/8305] | TA: 93.14% | Saved checkpoint | ETA: 3 days, 7:55:15
+Epoch 10/10 [ 700/8305] | TA: 92.96% | Saved checkpoint | ETA: 2 days, 19:43:13
+Epoch 10/10 [ 800/8305] | TA: 92.81% | Saved checkpoint | ETA: 2 days, 10:33:50
+Epoch 10/10 [ 900/8305] | TA: 92.35% | Saved checkpoint | ETA: 2 days, 3:26:18
+Epoch 10/10 [1000/8305] | TA: 93.06% | Saved checkpoint | ETA: 1 day, 21:44:05
+Epoch 10/10 [1100/8305] | TA: 93.29% | Saved checkpoint | ETA: 1 day, 17:03:57
+Epoch 10/10 [1200/8305] | TA: 92.25% | Saved checkpoint | ETA: 1 day, 13:10:23
+Epoch 10/10 [1300/8305] | TA: 92.43% | Saved checkpoint | ETA: 1 day, 9:52:38
+Epoch 10/10 [1400/8305] | TA: 92.41% | Saved checkpoint | ETA: 1 day, 7:03:04
+Epoch 10/10 [1500/8305] | TA: 92.75% | Saved checkpoint | ETA: 1 day, 4:36:00
+Epoch 10/10 [1600/8305] | TA: 93.03% | Saved checkpoint | ETA: 1 day, 2:27:15
+Epoch 10/10 [1700/8305] | TA: 92.84% | Saved checkpoint | ETA: 1 day, 0:33:36
+Epoch 10/10 [1800/8305] | TA: 92.78% | Saved checkpoint | ETA: 22:52:30
+Epoch 10/10 [1900/8305] | TA: 93.51% | Saved checkpoint | ETA: 21:21:59
+Epoch 10/10 [2000/8305] | TA: 92.70% | Saved checkpoint | ETA: 20:00:28
+Epoch 10/10 [2100/8305] | TA: 92.81% | Saved checkpoint | ETA: 18:46:39
+Epoch 10/10 [2200/8305] | TA: 92.07% | Saved checkpoint | ETA: 17:39:30
+Epoch 10/10 [2300/8305] | TA: 92.85% | Saved checkpoint | ETA: 16:38:09
+Epoch 10/10 [2400/8305] | TA: 92.69% | Saved checkpoint | ETA: 15:41:52
+Epoch 10/10 [2500/8305] | TA: 92.35% | Saved checkpoint | ETA: 14:50:03
+Epoch 10/10 [2600/8305] | TA: 92.66% | Saved checkpoint | ETA: 14:02:10
+Epoch 10/10 [2700/8305] | TA: 92.67% | Saved checkpoint | ETA: 13:17:48
+Epoch 10/10 [2800/8305] | TA: 92.41% | Saved checkpoint | ETA: 12:36:34
+Epoch 10/10 [2900/8305] | TA: 92.72% | Saved checkpoint | ETA: 11:58:09
+Epoch 10/10 [3000/8305] | TA: 92.94% | Saved checkpoint | ETA: 11:22:15
+Epoch 10/10 [3100/8305] | TA: 92.87% | Saved checkpoint | ETA: 10:48:38
+Epoch 10/10 [3200/8305] | TA: 92.50% | Saved checkpoint | ETA: 10:17:05
+Epoch 10/10 [3300/8305] | TA: 92.58% | Saved checkpoint | ETA: 9:47:26
+Epoch 10/10 [3400/8305] | TA: 92.93% | Saved checkpoint | ETA: 9:19:29
+Epoch 10/10 [3500/8305] | TA: 92.87% | Saved checkpoint | ETA: 8:53:06
+Epoch 10/10 [3600/8305] | TA: 93.02% | Saved checkpoint | ETA: 8:28:09
+Epoch 10/10 [3700/8305] | TA: 92.87% | Saved checkpoint | ETA: 8:04:32
+Epoch 10/10 [3800/8305] | TA: 92.88% | Saved checkpoint | ETA: 7:42:08
+Epoch 10/10 [3900/8305] | TA: 93.12% | Saved checkpoint | ETA: 7:20:51
+Epoch 10/10 [4000/8305] | TA: 93.29% | Saved checkpoint | ETA: 7:00:37
+Epoch 10/10 [4100/8305] | TA: 92.64% | Saved checkpoint | ETA: 6:41:20
+Epoch 10/10 [4200/8305] | TA: 93.24% | Saved checkpoint | ETA: 6:22:57
+Epoch 10/10 [4300/8305] | TA: 92.87% | Saved checkpoint | ETA: 6:05:23
+Epoch 10/10 [4400/8305] | TA: 92.29% | Saved checkpoint | ETA: 5:48:37
+Epoch 10/10 [4500/8305] | TA: 92.97% | Saved checkpoint | ETA: 5:32:33
+Epoch 10/10 [4600/8305] | TA: 92.50% | Saved checkpoint | ETA: 5:17:11
+Epoch 10/10 [4700/8305] | TA: 92.97% | Saved checkpoint | ETA: 5:02:26
+Epoch 10/10 [4800/8305] | TA: 92.66% | Saved checkpoint | ETA: 4:48:17
+Epoch 10/10 [4900/8305] | TA: 91.99% | Saved checkpoint | ETA: 4:34:41
+Epoch 10/10 [5000/8305] | TA: 92.97% | Saved checkpoint | ETA: 4:21:37
+Epoch 10/10 [5100/8305] | TA: 93.08% | Saved checkpoint | ETA: 4:09:02
+Epoch 10/10 [5200/8305] | TA: 92.64% | Saved checkpoint | ETA: 3:56:56
+Epoch 10/10 [5300/8305] | TA: 92.78% | Saved checkpoint | ETA: 3:45:15
+Epoch 10/10 [5400/8305] | TA: 92.26% | Saved checkpoint | ETA: 3:34:00
+Epoch 10/10 [5500/8305] | TA: 93.14% | Saved checkpoint | ETA: 3:23:07
+Epoch 10/10 [5600/8305] | TA: 92.78% | Saved checkpoint | ETA: 3:12:37
+Epoch 10/10 [5700/8305] | TA: 92.76% | Saved checkpoint | ETA: 3:02:29
+Epoch 10/10 [5800/8305] | TA: 92.04% | Saved checkpoint | ETA: 2:52:40
+Epoch 10/10 [5900/8305] | TA: 93.17% | Saved checkpoint | ETA: 2:43:10
+Epoch 10/10 [6000/8305] | TA: 92.81% | Saved checkpoint | ETA: 2:33:58
+Epoch 10/10 [6100/8305] | TA: 92.97% | Saved checkpoint | ETA: 2:25:03
+Epoch 10/10 [6200/8305] | TA: 92.90% | Saved checkpoint | ETA: 2:16:24
+Epoch 10/10 [6300/8305] | TA: 92.25% | Saved checkpoint | ETA: 2:08:01
+Epoch 10/10 [6400/8305] | TA: 92.78% | Saved checkpoint | ETA: 1:59:53
+Epoch 10/10 [6500/8305] | TA: 92.41% | Saved checkpoint | ETA: 1:51:59
+Epoch 10/10 [6600/8305] | TA: 92.90% | Saved checkpoint | ETA: 1:44:18
+Epoch 10/10 [6700/8305] | TA: 92.90% | Saved checkpoint | ETA: 1:36:50
+Epoch 10/10 [6800/8305] | TA: 92.84% | Saved checkpoint | ETA: 1:29:35
+Epoch 10/10 [6900/8305] | TA: 92.66% | Saved checkpoint | ETA: 1:22:31
+Epoch 10/10 [7000/8305] | TA: 92.40% | Saved checkpoint | ETA: 1:15:38
+Epoch 10/10 [7100/8305] | TA: 92.26% | Saved checkpoint | ETA: 1:08:56
+Epoch 10/10 [7200/8305] | TA: 92.14% | Saved checkpoint | ETA: 1:02:25
+Epoch 10/10 [7300/8305] | TA: 92.76% | Saved checkpoint | ETA: 0:56:04
+Epoch 10/10 [7400/8305] | TA: 93.23% | Saved checkpoint | ETA: 0:49:52
+Epoch 10/10 [7500/8305] | TA: 92.49% | Saved checkpoint | ETA: 0:43:49
+Epoch 10/10 [7600/8305] | TA: 92.75% | Saved checkpoint | ETA: 0:37:55
+Epoch 10/10 [7700/8305] | TA: 92.88% | Saved checkpoint | ETA: 0:32:09
+Epoch 10/10 [7800/8305] | TA: 92.82% | Saved checkpoint | ETA: 0:26:31
+Epoch 10/10 [7900/8305] | TA: 92.70% | Saved checkpoint | ETA: 0:21:01
+Epoch 10/10 [8000/8305] | TA: 92.75% | Saved checkpoint | ETA: 0:15:39
+Epoch 10/10 [8100/8305] | TA: 92.58% | Saved checkpoint | ETA: 0:10:24
+Epoch 10/10 [8200/8305] | TA: 92.94% | Saved checkpoint | ETA: 0:05:16
+Epoch 10/10 [8300/8305] | TA: 92.96% | Saved checkpoint | ETA: 0:00:14
+Epoch 10/10 completed | Loss: 0.0797 | MLM Loss: 0.8622
+[STAGE 2] Training completed! Run: zany-tapir-e3a1f1-witty-capybara-79c070
+Average test accuracy: 92.79%
+Samples tested: 66446
+Confusion matrix:
+[[30705  2328]
+ [ 2461 30952]]

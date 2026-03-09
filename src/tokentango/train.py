@@ -11,8 +11,6 @@ import uuid
 import random as rand
 import torch.optim as optim
 
-
-# Cute name generator for run names
 ADJECTIVES = [
     "happy",
     "sleepy",
@@ -24,6 +22,16 @@ ADJECTIVES = [
     "merry",
     "jolly",
     "silly",
+    "brave",
+    "clever",
+    "gentle",
+    "fierce",
+    "quirky",
+    "witty",
+    "calm",
+    "bold",
+    "zany",
+    "cheery",
 ]
 NOUNS = [
     "panda",
@@ -36,6 +44,16 @@ NOUNS = [
     "quokka",
     "narwhal",
     "axolotl",
+    "wombat",
+    "meerkat",
+    "platypus",
+    "fennec",
+    "tapir",
+    "manatee",
+    "binturong",
+    "numbat",
+    "kinkajou",
+    "pangolin",
 ]
 
 
@@ -71,12 +89,17 @@ def list_checkpoints(checkpoints_dir="data/checkpoints", meta_only=False) -> lis
 
 
 def load_checkpoint(model, checkpoint_path) -> Checkpoint:
-    """Load checkpoint and return Checkpoint object (model state already loaded into model)."""
-    # Use map_location to handle checkpoints from different devices
     data = torch.load(checkpoint_path, weights_only=False, map_location="cpu")
     checkpoint = Checkpoint.from_dict(data)
     checkpoint.checkpoint_path = checkpoint_path
-    model.load_state_dict(checkpoint.model_state)
+
+    # Strip _orig_mod. prefix if checkpoint was saved from a compiled model
+    state_dict = checkpoint.model_state
+    if any(k.startswith("_orig_mod.") for k in state_dict):
+        state_dict = {k.removeprefix("_orig_mod."): v for k, v in state_dict.items()}
+        checkpoint.model_state = state_dict
+
+    model.load_state_dict(state_dict)
     return checkpoint
 
 
@@ -111,9 +134,7 @@ def test_accuracy(
         all_predictions = []
         all_labels = []
 
-        for start_idx in range(
-            random_offset, random_offset + sample_size, batch_size
-        ):
+        for start_idx in range(random_offset, random_offset + sample_size, batch_size):
             end_idx = min(start_idx + batch_size, random_offset + sample_size)
             if use_masked_tokens:
                 x = test_data.masked_tokens[start_idx:end_idx, :]
@@ -130,18 +151,10 @@ def test_accuracy(
         accuracy = correct / sample_size * 100
 
         # Build confusion matrix
-        tp = sum(
-            1 for p, t in zip(all_predictions, all_labels) if p == 1 and t == 1
-        )
-        tn = sum(
-            1 for p, t in zip(all_predictions, all_labels) if p == -1 and t == -1
-        )
-        fp = sum(
-            1 for p, t in zip(all_predictions, all_labels) if p == 1 and t == -1
-        )
-        fn = sum(
-            1 for p, t in zip(all_predictions, all_labels) if p == -1 and t == 1
-        )
+        tp = sum(1 for p, t in zip(all_predictions, all_labels) if p == 1 and t == 1)
+        tn = sum(1 for p, t in zip(all_predictions, all_labels) if p == -1 and t == -1)
+        fp = sum(1 for p, t in zip(all_predictions, all_labels) if p == 1 and t == -1)
+        fn = sum(1 for p, t in zip(all_predictions, all_labels) if p == -1 and t == 1)
         confusion_matrix = np.array([[tn, fp], [fn, tp]])
 
     model.train()
@@ -167,8 +180,7 @@ def train(
         config.run_name = generate_run_name()
 
     device = torch.device(config.device)
-    model = model.to(device)
-    model.train()
+    model = torch.compile(model.to(device))
 
     print(f"[TRAIN] Starting training run: {config.run_name}")
     print(f"[TRAIN] Training set fraction: {config.train_frac}")
@@ -188,7 +200,7 @@ def train(
     test_accuracies = []
 
     num_samples = len(train_data.labels)
-    num_epochs = 2
+    num_epochs = 10
     batch_size = config.batch_size
     start_time = dt.datetime.now()
     device_type = device.type
@@ -205,6 +217,7 @@ def train(
 
     for epoch in range(0, num_epochs):
         for sample, idx in enumerate(range(0, num_samples, batch_size)):
+            model.train()
             optimizer.zero_grad()
 
             x = train_data.source_tokens[idx : idx + batch_size, :]

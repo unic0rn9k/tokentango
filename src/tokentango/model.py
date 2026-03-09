@@ -13,7 +13,9 @@ class BertClassifier(nn.Module):
 
         self.vocab_size = vocab_size
 
-        self.encoder_layer = nn.TransformerEncoderLayer(d_model=EMBEDDING_DIM, nhead=4)
+        self.encoder_layer = nn.TransformerEncoderLayer(
+            d_model=EMBEDDING_DIM, nhead=4, norm_first=True
+        )
         self.use_nested_tensor = True
         self.encoder_layer.self_attn.batch_first = True
         self.transformer_encoder = nn.TransformerEncoder(
