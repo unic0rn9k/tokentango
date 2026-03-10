@@ -6,7 +6,7 @@
 ### Sources
 - [FakeNewsCorpus (training data)](https://github.com/several27/FakeNewsCorpus)
 - ["For Perception Tasks: The Cost of LLM Pretraining by Next-Token Prediction Outweigh its Benefits" by Balestriero et al.](https://openreview.net/forum?id=wYGBWOjq1Q)
-- [Reference for the pretrained model (also by me)](https://github.com/unic0rn9k/fake_news/blob/final_friday/bert_pretrained.ipynb)
+- [BERT fine-tuned on FakeNewsCorpus by my uni study group and I](https://github.com/unic0rn9k/fake_news/blob/final_friday/bert_pretrained.ipynb)
 
 ### Comparison between pretrained and from-scratch
 **Differences in setup:**
@@ -33,5 +33,6 @@ Repo might not be entirely up to date. Newer changes can be found on the develop
 ### Preliminary results (newer graphs might be added later)
 <img width="1136" height="540" alt="newplot(94)" src="https://github.com/user-attachments/assets/13ad0754-8786-48c1-86a0-ebd2e1a7bca3" />
 <img width="1136" height="540" alt="newplot(93)" src="https://github.com/user-attachments/assets/29147569-5154-4cf4-b67c-7df0338e2369" />
+
 
 
