@@ -15,11 +15,11 @@ Training conditions where not the exact same.
 - Pre-trained model was trained on raw data set, which had a bias in the labels / class imbalance, which may have negatively affected training, while also giving the impression of better performance on the test set.
 
 **Results:**
-|  | fine-tuning metric | from-scratch metric |
+| Metrics | fine-tuned | from-scratch |
 |-|-|-|
-| duration     | 8 hours | 2 hours |
-| bias corrected test accuracy | 90% | 93% |
-| biased accuracy | 94% | N/A |
+| Duration     | 8 hours | 2 hours |
+| Bias corrected test accuracy | 90% | 93% |
+| Biased accuracy | 94% | N/A |
 
 So fine-tuning again, with a evenly sampled training set would be a good idea. Also perhaps training from-scratch on a biased dataset, either method is more robus against sample bias.
 
@@ -33,6 +33,7 @@ Repo might not be entirely up to date. Newer changes can be found on the develop
 ### Preliminary results (newer graphs might be added later)
 <img width="1136" height="540" alt="newplot(94)" src="https://github.com/user-attachments/assets/13ad0754-8786-48c1-86a0-ebd2e1a7bca3" />
 <img width="1136" height="540" alt="newplot(93)" src="https://github.com/user-attachments/assets/29147569-5154-4cf4-b67c-7df0338e2369" />
+
 
 
 
