@@ -28,6 +28,6 @@ It would also have been interesting to explore how well the from-scratch model w
 <img width="1616" height="540" alt="newplot(104)" src="https://github.com/user-attachments/assets/dc1371a4-a342-4bdd-ba13-c351e68ad7be" />
 
 ### Main interesting files, if you wan't too look at the code
-**NOTE:** Repo might not be entirely up to date. Newer changes can be found on the other branch.
+**NOTE:** Repo might not be entirely up to date. Newer changes can be found on the other branches.
 - [Model definition](https://github.com/unic0rn9k/tokentango/blob/master/src/tokentango/model.py)
 - [Training loop](https://github.com/unic0rn9k/tokentango/blob/master/src/tokentango/train.py)
