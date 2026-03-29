@@ -14,10 +14,20 @@ Training conditions where not the exact same.
 **Results:**
 | Metric | Fine-Tuned | From-Scratch |
 |-|-|-|
-| Training samples used | 99.5k | 796k |
-| Duration     | 8 hours | 2 hours |
-| Bias corrected test accuracy | 90% | 92% |
-| Biased accuracy | 94% | N/A |
+| `Training samples used` | 100k | 796k |
+| `Duration`     | 8 hours | 2 hours |
+| `Bias corrected test accuracy` | 90% | 92% |
+| `Biased accuracy` | 94% | N/A |
+| `hidden_size` | 768 | 32 |
+| `n_heads` | 12 | 4 |
+| `n_layers` | 6 | 6 |
+| `vocab_size` | 30,522 | 40,000 |
+| `max_seq_len` | 512 | 300 |
+| `ffn_hidden_size` | 3,072 | 32 |
+| `head_dim` | 64 | 32 |
+| `dropout` | 0.1 | 0 |
+| `attention_dropout` | 0.1 | 0 |
+| `layer_norm` | x = LayerNorm(x + Sublayer(x)) | tried both with similar results |
 
 So fine-tuning again, with a evenly sampled training set would be a good idea. Also perhaps training from-scratch on a biased dataset, either method is more robust against sample bias.
 It would also have been interesting to explore how well the from-scratch model would have generalized, given a smaller amount of training data.
