@@ -11,7 +11,7 @@ Training conditions where not the exact same.
 - Pre-trained model was trained on raw data set, which had a bias in the labels / class imbalance, which may have negatively affected training, while also giving the impression of better performance on the test set.
 - The fine-tuning was done on a much smaller fraction of the dataset, than the from-scratch training. Since training from scratch with a smaller mode used so much less compute, it was viable to train on more data.
 
-**Results:**
+**Results & architecture:**
 | Metric | Fine-Tuned | From-Scratch |
 |-|-|-|
 | `Training samples used` | 100k | 796k |
